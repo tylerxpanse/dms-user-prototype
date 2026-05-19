@@ -2394,13 +2394,13 @@ function getDocExtractedFields(doc) {
       { label:'Employer', value: isJim ? 'Dunder Mifflin Paper Co.' : 'Costco Wholesale Corp.' },
       { label:'Pay Period', value:'Jan 1 – Jan 15, 2026' },
       { divider: true },
-      { label:'Gross Pay', value: isJim ? '$4,166.67' : '$3,461.54' },
-      { label:'YTD Gross', value: isJim ? '$8,333.34' : '$6,923.08' },
+      { label:'Gross Pay', value: isJim ? '$4,166.67' : '$3,461.54', field:'gross-pay' },
+      { label:'YTD Gross', value: isJim ? '$8,333.34' : '$6,923.08', field:'ytd-gross' },
       { divider: true },
-      { label:'Federal Tax', value: isJim ? '$625.00' : '$519.23' },
-      { label:'State Tax', value: isJim ? '$128.17' : '$106.40' },
-      { label:'Social Security', value: isJim ? '$258.33' : '$214.80' },
-      { label:'Net Pay', value: isJim ? '$3,094.75' : '$2,570.86' },
+      { label:'Federal Tax', value: isJim ? '$625.00' : '$519.23', field:'fed-tax' },
+      { label:'State Tax', value: isJim ? '$128.17' : '$106.40', field:'state-tax' },
+      { label:'Social Security', value: isJim ? '$258.33' : '$214.80', field:'soc-sec' },
+      { label:'Net Pay', value: isJim ? '$3,094.75' : '$2,570.86', field:'net-pay' },
     ];
   }
   if (c === 'Bank Statement') return [
