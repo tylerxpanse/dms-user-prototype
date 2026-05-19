@@ -504,9 +504,10 @@
   .compare-doc-header-name { flex: 1; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .compare-doc-header-meta { font-size: 11px; color: #6b7280; white-space: nowrap; }
   .compare-status-pill { border-radius: 9999px; padding: 2px 7px; font-size: 11px; font-weight: 500; white-space: nowrap; }
-  /* The doc body — fixed 816px paper, scaled via JS zoom */
-  .compare-doc-body { background: #fff; padding: 0; display: block; overflow: hidden; }
-  .compare-doc-inner { width: 816px; flex-shrink: 0; padding: 40px 56px; transform-origin: top left; display: block; box-sizing: border-box; }
+  /* The doc body — paper sits on a neutral surface */
+  .compare-doc-body { background: #dde1e7; display: block; overflow: hidden; }
+  /* White 8.5×11 letter page: 816×1056px at 96dpi, proper margins */
+  .compare-doc-inner { width: 816px; min-height: 1056px; padding: 72px 80px; background: #fff; box-sizing: border-box; transform-origin: top left; display: block; }
 
   /* Right: extracted fields — clean, no header clutter */
   .compare-ext-panel { width: 232px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
