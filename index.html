@@ -1757,8 +1757,10 @@ function renderTable() {
   tbody.innerHTML = docs.map(d => {
     const expDate = d.expires ? new Date(d.expires) : null;
     const expired = expDate && expDate < today;
+    const isSelected = selectedDocIds.has(d.id);
     return `
-    <tr onclick="openDoc(${d.id})" class="${expired ? 'row-expired' : ''}">
+    <tr onclick="openDoc(${d.id})" class="${expired ? 'row-expired' : ''} ${isSelected ? 'row-selected' : ''}">
+      <td class="select-col" onclick="event.stopPropagation()"><input type="checkbox" class="doc-checkbox" data-id="${d.id}" ${isSelected ? 'checked' : ''} onchange="toggleDocSelect(${d.id},this)"></td>
       <td class="star-col"><span class="star ${d.star ? 'filled' : ''}" onclick="event.stopPropagation();toggleStar(${d.id},this)">${d.star ? '★' : '☆'}</span></td>
       <td>${d.classification}</td>
       <td class="doc-name">
