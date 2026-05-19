@@ -2275,11 +2275,20 @@ function renderCompareView() {
   requestAnimationFrame(scaleCompareDocSections);
 }
 
+let _compareObserverLocked = false;
+let _compareObserverLockTimer = null;
+function lockCompareObserver() {
+  _compareObserverLocked = true;
+  clearTimeout(_compareObserverLockTimer);
+  _compareObserverLockTimer = setTimeout(() => { _compareObserverLocked = false; }, 600);
+}
+
 function setupCompareObserver(docs) {
   if (compareObserver) compareObserver.disconnect();
   const scrollArea = document.getElementById('compare-scroll-area');
   const ratios = {};
   compareObserver = new IntersectionObserver((entries) => {
+    if (_compareObserverLocked) return;
     entries.forEach(e => { ratios[e.target.dataset.docId] = e.intersectionRatio; });
     let bestId = null, bestRatio = -1;
     Object.entries(ratios).forEach(([id, r]) => { if (r > bestRatio) { bestRatio = r; bestId = parseInt(id); } });
