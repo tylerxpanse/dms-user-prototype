@@ -2223,7 +2223,8 @@ function exitCompareMode() {
   document.getElementById('screen-compare').classList.remove('visible');
   document.getElementById('screen-list').style.display = '';
   if (compareObserver) { compareObserver.disconnect(); compareObserver = null; }
-  // Restore right sidebar state
+  // Restore nav section list and right sidebar
+  document.querySelector('.nav-section-list').style.display = '';
   if (_rightPanelWasOpen) {
     document.getElementById('right-panel-wrap').classList.remove('collapsed');
     document.getElementById('right-icon-strip').classList.add('hidden');
