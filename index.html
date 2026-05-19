@@ -2425,9 +2425,9 @@ function getDocExtractedFields(doc) {
     { label:'Avg Daily Balance', value:'$40,535.90' },
   ];
   if (c === 'Tax Return') return [
-    { label:'Tax Year', value:'2025' },
-    { label:'Filing Status', value:'Married Filing Jointly' },
-    { label:'Taxpayer SSN', value:'***-**-1234' },
+    { label:'Tax Year', value:'2025', field:'tax-year' },
+    { label:'Filing Status', value:'Married Filing Jointly', field:'filing-status' },
+    { label:'Taxpayer SSN', value:'***-**-1234', field:'taxpayer-ssn' },
     { divider: true },
     { label:'Total Income', value:'$182,500.00', field:'total-income' },
     { label:'AGI', value:'$178,200.00', field:'agi' },
