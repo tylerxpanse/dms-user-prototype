@@ -2273,7 +2273,8 @@ function renderCompareView() {
   activeCompareDocId = docs[0].id;
   setActiveCompareDoc(docs[0].id, false);
   setupCompareObserver(docs);
-  setTimeout(scaleCompareDocSections, 60);
+  setTimeout(scaleCompareDocSections, 0);
+  setTimeout(scaleCompareDocSections, 250); // second pass ensures layout is fully settled
 }
 
 let _compareObserverLocked = false;
