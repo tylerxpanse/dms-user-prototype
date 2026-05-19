@@ -2357,11 +2357,9 @@ function scaleCompareDocSections() {
   document.querySelectorAll('.compare-doc-body').forEach(body => {
     const inner = body.querySelector('.compare-doc-inner');
     if (!inner) return;
-    inner.style.zoom = '1';
     const bodyW = body.clientWidth;
-    const innerW = inner.scrollWidth;
-    if (innerW > bodyW && bodyW > 0) {
-      inner.style.zoom = String((bodyW / innerW).toFixed(3));
+    if (bodyW > 0) {
+      inner.style.zoom = (bodyW / 816).toFixed(3);
     }
   });
 }
