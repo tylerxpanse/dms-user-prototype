@@ -2389,12 +2389,12 @@ function getDocExtractedFields(doc) {
     { divider: true },
     { label:'Wages, tips, other comp', value:'$85,000.00', field:'wages' },
     { label:'Federal income tax', value:'$12,450.00', field:'fed-tax' },
-    { label:'Social security wages', value:'$85,000.00' },
-    { label:'Medicare wages', value:'$85,000.00' },
+    { label:'Social security wages', value:'$85,000.00', field:'soc-wages' },
+    { label:'Medicare wages', value:'$85,000.00', field:'medicare-wages' },
     { divider: true },
-    { label:'State', value:'NY' },
-    { label:'State wages', value:'$85,000.00' },
-    { label:'State income tax', value:'$5,950.00' },
+    { label:'State', value:'NY', field:'w2-state' },
+    { label:'State wages', value:'$85,000.00', field:'state-wages' },
+    { label:'State income tax', value:'$5,950.00', field:'state-tax' },
   ];
   if (c === 'Pay Stub') {
     const isJim = doc.name.includes('Jim');
