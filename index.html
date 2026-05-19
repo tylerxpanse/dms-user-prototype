@@ -2273,8 +2273,7 @@ function renderCompareView() {
   activeCompareDocId = docs[0].id;
   setActiveCompareDoc(docs[0].id, false);
   setupCompareObserver(docs);
-  // Double-RAF ensures flex layout is settled before measuring
-  requestAnimationFrame(() => requestAnimationFrame(scaleCompareDocSections));
+  setTimeout(scaleCompareDocSections, 60);
 }
 
 let _compareObserverLocked = false;
