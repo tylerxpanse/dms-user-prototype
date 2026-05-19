@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Documents — Jim Halpert</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #111827; background: #f9fafb; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* TOP NAV */
+  .top-nav { background: #111827; color: #fff; display: flex; align-items: center; gap: 32px; padding: 0 20px; height: 52px; flex-shrink: 0; }
+  .nav-field { display: flex; flex-direction: column; }
+  .nav-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: .4px; }
+  .nav-value { font-size: 13px; font-weight: 500; }
+  .nav-value .badge { display: inline-flex; align-items: center; justify-content: center; background: #374151; border-radius: 9999px; font-size: 11px; width: 18px; height: 18px; margin-left: 4px; }
+  .nav-spacer { flex: 1; }
+  .btn-aus { background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .btn-aus:hover { background: #1d4ed8; }
+
+  /* STATUS BAR */
+  .status-bar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 8px 20px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .status-label { font-size: 12px; color: #6b7280; }
+  .status-value { font-size: 13px; font-weight: 500; }
+  .stage-label { font-size: 13px; color: #2563eb; font-weight: 500; }
+  .progress-bar { flex: 1; max-width: 240px; height: 6px; background: #e5e7eb; border-radius: 9999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #2563eb; border-radius: 9999px; width: 50%; }
+
+  /* LAYOUT */
+  .app-body { display: flex; flex: 1; overflow: hidden; }
+
+  /* LEFT NAV — dual panel */
+  .left-nav { display: flex; flex-direction: row; flex-shrink: 0; }
+
+  /* Narrow dark icon strip */
+  .nav-icon-strip { width: 44px; background: #070c18; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .nav-logo { width: 44px; height: 52px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .nav-strip-icons { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 4px; }
+  .nav-strip-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; color: #2d3d6b; transition: background .15s, color .15s; }
+  .nav-strip-icon:hover { background: rgba(255,255,255,.06); color: #6b82c4; }
+  .nav-strip-icon.active { background: rgba(79,110,247,.18); color: #7ba4ff; }
+  .nav-strip-icon svg { width: 17px; height: 17px; }
+  .nav-strip-avatar { width: 30px; height: 30px; border-radius: 50%; background: #1e40af; border: 2px solid #3b5fc0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; margin: 0 0 12px; cursor: pointer; flex-shrink: 0; }
+
+  /* White section list */
+  .nav-section-list { width: 186px; background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; flex-shrink: 0; }
+  .nav-items { flex: 1; overflow-y: auto; padding-top: 6px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; cursor: pointer; color: #374151; border-left: 3px solid transparent; font-size: 13px; }
+  .nav-item:hover { background: #f3f4f6; }
+  .nav-item.active { color: #2563eb; background: #eff6ff; border-left-color: #2563eb; font-weight: 500; }
+  .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .65; }
+  .nav-item .nav-badge { margin-left: auto; background: #e5e7eb; border-radius: 9999px; font-size: 11px; padding: 1px 6px; }
+  .nav-item.active .nav-badge { background: #dbeafe; color: #1d4ed8; }
+  .nav-collapse { padding: 10px 14px; font-size: 12px; color: #9ca3af; cursor: pointer; display: flex; align-items: center; gap: 4px; border-top: 1px solid #e5e7eb; }
+
+  /* RIGHT SIDEBAR — panel pushes main content, strip is the collapsed state */
+  .right-sidebar { display: flex; flex-direction: row; flex-shrink: 0; }
+  .right-panel-wrap { width: 280px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; transition: width .2s ease; }
+  .right-panel-wrap.collapsed { width: 0; border-left: none; }
+  .right-panel-header { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; user-select: none; }
+  .right-panel-title { font-size: 14px; font-weight: 600; color: #111827; white-space: nowrap; }
+  .right-panel-body { flex: 1; overflow-y: auto; min-width: 280px; }
+  .tasks-group { padding: 0; }
+  .tasks-group + .tasks-group { border-top: 1px solid #f3f4f6; }
+  .tasks-group-label { font-size: 10px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: .7px; padding: 12px 16px 6px; }
+  .task-card { padding: 9px 16px 10px; cursor: pointer; border-bottom: 1px solid #f9fafb; }
+  .task-card:hover { background: #f9fafb; }
+  .task-card-title { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 3px; line-height: 1.35; }
+  .task-card-desc { font-size: 12px; color: #6b7280; line-height: 1.4; margin-bottom: 6px; }
+  .task-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .task-card-tag { font-size: 11px; color: #9ca3af; }
+  .task-card-due { font-size: 11px; font-weight: 500; color: #9ca3af; white-space: nowrap; }
+  .task-card-due.today { color: #d97706; }
+  .task-card-due.urgent { color: #dc2626; }
+  .demo-stage-section { border-top: 1px solid #e5e7eb; padding: 12px 16px; flex-shrink: 0; }
+  .demo-stage-header { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .demo-stage-tabs { display: flex; gap: 4px; }
+  .demo-stage-tab { border: 1px solid #e5e7eb; background: #fff; border-radius: 6px; padding: 5px 10px; font-size: 12px; color: #374151; cursor: pointer; white-space: nowrap; }
+  .demo-stage-tab:hover { background: #f3f4f6; }
+  .demo-stage-tab.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+  /* Right vertical icon strip — this IS the collapsed state of the right sidebar */
+  .right-icon-strip { width: 36px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; align-items: center; padding: 6px 0; gap: 0; flex-shrink: 0; }
+  .right-icon-strip.hidden { display: none; }
+  .right-tab-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; padding: 10px 0; width: 36px; position: relative; }
+  .right-tab-icon:hover { background: #f9fafb; }
+  .right-tab-icon svg { width: 15px; height: 15px; color: #9ca3af; flex-shrink: 0; }
+  .right-tab-label { font-size: 8.5px; color: #9ca3af; writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: .3px; white-space: nowrap; line-height: 1; }
+  .right-tab-badge { position: absolute; top: 5px; right: 1px; background: #2563eb; color: #fff; border-radius: 9999px; font-size: 8px; min-width: 13px; height: 13px; display: flex; align-items: center; justify-content: center; font-weight: 700; line-height: 1; }
+  .right-tab-spacer { flex: 1; }
+  .right-tab-ai svg { color: #7c3aed; }
+  .right-tab-ai .right-tab-label { color: #7c3aed; }
+
+  /* MAIN CONTENT */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ===== DOCUMENTS LIST ===== */
+  #screen-list { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  .list-header { padding: 24px 28px 0; }
+  .list-header h1 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .list-tabs { display: flex; gap: 0; border-bottom: 1px solid #e5e7eb; }
+  .list-tab { padding: 10px 0; margin-right: 24px; font-size: 14px; color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; }
+  .list-tab.active { color: #111827; border-bottom-color: #111827; font-weight: 500; }
+  .tab-count { background: #111827; color: #fff; border-radius: 9999px; font-size: 11px; padding: 1px 6px; }
+  .list-tab:not(.active) .tab-count { background: #e5e7eb; color: #374151; }
+  .upload-btn { margin-left: auto; background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; align-self: flex-start; }
+  .upload-btn:hover { background: #1d4ed8; }
+  .list-controls { display: flex; align-items: center; gap: 10px; padding: 14px 28px; }
+  .result-count { font-size: 13px; color: #6b7280; }
+  .search-input { border: 1px solid #e5e7eb; border-radius: 6px; padding: 7px 12px; font-size: 13px; width: 220px; outline: none; }
+  .search-input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #dbeafe; }
+  .adv-search { display: flex; align-items: center; gap: 6px; color: #374151; cursor: pointer; font-size: 13px; }
+  .right-controls { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .ctrl-btn { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #374151; cursor: pointer; }
+
+  /* TABLE */
+  .table-wrap { flex: 1; overflow-y: auto; padding: 0 28px 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { text-align: left; font-size: 12px; font-weight: 500; color: #6b7280; padding: 8px 10px; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid #f3f4f6; cursor: pointer; }
+  tbody tr:hover { background: #f9fafb; }
+  td { padding: 11px 10px; font-size: 13px; color: #111827; }
+  td.doc-name { font-weight: 500; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .star-col { width: 32px; }
+  .star { cursor: pointer; font-size: 16px; color: #d1d5db; }
+  .link-col { width: 32px; text-align: center; }
+  .chain-icon { width: 14px; height: 14px; color: #93c5fd; display: inline-block; vertical-align: middle; }
+  .tree-chain-icon { width: 12px; height: 12px; color: #93c5fd; flex-shrink: 0; }
+  .comments-col, .links-col, .kebab-col { width: 30px; text-align: center; }
+  td.comments-col, td.links-col, td.kebab-col { vertical-align: middle; }
+  th.comments-col svg, th.links-col svg { color: #9ca3af; }
+  .comment-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 9px; font-size: 11px; font-weight: 600; padding: 0 4px; line-height: 1; cursor: default; }
+  .comment-badge.unread { background: #2563eb; color: #fff; }
+  .comment-badge.read { background: #eff6ff; border: 1.5px solid #93c5fd; color: #1d4ed8; }
+  /* Kebab */
+  .kebab-btn { background: none; border: none; cursor: pointer; color: #4b5563; padding: 0 2px; border-radius: 4px; font-size: 17px; letter-spacing: 1px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; height: 22px; }
+  .kebab-btn:hover { color: #111827; background: #f3f4f6; }
+  .kebab-dropdown { position: fixed; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.14); z-index: 9999; min-width: 180px; overflow: hidden; display: none; }
+  .kebab-item { padding: 9px 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #374151; }
+  .kebab-item:hover { background: #f9fafb; }
+  .kebab-item.success { color: #166534; }
+  .kebab-item.danger { color: #dc2626; }
+  .kebab-divider { height: 1px; background: #f3f4f6; margin: 2px 0; }
+  /* Hover tooltips */
+  .row-tooltip { position: fixed; background: #1f2937; color: #f9fafb; border-radius: 8px; padding: 10px 13px; font-size: 12px; max-width: 260px; z-index: 10000; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,.22); display: none; line-height: 1.5; }
+  .row-tooltip .tt-title { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .row-tooltip .tt-item { padding: 2px 0; }
+  .row-tooltip .tt-author { font-weight: 600; color: #e5e7eb; }
+  .star.filled { color: #f59e0b; }
+  /* Expiration column */
+  .exp-date { font-size: 13px; white-space: nowrap; color: #6b7280; }
+  .exp-date.expired { color: #dc2626; font-weight: 500; }
+  tr.row-expired { background: #fff5f5; }
+  tr.row-expired:hover { background: #fee2e2; }
+  /* Sortable column headers */
+  .sortable-th { cursor: pointer; user-select: none; white-space: nowrap; }
+  .sortable-th:hover { color: #111827; }
+  .sortable-th span:first-child { margin-right: 3px; }
+  .sort-chevron { display: inline-block; font-size: 10px; color: #9ca3af; vertical-align: middle; line-height: 1; transition: color .15s; }
+  .sortable-th:hover .sort-chevron { color: #6b7280; }
+  .sort-chevron.active { color: #2563eb; }
+  th.sort-active { color: #2563eb; }
+  .v-tag { display: inline-flex; align-items: center; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 10px; color: #6b7280; padding: 1px 4px; margin-left: 4px; }
+  .amended-tag { background: #fef9c3; border-color: #fef08a; color: #854d0e; border-radius: 4px; font-size: 10px; padding: 1px 5px; margin-left: 4px; }
+
+  /* STATUS BADGES */
+  .badge-approved { display: inline-block; background: #dcfce7; color: #166534; border-radius: 9999px; padding: 2px 10px; font-size: 12px; font-weight: 500; }
+  .badge-received { display: inline-block; background: #f3f4f6; color: #374151; border-radius: 9999px; padding: 2px 10px; font-size: 12px; font-weight: 500; }
+  .badge-under-review { display: inline-block; background: #eff6ff; color: #1d4ed8; border-radius: 9999px; padding: 2px 10px; font-size: 12px; font-weight: 500; }
+  .badge-needs-action { display: inline-block; background: #fee2e2; color: #dc2626; border-radius: 9999px; padding: 2px 10px; font-size: 12px; font-weight: 500; }
+
+  /* ===== DOCUMENT DETAIL ===== */
+  #screen-detail { display: none; flex: 1; overflow: hidden; flex-direction: row; }
+  #screen-detail.visible { display: flex; }
+
+  /* Left taxonomy panel */
+  .taxonomy-panel { width: 240px; border-right: 1px solid #e5e7eb; background: #fff; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; transition: width .2s ease; }
+  .taxonomy-panel.collapsed { width: 36px; }
+  .taxonomy-panel.collapsed .taxonomy-title,
+  .taxonomy-panel.collapsed .taxonomy-subtitle,
+  .taxonomy-panel.collapsed .taxonomy-upload,
+  .taxonomy-panel.collapsed .taxonomy-tree { display: none; }
+  .taxonomy-panel.collapsed .back-link { display: none; }
+  .taxonomy-panel.collapsed .tree-collapse-btn { flex-direction: column; padding: 12px 0; justify-content: space-between; align-items: center; flex: 1; border-top: none; }
+  .taxonomy-panel.collapsed .tree-collapse-btn .collapse-label { display: none; }
+  .taxonomy-panel.collapsed .tree-collapse-btn .expand-icon { display: flex; }
+  .taxonomy-panel.collapsed .tree-collapse-btn .collapsed-back-arrow { display: flex; }
+  .expand-icon { display: none; color: #9ca3af; line-height: 1; }
+  .collapsed-back-arrow { display: none; color: #2563eb; cursor: pointer; padding: 4px; border-radius: 4px; }
+  .collapsed-back-arrow:hover { background: #eff6ff; }
+  .back-link { display: flex; align-items: center; gap: 6px; padding: 12px 16px; font-size: 13px; color: #2563eb; cursor: pointer; border-bottom: 1px solid #f3f4f6; }
+  .back-link:hover { background: #f9fafb; }
+  .taxonomy-title { padding: 12px 16px 4px; font-weight: 600; font-size: 13px; }
+  .taxonomy-subtitle { padding: 0 16px 12px; font-size: 11px; color: #9ca3af; }
+  .taxonomy-upload { margin: 8px 16px; background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; width: calc(100% - 32px); justify-content: center; }
+  .taxonomy-upload:hover { background: #1d4ed8; }
+  .taxonomy-tree { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .tree-section { }
+  .tree-row { display: flex; align-items: center; gap: 6px; padding: 5px 16px; font-size: 13px; color: #374151; cursor: pointer; }
+  .tree-row:hover { background: #f9fafb; }
+  .tree-row.active { color: #2563eb; background: #eff6ff; }
+  .tree-row.indent1 { padding-left: 28px; }
+  .tree-row.indent2 { padding-left: 40px; }
+  .tree-row.indent3 { padding-left: 52px; font-size: 12px; }
+  .tree-row.indent3.active { background: #dbeafe; }
+  .tree-children { overflow: hidden; }
+  .tree-children.collapsed { display: none; }
+  .tree-toggle { width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; color: #9ca3af; flex-shrink: 0; font-size: 8px; }
+  .tree-icon { width: 14px; height: 14px; flex-shrink: 0; color: #6b7280; }
+  .comment-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .comment-dot.unread { background: #2563eb; }
+  .comment-dot.read { background: transparent; border: 1.5px solid #2563eb; }
+  /* Fixed two-column grid: [dot col] [chain col] — always same positions */
+  .tree-end { margin-left: auto; display: grid; grid-template-columns: 11px 16px; gap: 4px; align-items: center; flex-shrink: 0; }
+  .tree-collapse-btn { padding: 10px 16px; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; display: flex; gap: 4px; align-items: center; cursor: pointer; }
+
+  /* Main detail area */
+  .detail-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Detail tabs */
+  .detail-tabs { display: flex; align-items: center; gap: 0; border-bottom: 1px solid #e5e7eb; background: #fff; padding: 0 24px; flex-shrink: 0; }
+  .detail-tab { padding: 12px 0; margin-right: 24px; font-size: 14px; color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent; }
+  .detail-tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 500; }
+  .detail-tab:hover:not(.active) { color: #374151; }
+
+  /* Document viewer area */
+  .doc-viewer-area { flex: 1; display: flex; overflow: hidden; position: relative; }
+
+  /* Tab content panels */
+  .tab-panel { display: none; overflow-y: auto; flex-shrink: 0; }
+  .tab-panel.active { display: flex; flex-direction: column; }
+
+  /* Overview panel */
+  .overview-props { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+  .overview-props h3 { font-size: 12px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+  .props-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .prop-row { display: flex; flex-direction: column; gap: 2px; }
+  .prop-label { font-size: 12px; color: #6b7280; }
+  .prop-value { font-size: 13px; font-weight: 500; color: #111827; }
+
+  /* Document preview */
+  .doc-preview-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .doc-preview-bar { display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: #1f2937; color: #fff; flex-shrink: 0; }
+  .doc-icon { font-size: 16px; }
+  .doc-bar-name { font-size: 13px; font-weight: 500; flex: 1; }
+  .doc-bar-size { font-size: 12px; color: #9ca3af; }
+  .status-dropdown { display: flex; align-items: center; gap: 6px; cursor: pointer; position: relative; }
+  .status-dropdown select { background: none; border: none; appearance: none; color: inherit; font-size: 12px; font-weight: 500; cursor: pointer; outline: none; }
+  .page-nav { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9ca3af; }
+  .page-btn { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 16px; padding: 0 4px; }
+  .zoom-ctrl { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #9ca3af; }
+  .fullscreen-btn { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 18px; }
+
+  .doc-preview-content { flex: 1; overflow: hidden; background: #374151; display: flex; flex-direction: row; position: relative; }
+  .doc-preview-scroll { flex: 1; overflow-y: auto; display: flex; justify-content: center; align-items: flex-start; padding: 24px 20px; position: relative; }
+  .view-extracted-btn { position: absolute; top: 12px; right: 12px; background: #2563eb; border: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px; z-index: 20; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+  .view-extracted-btn:hover { background: #1d4ed8; }
+
+  /* IRS-style W-2 form */
+  .w2-doc { background: #fff; width: 660px; flex-shrink: 0; padding: 28px 32px; border-radius: 2px; font-size: 10px; font-family: Arial, sans-serif; color: #111; }
+  .w2-form-title { text-align: center; margin-bottom: 4px; }
+  .w2-form-title h2 { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+  .w2-form-title .w2-subtitle { font-size: 10px; color: #444; }
+  .w2-form-title .w2-year { font-size: 28px; font-weight: 900; color: #111; }
+  .w2-omb { font-size: 8px; color: #666; text-align: right; margin-bottom: 6px; }
+  .w2-grid { border: 1px solid #333; }
+  .w2-row { display: flex; border-bottom: 1px solid #333; }
+  .w2-row:last-child { border-bottom: none; }
+  .w2-box { border-right: 1px solid #333; padding: 3px 5px; display: flex; flex-direction: column; justify-content: flex-start; }
+  .w2-box:last-child { border-right: none; }
+  .w2-box-num { font-size: 8px; color: #555; }
+  .w2-box-label { font-size: 8px; color: #333; line-height: 1.2; }
+  .w2-box-value { font-size: 11px; font-weight: 600; margin-top: 2px; color: #111; }
+  .w2-box-value.highlight-target { border-radius: 2px; }
+  .w2-box-wide { flex: 2; }
+  .w2-box-narrow { flex: 1; }
+  .w2-box-full { flex: 1; }
+  .w2-section-header { background: #111; color: #fff; font-size: 8px; font-weight: 700; padding: 2px 5px; letter-spacing: .5px; }
+  .w2-copy-notice { font-size: 8px; color: #555; text-align: center; margin-top: 8px; line-height: 1.4; }
+  .w2-footer-row { display: flex; gap: 12px; margin-top: 12px; border: 1px solid #333; }
+  .w2-tall { min-height: 40px; }
+
+  /* Extracted fields panel — lives inside the dark doc-preview-content */
+  .doc-preview-scroll { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 20px; position: relative; }
+  .extracted-panel { width: 220px; border-left: 1px solid rgba(255,255,255,.12); background: #fff; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
+  .extracted-panel.hidden { display: none; }
+  .extracted-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #e5e7eb; }
+  .extracted-header h3 { font-size: 14px; font-weight: 600; }
+  .close-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: #6b7280; line-height: 1; }
+  .extracted-fields { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 16px; }
+  .ext-field { display: flex; flex-direction: column; gap: 2px; }
+  .ext-label { font-size: 11px; color: #6b7280; }
+  .ext-value-row { display: flex; align-items: center; justify-content: space-between; }
+  .ext-value { font-size: 14px; font-weight: 600; }
+  .edit-icon { font-size: 14px; color: #9ca3af; cursor: pointer; flex-shrink: 0; }
+  .edit-icon:hover { color: #2563eb; }
+  .ext-value-input { font-size: 14px; font-weight: 600; border: 1px solid #2563eb; border-radius: 4px; padding: 1px 5px; outline: none; width: 100%; background: #fff; box-shadow: 0 0 0 2px #dbeafe; }
+  .confirm-icon { font-size: 15px; color: #16a34a; cursor: pointer; flex-shrink: 0; }
+  .confirm-icon:hover { color: #15803d; }
+  .ext-field { cursor: pointer; border-radius: 6px; padding: 4px 6px; margin: -4px -6px; transition: background .15s; }
+  .ext-field.selected { background: #dbeafe; }
+  .doc-field-highlight { background: #dbeafe; border-radius: 4px; padding: 1px 4px; transition: background .15s; }
+
+  /* Right side quick actions */
+  .right-actions { width: 36px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; flex-shrink: 0; }
+  .action-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; position: relative; }
+  .action-icon:hover { background: #f3f4f6; }
+  .action-icon svg { width: 18px; height: 18px; color: #6b7280; }
+  .action-icon .action-badge { position: absolute; top: 2px; right: 2px; background: #2563eb; color: #fff; border-radius: 9999px; font-size: 9px; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
+
+  /* Conditions & Validation */
+  .cv-panel { display: flex; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  .cv-col { flex: 1; padding: 14px 16px; }
+  .cv-col:first-child { border-right: 1px solid #e5e7eb; }
+  .cv-col h3 { font-size: 11px; font-weight: 500; color: #6b7280; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .4px; }
+  .condition-card { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; margin-bottom: 12px; }
+  .condition-card:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .condition-name { font-size: 13px; font-weight: 500; color: #111827; }
+  .condition-status { display: inline-block; background: #dcfce7; color: #166534; border-radius: 9999px; padding: 2px 8px; font-size: 11px; font-weight: 500; width: fit-content; }
+  .condition-status.pending { background: #fef9c3; color: #854d0e; }
+  .condition-status.needs-docs { background: #fee2e2; color: #dc2626; }
+
+  /* Panel collapsible — clamped at the panel level so all tabs match Overview height */
+  .tab-panel { position: relative; }
+  .tab-panel.clamped { max-height: 120px; overflow: hidden; }
+  .tab-panel.clamped::after { content: ''; position: absolute; bottom: 24px; left: 0; right: 0; height: 36px; background: linear-gradient(transparent, #fff); pointer-events: none; }
+  .view-more-btn { text-align: center; padding: 5px 0 2px; font-size: 12px; color: #2563eb; cursor: pointer; font-weight: 500; }
+  .view-more-btn:hover { text-decoration: underline; }
+  .tab-panel.clamped .view-more-btn { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; z-index: 2; padding: 4px 0 3px; }
+
+  /* Communications */
+  .comm-thread { display: flex; flex-direction: column; gap: 16px; padding: 16px 24px; }
+  .comm-msg { display: flex; gap: 10px; }
+  .comm-avatar { width: 28px; height: 28px; border-radius: 50%; background: #2563eb; color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .comm-avatar.green { background: #16a34a; }
+  .comm-avatar.gray { background: #6b7280; }
+  .comm-body { flex: 1; }
+  .comm-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; }
+  .comm-name { font-size: 13px; font-weight: 600; color: #111827; }
+  .comm-time { font-size: 11px; color: #9ca3af; }
+  .comm-text { font-size: 13px; color: #374151; line-height: 1.5; }
+  .comm-system { font-size: 12px; color: #9ca3af; padding: 2px 0; display: flex; align-items: center; gap: 6px; }
+  .validation-rows { display: flex; flex-direction: column; gap: 8px; }
+  .val-row { display: flex; align-items: center; justify-content: space-between; }
+  .val-label { font-size: 12px; color: #6b7280; }
+  .val-pass { color: #16a34a; font-size: 13px; font-weight: 500; }
+  .manage-link { color: #2563eb; font-size: 11px; cursor: pointer; text-decoration: none; font-weight: 400; }
+
+  /* Communications */
+  .comm-empty { height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #9ca3af; }
+  .comm-empty svg { width: 32px; height: 32px; opacity: .4; }
+
+  /* History */
+  .history-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .hist-col h3 { font-size: 12px; font-weight: 500; color: #6b7280; margin-bottom: 8px; }
+  .activity-list { display: flex; flex-direction: column; gap: 8px; }
+  .activity-item { display: flex; flex-direction: column; gap: 2px; }
+  .act-name { font-size: 13px; font-weight: 500; color: #111827; }
+  .act-time { font-size: 12px; color: #9ca3af; }
+  .act-sub { font-size: 12px; color: #9ca3af; }
+  .version-list { display: flex; flex-direction: column; gap: 10px; }
+  .version-row { display: flex; align-items: center; gap: 10px; }
+  .v-badge { width: 22px; height: 22px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+  .v-badge.current { background: #2563eb; color: #fff; }
+  .v-badge.old { background: #e5e7eb; color: #374151; }
+  .ver-info { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+  .ver-name { font-size: 13px; font-weight: 500; color: #111827; }
+  .ver-time { font-size: 12px; color: #9ca3af; }
+  .ver-action { font-size: 12px; color: #2563eb; cursor: pointer; }
+  .ver-active-tag { font-size: 12px; color: #16a34a; font-weight: 500; }
+
+  /* Bottom bar */
+  .doc-bottom-bar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-top: 1px solid #e5e7eb; background: #fff; flex-shrink: 0; }
+  .tag-pill { background: #f3f4f6; border-radius: 9999px; padding: 3px 10px; font-size: 12px; color: #374151; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; position: relative; }
+  .tag-pill:hover { background: #e5e7eb; }
+  .tag-pill .tag-remove { display: none; font-size: 11px; color: #6b7280; line-height: 1; margin-left: 1px; }
+  .tag-pill.selected { background: #e5e7eb; padding-right: 7px; }
+  .tag-pill.selected .tag-remove { display: inline; }
+  .add-tag { color: #9ca3af; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
+  .tag-input { border: 1px solid #2563eb; border-radius: 9999px; padding: 3px 10px; font-size: 12px; outline: none; width: 90px; box-shadow: 0 0 0 2px #dbeafe; font-family: inherit; }
+  .add-note { color: #6b7280; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .note-popover { display: none; position: absolute; bottom: calc(100% + 8px); left: 0; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.1); padding: 10px; width: 280px; z-index: 200; }
+  .note-popover.open { display: block; }
+  .note-popover textarea { width: 100%; height: 80px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; font-size: 13px; font-family: inherit; resize: none; outline: none; color: #111827; }
+  .note-popover textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #dbeafe; }
+  .note-popover-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+  .note-cancel { font-size: 13px; color: #6b7280; cursor: pointer; padding: 5px 10px; border-radius: 5px; border: 1px solid #e5e7eb; background: #fff; }
+  .note-cancel:hover { background: #f3f4f6; }
+  .note-save { font-size: 13px; color: #fff; cursor: pointer; padding: 5px 12px; border-radius: 5px; border: none; background: #2563eb; font-weight: 500; }
+  .note-save:hover { background: #1d4ed8; }
+  .note-anchor { position: relative; }
+  .bottom-actions { margin-left: auto; position: relative; }
+  .btn-actions { background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .btn-actions:hover { background: #1d4ed8; }
+  .actions-dropdown { display: none; position: absolute; bottom: calc(100% + 6px); right: 0; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.1); min-width: 180px; z-index: 100; overflow: hidden; }
+  .actions-dropdown.open { display: block; }
+  .action-item { padding: 10px 14px; font-size: 13px; color: #111827; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .action-item:hover { background: #f3f4f6; }
+  .action-item.danger { color: #dc2626; }
+  .action-item.danger:hover { background: #fef2f2; }
+  .action-item.success { color: #16a34a; }
+  .action-item.success:hover { background: #f0fdf4; }
+  .action-divider { height: 1px; background: #e5e7eb; margin: 4px 0; }
+
+  /* ===== UPLOAD MODAL ===== */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  .modal-overlay.hidden { display: none; }
+  .modal { background: #fff; border-radius: 12px; width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+  .modal-header h2 { font-size: 18px; font-weight: 600; }
+  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #6b7280; line-height: 1; }
+  .modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .automation-row { display: flex; align-items: center; gap: 12px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; }
+  .auto-icon { width: 32px; height: 32px; background: #eff6ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .auto-text { flex: 1; }
+  .auto-title { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+  .auto-sub { font-size: 12px; color: #6b7280; }
+  .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; cursor: pointer; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-track { position: absolute; inset: 0; background: #e5e7eb; border-radius: 9999px; transition: background .2s; }
+  .toggle input:checked ~ .toggle-track { background: #2563eb; }
+  .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #fff; border-radius: 9999px; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); }
+  .drop-zone { border: 2px dashed #d1d5db; border-radius: 8px; padding: 32px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+  .drop-zone:hover { border-color: #2563eb; background: #f9fafb; }
+  .drop-icon { font-size: 28px; color: #9ca3af; }
+  .drop-text { font-size: 14px; font-weight: 500; color: #374151; }
+  .drop-sub { font-size: 12px; color: #9ca3af; }
+  .file-item { display: flex; align-items: center; gap: 12px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
+  .file-item-icon { font-size: 22px; color: #2563eb; }
+  .file-item-info { flex: 1; }
+  .file-item-name { font-size: 13px; font-weight: 500; }
+  .file-item-size { font-size: 12px; color: #9ca3af; }
+  .file-remove { background: none; border: none; font-size: 18px; color: #9ca3af; cursor: pointer; }
+  .add-more { border: 2px dashed #d1d5db; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+  .add-more:hover { border-color: #2563eb; }
+  .add-more-label { font-size: 13px; color: #374151; }
+  .add-more-link { font-size: 13px; color: #2563eb; }
+  .modal-section-label { font-size: 13px; font-weight: 500; color: #374151; margin-bottom: -8px; }
+  .modal-input { border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px 12px; font-size: 13px; width: 100%; outline: none; }
+  .modal-input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #dbeafe; }
+  .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid #e5e7eb; }
+  .btn-cancel { border: 1px solid #e5e7eb; background: #fff; color: #374151; border-radius: 6px; padding: 8px 20px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .btn-upload-doc { background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 8px 20px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .btn-upload-doc:hover:not(:disabled) { background: #1d4ed8; }
+  .btn-upload-doc:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* Status dropdown in detail bar */
+  .status-select-wrap { position: relative; display: inline-flex; align-items: center; }
+  .status-select-wrap select { border: none; border-radius: 9999px; padding: 2px 24px 2px 10px; font-size: 12px; font-weight: 500; cursor: pointer; appearance: none; outline: none; }
+  .status-select-wrap::after { content: '▾'; position: absolute; right: 8px; pointer-events: none; font-size: 10px; }
+  .status-select-wrap.approved select { background: #dcfce7; color: #166534; }
+  .status-select-wrap.received select { background: #f3f4f6; color: #374151; }
+  .status-select-wrap.under-review select { background: #eff6ff; color: #1d4ed8; }
+  .status-select-wrap.needs-action select { background: #fee2e2; color: #dc2626; }
+  .status-select-wrap.approved::after { color: #166534; }
+  .status-select-wrap.received::after { color: #374151; }
+  .status-select-wrap.under-review::after { color: #1d4ed8; }
+  .status-select-wrap.needs-action::after { color: #dc2626; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-field">
+    <span class="nav-label">Borrower</span>
+    <span class="nav-value">Jim Halpert <span class="badge">+2</span></span>
+  </div>
+  <div class="nav-field">
+    <span class="nav-label">Purpose</span>
+    <span class="nav-value">Purchase</span>
+  </div>
+  <div class="nav-field">
+    <span class="nav-label">Property</span>
+    <span class="nav-value">1725 Slough Ave, Scranton, PA</span>
+  </div>
+  <div class="nav-field">
+    <span class="nav-label">Est. Close Date</span>
+    <span class="nav-value">Apr 15, 2026</span>
+  </div>
+  <div class="nav-field">
+    <span class="nav-label">Loan Amount</span>
+    <span class="nav-value">$520,000</span>
+  </div>
+  <div class="nav-field">
+    <span class="nav-label">Loan Product</span>
+    <span class="nav-value">30-year Fixed</span>
+  </div>
+  <div class="nav-field">
+    <span class="nav-label">Interest Rate</span>
+    <span class="nav-value">6.25%</span>
+  </div>
+  <div class="nav-spacer"></div>
+  <button class="btn-aus">▶ Run AUS</button>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span class="status-label">Loan Status:</span>
+  <span class="status-value">Processing</span>
+  <span class="stage-label">Stage 3/6</span>
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+
+  <!-- LEFT NAV -->
+  <nav class="left-nav">
+
+    <!-- Narrow dark icon strip -->
+    <div class="nav-icon-strip">
+      <div class="nav-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M4 4 L11 12 L4 20" stroke="#4f6ef7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 4 L13 12 L20 20" stroke="#4f6ef7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="nav-strip-icons">
+        <div class="nav-strip-icon active" title="Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="nav-strip-icon" title="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="nav-strip-icon" title="Recent Activity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="nav-strip-icon" title="Launch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="nav-strip-icon" title="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+      </div>
+      <div class="nav-strip-avatar" title="Mike Schmidt">MS</div>
+    </div>
+
+    <!-- White section list -->
+    <div class="nav-section-list">
+      <div class="nav-items">
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Borrower
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Property &amp; Loan
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Income &amp; Employment
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Credit
+          <span class="nav-badge">740</span>
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Assets &amp; Liabilities
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Pricing Scenarios
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7"/><path d="M9 22V12h6v10"/><rect x="3" y="9" width="18" height="13" rx="1"/></svg>
+          Title
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Appraisal
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Insurance
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Fraud
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Third Party Orders
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Review Application
+        </div>
+        <div class="nav-item active" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Documents
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          Closing
+        </div>
+        <div class="nav-item" onclick="navTo(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Funding
+        </div>
+      </div>
+      <div class="nav-collapse">‹ Collapse</div>
+    </div>
+
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- SCREEN: DOCUMENTS LIST -->
+    <div id="screen-list">
+      <div class="list-header">
+        <h1>Documents</h1>
+        <div style="display:flex;align-items:flex-end;gap:0;">
+          <div class="list-tabs" style="flex:1;">
+            <div class="list-tab" id="tab-all" onclick="switchListTab('all')">
+              All Documents <span class="tab-count" id="count-all">12</span>
+            </div>
+            <div class="list-tab active" id="tab-decision" onclick="switchListTab('decision')">
+              Decision Documents <span class="tab-count" id="count-decision">8</span>
+            </div>
+          </div>
+          <button class="upload-btn" onclick="openUpload()">⬆ Upload</button>
+        </div>
+      </div>
+      <div class="list-controls">
+        <span class="result-count" id="result-count">8 results found</span>
+        <input type="text" class="search-input" placeholder="Search..." id="search-input" oninput="filterDocs()">
+        <span class="adv-search">☰ Advanced Search</span>
+        <div class="right-controls">
+          <span class="ctrl-btn" style="color:#374151;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Customize Columns
+          </span>
+        </div>
+      </div>
+      <div id="decision-empty-state" style="display:none; padding: 40px 28px; text-align: center;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:12px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <div style="font-size:14px;font-weight:500;color:#374151;margin-bottom:6px;">No decision documents yet</div>
+        <div style="font-size:13px;color:#9ca3af;max-width:320px;margin:0 auto;line-height:1.5;">Star any document on the <strong style="color:#6b7280;">All Documents</strong> tab to flag it as a decision document — it will appear here for quick review.</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="star-col"></th>
+              <th class="sortable-th" onclick="sortBy('classification')"><span>Classification</span><span class="sort-chevron" id="sort-chevron-classification"></span></th>
+              <th class="sortable-th" onclick="sortBy('name')"><span>Document Name</span><span class="sort-chevron" id="sort-chevron-name"></span></th>
+              <th class="sortable-th" onclick="sortBy('status')"><span>Status</span><span class="sort-chevron" id="sort-chevron-status"></span></th>
+              <th class="sortable-th" onclick="sortBy('version')"><span>Version</span><span class="sort-chevron" id="sort-chevron-version"></span></th>
+              <th class="sortable-th" onclick="sortBy('source')"><span>Source</span><span class="sort-chevron" id="sort-chevron-source"></span></th>
+              <th class="sortable-th" onclick="sortBy('uploadedBy')"><span>Uploaded By</span><span class="sort-chevron" id="sort-chevron-uploadedBy"></span></th>
+              <th class="sortable-th" onclick="sortBy('date')"><span>Upload Date</span><span class="sort-chevron" id="sort-chevron-date"></span></th>
+              <th class="sortable-th" onclick="sortBy('expires')"><span>Expiration</span><span class="sort-chevron" id="sort-chevron-expires"></span></th>
+              <th class="comments-col" title="Comments"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></th>
+              <th class="links-col" title="Linked Conditions"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></th>
+              <th class="kebab-col"></th>
+            </tr>
+          </thead>
+          <tbody id="doc-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SCREEN: DOCUMENT DETAIL -->
+    <div id="screen-detail">
+
+      <!-- Taxonomy Panel -->
+      <div class="taxonomy-panel">
+        <div class="back-link" onclick="goBack()">‹ Back to List</div>
+        <div class="taxonomy-title">Document Taxonomy</div>
+        <div class="taxonomy-subtitle">Browse by category</div>
+        <button class="taxonomy-upload" onclick="openUpload()">⬆ Upload</button>
+        <div class="taxonomy-tree">
+          <div class="tree-row indent1" onclick="toggleTree(this)">
+            <span class="tree-toggle">▼</span>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            Application
+          </div>
+          <div class="tree-children">
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Loan Application 1003
+              <span class="tree-end"><span></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Borrower Authorization
+              <span class="tree-end"><span class="comment-dot read"></span></span>
+            </div>
+          </div>
+
+          <div class="tree-row indent1" onclick="toggleTree(this)">
+            <span class="tree-toggle">▼</span>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            Income
+          </div>
+          <div class="tree-children">
+            <div class="tree-row indent2" onclick="toggleTree(this)">
+              <span class="tree-toggle">▼</span>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Paystubs
+            </div>
+            <div class="tree-children">
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Pay Stub - Jim Halpert (Jan)
+                <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+              </div>
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Pay Stub - Alice Firstimer (Dec)
+                <span class="tree-end"></span>
+              </div>
+            </div>
+
+            <div class="tree-row indent2" onclick="toggleTree(this)">
+              <span class="tree-toggle">▼</span>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <span style="color:#2563eb;font-weight:500;">W-2 Forms</span>
+            </div>
+            <div class="tree-children">
+              <div class="tree-row indent3 active">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                W2 - Alice Firstimer - Costco -
+                <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+              </div>
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                W2 - Johnny Firstimer - Walma…
+                <span class="tree-end"><span class="comment-dot read"></span></span>
+              </div>
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                W2 - 2024
+                <span class="tree-end"></span>
+              </div>
+            </div>
+
+            <div class="tree-row indent2" onclick="toggleTree(this)">
+              <span class="tree-toggle">▼</span>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Tax Returns
+            </div>
+            <div class="tree-children">
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Tax Return 2025 - Joint Filing
+                <span class="tree-end"><span class="comment-dot read"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+              </div>
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Tax Return 2024
+                <span class="tree-end"></span>
+              </div>
+            </div>
+
+            <div class="tree-row indent2" onclick="toggleTree(this)">
+              <span class="tree-toggle">▼</span>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Employment Verification
+            </div>
+            <div class="tree-children">
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Employment Verification Letter
+                <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+              </div>
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Offer Letter - Jim Halpert
+                <span class="tree-end"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-row indent1" onclick="toggleTree(this)">
+            <span class="tree-toggle">▼</span>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            Assets
+          </div>
+          <div class="tree-children">
+            <div class="tree-row indent2" onclick="toggleTree(this)">
+              <span class="tree-toggle">▼</span>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Bank Statements
+            </div>
+            <div class="tree-children">
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Chase ****4532 - Jan 2026
+                <span class="tree-end"><span class="comment-dot read"></span></span>
+              </div>
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Chase ****4532 - Dec 2025
+                <span class="tree-end"></span>
+              </div>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Retirement Accounts
+              <span class="tree-end"></span>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Investment Accounts
+              <span class="tree-end"></span>
+            </div>
+            <div class="tree-row indent2" onclick="toggleTree(this)">
+              <span class="tree-toggle">▼</span>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Gift Letters
+            </div>
+            <div class="tree-children">
+              <div class="tree-row indent3">
+                <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Gift Letter - Pam Halpert
+                <span class="tree-end"><span class="comment-dot unread"></span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-row indent1" onclick="toggleTree(this)">
+            <span class="tree-toggle">▼</span>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            Credit
+          </div>
+          <div class="tree-children">
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Credit Report - Jim Halpert
+              <span class="tree-end"><span></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Credit Explanation Letter
+              <span class="tree-end"><span class="comment-dot read"></span></span>
+            </div>
+          </div>
+
+          <div class="tree-row indent1" onclick="toggleTree(this)">
+            <span class="tree-toggle">▼</span>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            Property
+          </div>
+          <div class="tree-children">
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Property Appraisal Report
+              <span class="tree-end"><span class="comment-dot read"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Flood Certification
+              <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Homeowners Insurance Decl.
+              <span class="tree-end"></span>
+            </div>
+            <div class="tree-row indent2">
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              Title Commitment
+              <span class="tree-end"><span></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="tree-collapse-btn" id="taxonomy-collapse-btn" onclick="toggleTaxonomy()">
+          <!-- blue back arrow — top of collapsed strip -->
+          <span class="collapsed-back-arrow" onclick="event.stopPropagation();backToList()" title="Back to list">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </span>
+          <!-- chevrons pointing inward = close/collapse (shown when expanded) -->
+          <span class="collapse-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+          </span>
+          <span style="margin-left:auto;" class="collapse-label"><span id="expand-all-btn" onclick="event.stopPropagation();toggleExpandAll()" style="color:#2563eb;cursor:pointer;">Expand All</span></span>
+          <!-- chevrons pointing outward = open/expand (shown at bottom of collapsed strip) -->
+          <span class="expand-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Detail Main -->
+      <div class="detail-main">
+        <!-- Tabs -->
+        <div class="detail-tabs">
+          <div class="detail-tab active" id="dtab-overview" onclick="switchDetailTab('overview')">Overview</div>
+          <div class="detail-tab" id="dtab-conditions" onclick="switchDetailTab('conditions')">Conditions <span class="tab-count" style="background:#e5e7eb;color:#374151;border-radius:9999px;font-size:11px;padding:1px 6px;margin-left:4px;" id="conditions-badge">3</span></div>
+          <div class="detail-tab" id="dtab-communications" onclick="switchDetailTab('communications')">Communications</div>
+          <div class="detail-tab" id="dtab-history" onclick="switchDetailTab('history')">History</div>
+        </div>
+
+        <!-- Doc viewer + extracted panel -->
+        <div class="doc-viewer-area">
+
+          <!-- Tab panels (left of extracted) -->
+          <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+
+            <!-- OVERVIEW TAB PROPS (shown above preview only on Overview tab) -->
+            <div id="overview-props-section" class="overview-props" style="flex-shrink:0;">
+              <div class="props-grid">
+                <div class="prop-row">
+                  <span class="prop-label">Type</span>
+                  <span class="prop-value">W-2 Form</span>
+                </div>
+                <div class="prop-row">
+                  <span class="prop-label">Source</span>
+                  <span class="prop-value">Borrower Portal</span>
+                </div>
+                <div class="prop-row">
+                  <span class="prop-label">Uploaded by</span>
+                  <span class="prop-value">Sarah Chen</span>
+                </div>
+                <div class="prop-row">
+                  <span class="prop-label">Uploaded</span>
+                  <span class="prop-value">Jan 18, 2026</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL: Conditions -->
+            <div id="panel-conditions" class="tab-panel" style="padding:16px 24px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <span style="font-size:11px;font-weight:500;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;">Conditions</span>
+                <a class="manage-link">Manage</a>
+              </div>
+              <div id="collapsible-conditions">
+                <div class="condition-card">
+                  <div class="condition-name">Income Verification — 2 Years W-2</div>
+                  <div class="condition-status">Satisfied</div>
+                </div>
+                <div class="condition-card">
+                  <div class="condition-name">Employment History — 2 Year Continuous</div>
+                  <div class="condition-status pending">Pending</div>
+                </div>
+                <div class="condition-card">
+                  <div class="condition-name">Proof of Funds — Down Payment &amp; Reserves</div>
+                  <div class="condition-status needs-docs">Needs Docs</div>
+                </div>
+              </div>
+              <div class="view-more-btn" id="vmb-conditions" onclick="togglePanelExpand('conditions')">View more ↓</div>
+            </div>
+
+            <!-- PANEL: Communications -->
+            <div id="panel-communications" class="tab-panel" style="padding:0;">
+              <div id="collapsible-communications">
+                <div class="comm-thread">
+                  <div class="comm-msg">
+                    <div class="comm-avatar">SC</div>
+                    <div class="comm-body">
+                      <div class="comm-header"><span class="comm-name">Sarah Chen</span><span class="comm-time">Jan 18, 9:22 AM</span></div>
+                      <div class="comm-text">Please verify the employer name matches exactly with state business records before approving this W-2.</div>
+                    </div>
+                  </div>
+                  <div class="comm-msg">
+                    <div class="comm-avatar green">MR</div>
+                    <div class="comm-body">
+                      <div class="comm-header"><span class="comm-name">Mike Ross</span><span class="comm-time">Jan 18, 10:05 AM</span></div>
+                      <div class="comm-text">Confirmed — employer name matches state database exactly. Costco Wholesale Corp. Approved on our end.</div>
+                    </div>
+                  </div>
+                  <div class="comm-system">⚙ Document status changed to <strong>Under Review</strong> by Sarah Chen · Jan 18, 10:08 AM</div>
+                  <div class="comm-msg">
+                    <div class="comm-avatar">SC</div>
+                    <div class="comm-body">
+                      <div class="comm-header"><span class="comm-name">Sarah Chen</span><span class="comm-time">Jan 18, 11:30 AM</span></div>
+                      <div class="comm-text">Flagging for secondary review — address on W-2 doesn't match current address on file. Borrower may have moved during tax year.</div>
+                    </div>
+                  </div>
+                  <div class="comm-msg">
+                    <div class="comm-avatar gray">AB</div>
+                    <div class="comm-body">
+                      <div class="comm-header"><span class="comm-name">Alice Borrower</span><span class="comm-time">Jan 19, 8:45 AM</span></div>
+                      <div class="comm-text">Hi, I moved in March 2025. The W-2 shows my old address. Is there anything else you need from me to verify?</div>
+                    </div>
+                  </div>
+                  <div class="comm-system">⚙ Version 2 uploaded by Sarah Chen · Jan 18, 9:16 AM</div>
+                  <div class="comm-msg">
+                    <div class="comm-avatar">SC</div>
+                    <div class="comm-body">
+                      <div class="comm-header"><span class="comm-name">Sarah Chen</span><span class="comm-time">Jan 19, 9:10 AM</span></div>
+                      <div class="comm-text">Thanks Alice — that explains it. I've noted the address change in the file. No further action needed from you on this one.</div>
+                    </div>
+                  </div>
+                  <div class="comm-system">⚙ Document status changed to <strong>Approved</strong> by Sarah Chen · Jan 19, 9:12 AM</div>
+                </div>
+              </div>
+              <div class="view-more-btn" id="vmb-communications" onclick="togglePanelExpand('communications')">View more ↓</div>
+            </div>
+
+            <!-- PANEL: History -->
+            <div id="panel-history" class="tab-panel" style="padding:20px 24px; overflow:visible;">
+              <div id="collapsible-history">
+              <div class="history-panel" style="padding:0;">
+                <div class="hist-col">
+                  <h3>Activity</h3>
+                  <div class="activity-list">
+                    <div class="activity-item active">
+                      <span class="act-name">• Uploaded</span>
+                      <span class="act-time">4-17-26 9:16 AM</span>
+                    </div>
+                    <div class="activity-item">
+                      <span class="act-name" style="color:#9ca3af;">• Awaiting Review</span>
+                      <span class="act-sub">Pending</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="hist-col">
+                  <h3>Version History</h3>
+                  <div class="version-list">
+                    <div class="version-row">
+                      <span class="v-badge current">v2</span>
+                      <div class="ver-info">
+                        <span class="ver-name">Current · 4-17-26 9:16 AM</span>
+                      </div>
+                      <span class="ver-active-tag">Active</span>
+                    </div>
+                    <div class="version-row">
+                      <span class="v-badge old">v1</span>
+                      <div class="ver-info">
+                        <span class="ver-name">Initial upload · 4-15-26 2:42 PM</span>
+                      </div>
+                      <span class="ver-action">Restore</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div><!-- end panel-collapsible -->
+              <div class="view-more-btn" id="vmb-history" onclick="togglePanelExpand('history')" style="display:none;">View more ↓</div>
+            </div>
+
+            <!-- DOCUMENT PREVIEW (always visible below active panel or on overview) -->
+            <div class="doc-preview-wrap">
+              <div class="doc-preview-bar">
+                <span class="doc-icon">📄</span>
+                <span class="doc-bar-name">W2 - Alice Firstimer - Costco - 2025</span>
+                <span class="doc-bar-size">128 KB</span>
+                <div class="status-select-wrap" id="status-wrap" style="margin:0 8px;">
+                  <select id="status-select" onchange="updateStatus(this.value)">
+                    <option value="approved" selected>Approved</option>
+                    <option value="received">Received</option>
+                    <option value="under-review">Under Review</option>
+                    <option value="needs-action">Needs Action</option>
+                  </select>
+                </div>
+                <div class="page-nav">
+                  <button class="page-btn">‹</button>
+                  Page 1 of 1
+                  <button class="page-btn">›</button>
+                </div>
+                <div class="zoom-ctrl" style="margin-left:12px;">
+                  <button class="page-btn">−</button>
+                  100%
+                  <button class="page-btn">+</button>
+                </div>
+                <button class="fullscreen-btn" style="margin-left:8px;">⤢</button>
+              </div>
+              <div class="doc-preview-content">
+                <button class="view-extracted-btn" id="view-extracted-btn" onclick="toggleExtracted()" style="display:none;">
+                  ⊞ View Extracted Data
+                </button>
+                <div class="doc-preview-scroll">
+                <div class="w2-doc">
+                  <div class="w2-omb">OMB No. 1545-0008</div>
+                  <div class="w2-form-title">
+                    <div class="w2-year">2025</div>
+                    <h2>Form W-2</h2>
+                    <div class="w2-subtitle">Wage and Tax Statement</div>
+                    <div class="w2-subtitle" style="margin-top:2px;">Department of the Treasury — Internal Revenue Service</div>
+                  </div>
+
+                  <div class="w2-grid" style="margin-top:12px;">
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide">
+                        <span class="w2-box-num">a</span><span class="w2-box-label">Employee's social security number</span>
+                        <span class="w2-box-value" data-field="ssn">***-**-1234</span>
+                      </div>
+                      <div class="w2-box w2-box-wide">
+                        <span class="w2-box-num">b</span><span class="w2-box-label">Employer identification number (EIN)</span>
+                        <span class="w2-box-value" data-field="ein">12-3456789</span>
+                      </div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-full w2-tall">
+                        <span class="w2-box-num">c</span><span class="w2-box-label">Employer's name, address, and ZIP code</span>
+                        <span class="w2-box-value" style="font-weight:400;line-height:1.7;">ABC Corporation<br>123 Business Ave<br>New York, NY 10001</span>
+                      </div>
+                      <div class="w2-box w2-box-wide">
+                        <span class="w2-box-num">d</span><span class="w2-box-label">Control number</span>
+                        <span class="w2-box-value" style="color:#aaa;">—</span>
+                      </div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-full w2-tall">
+                        <span class="w2-box-num">e</span><span class="w2-box-label">Employee's first name and initial</span>
+                        <span class="w2-box-value" style="font-weight:400;">Alice J.</span>
+                      </div>
+                      <div class="w2-box w2-box-full w2-tall">
+                        <span class="w2-box-label">Last name</span>
+                        <span class="w2-box-value" style="font-weight:400;">Firstimer</span>
+                      </div>
+                      <div class="w2-box" style="flex:0 0 38px;"><span class="w2-box-label">Suf.</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-full w2-tall">
+                        <span class="w2-box-num">f</span><span class="w2-box-label">Employee's address and ZIP code</span>
+                        <span class="w2-box-value" style="font-weight:400;line-height:1.7;">456 Oak Street<br>Brooklyn, NY 11201</span>
+                      </div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">1</span><span class="w2-box-label">Wages, tips, other compensation</span><span class="w2-box-value" data-field="wages">$85,000.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">2</span><span class="w2-box-label">Federal income tax withheld</span><span class="w2-box-value" data-field="fed-tax">$12,450.00</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">3</span><span class="w2-box-label">Social security wages</span><span class="w2-box-value">$85,000.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">4</span><span class="w2-box-label">Social security tax withheld</span><span class="w2-box-value">$5,270.00</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">5</span><span class="w2-box-label">Medicare wages and tips</span><span class="w2-box-value">$85,000.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">6</span><span class="w2-box-label">Medicare tax withheld</span><span class="w2-box-value">$1,232.50</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">7</span><span class="w2-box-label">Social security tips</span><span class="w2-box-value" style="color:#aaa;">—</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">8</span><span class="w2-box-label">Allocated tips</span><span class="w2-box-value" style="color:#aaa;">—</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">9</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">10</span><span class="w2-box-label">Dependent care benefits</span><span class="w2-box-value" style="color:#aaa;">—</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">11</span><span class="w2-box-label">Nonqualified plans</span><span class="w2-box-value" style="color:#aaa;">—</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">12a</span><span class="w2-box-label">See instructions for box 12</span><span class="w2-box-value" style="color:#aaa;font-size:9px;">Code ___</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide" style="min-height:36px;"><span class="w2-box-num">13</span><span class="w2-box-label">Statutory employee ☐&nbsp; Retirement plan ☐&nbsp; Third-party sick pay ☐</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">12b</span><span class="w2-box-value" style="color:#aaa;font-size:9px;">Code ___</span></div>
+                    </div>
+                    <div class="w2-row" style="min-height:44px;">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">14</span><span class="w2-box-label">Other</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">12c</span><span class="w2-box-value" style="color:#aaa;font-size:9px;">Code ___</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box w2-box-wide"><span class="w2-box-label" style="color:#aaa;">(Reserved)</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">12d</span><span class="w2-box-value" style="color:#aaa;font-size:9px;">Code ___</span></div>
+                    </div>
+                    <div class="w2-row">
+                      <div class="w2-box" style="flex:0 0 50px;"><span class="w2-box-num">15</span><span class="w2-box-label">State</span><span class="w2-box-value">NY</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-label">Employer's state ID</span><span class="w2-box-value">NY-987654</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">16</span><span class="w2-box-label">State wages, tips</span><span class="w2-box-value">$85,000.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">17</span><span class="w2-box-label">State income tax</span><span class="w2-box-value">$5,950.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">18</span><span class="w2-box-label">Local wages, tips</span><span class="w2-box-value">$85,000.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">19</span><span class="w2-box-label">Local income tax</span><span class="w2-box-value">$3,230.00</span></div>
+                      <div class="w2-box w2-box-wide"><span class="w2-box-num">20</span><span class="w2-box-label">Locality name</span><span class="w2-box-value">NYC</span></div>
+                    </div>
+                  </div>
+
+                  <div class="w2-copy-notice">
+                    <strong>Copy B — To Be Filed With Employee's FEDERAL Tax Return.</strong><br>
+                    This information is being furnished to the Internal Revenue Service. If you are required to file a tax return, a negligence penalty or other sanction may be imposed on you if this income is taxable and you fail to report it.
+                  </div>
+
+                  <div style="margin-top:32px;border-top:2px dashed #bbb;padding-top:24px;">
+                    <div class="w2-omb" style="font-size:9px;color:#888;">Copy C — For Employee's Records</div>
+                    <div class="w2-grid" style="margin-top:8px;">
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">a</span><span class="w2-box-label">Employee's social security number</span><span class="w2-box-value">***-**-1234</span></div>
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">b</span><span class="w2-box-label">Employer identification number (EIN)</span><span class="w2-box-value">12-3456789</span></div>
+                      </div>
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-full w2-tall"><span class="w2-box-num">c</span><span class="w2-box-label">Employer's name, address, and ZIP code</span><span class="w2-box-value" style="font-weight:400;line-height:1.7;">ABC Corporation<br>123 Business Ave<br>New York, NY 10001</span></div>
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">d</span><span class="w2-box-label">Control number</span></div>
+                      </div>
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-full w2-tall"><span class="w2-box-num">e f</span><span class="w2-box-label">Employee's name and address</span><span class="w2-box-value" style="font-weight:400;line-height:1.7;">Alice J. Firstimer<br>456 Oak Street, Brooklyn, NY 11201</span></div>
+                      </div>
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">1</span><span class="w2-box-label">Wages, tips, other compensation</span><span class="w2-box-value">$85,000.00</span></div>
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">2</span><span class="w2-box-label">Federal income tax withheld</span><span class="w2-box-value">$12,450.00</span></div>
+                      </div>
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">3</span><span class="w2-box-label">Social security wages</span><span class="w2-box-value">$85,000.00</span></div>
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">4</span><span class="w2-box-label">Social security tax withheld</span><span class="w2-box-value">$5,270.00</span></div>
+                      </div>
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">5</span><span class="w2-box-label">Medicare wages and tips</span><span class="w2-box-value">$85,000.00</span></div>
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">6</span><span class="w2-box-label">Medicare tax withheld</span><span class="w2-box-value">$1,232.50</span></div>
+                      </div>
+                      <div class="w2-row">
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">16</span><span class="w2-box-label">State wages</span><span class="w2-box-value">$85,000.00</span></div>
+                        <div class="w2-box w2-box-wide"><span class="w2-box-num">17</span><span class="w2-box-label">State income tax</span><span class="w2-box-value">$5,950.00</span></div>
+                      </div>
+                    </div>
+                    <div class="w2-copy-notice" style="margin-top:10px;">
+                      <strong>Copy C — For Employee's Records.</strong><br>
+                      Keep this copy for your records. You may need it to prepare your state or local income tax return.
+                    </div>
+                  </div>
+                </div>
+                </div><!-- end doc-preview-scroll -->
+
+                <!-- EXTRACTED FIELDS PANEL (inside dark preview area) -->
+                <div class="extracted-panel" id="extracted-panel">
+                  <div class="extracted-header">
+                    <h3>Extracted Fields</h3>
+                    <button class="close-btn" onclick="toggleExtracted()">×</button>
+                  </div>
+                  <div class="extracted-fields">
+                    <div class="ext-field" data-field="ssn" onclick="selectField('ssn')">
+                      <span class="ext-label">Employee SSN</span>
+                      <div class="ext-value-row"><span class="ext-value">***-**-1234</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
+                    </div>
+                    <div class="ext-field" data-field="ein" onclick="selectField('ein')">
+                      <span class="ext-label">Employer EIN</span>
+                      <div class="ext-value-row"><span class="ext-value">12-3456789</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
+                    </div>
+                    <div class="ext-field" data-field="wages" onclick="selectField('wages')">
+                      <span class="ext-label">Wages, tips, other comp</span>
+                      <div class="ext-value-row"><span class="ext-value">$85,000.00</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
+                    </div>
+                    <div class="ext-field" data-field="fed-tax" onclick="selectField('fed-tax')">
+                      <span class="ext-label">Federal income tax withheld</span>
+                      <div class="ext-value-row"><span class="ext-value">$12,450.00</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
+                    </div>
+                  </div><!-- end extracted-fields -->
+                </div><!-- end extracted-panel -->
+
+              </div><!-- end doc-preview-content -->
+            </div><!-- end doc-preview-wrap -->
+
+          </div><!-- end left column -->
+
+          <!-- right-actions removed; now part of global right sidebar -->
+
+        </div><!-- end doc-viewer-area -->
+
+        <!-- BOTTOM ACTION BAR -->
+        <div class="doc-bottom-bar">
+          <span class="tag-pill" onclick="selectTag(this)">Alice Firstimer<span class="tag-remove" onclick="event.stopPropagation();removeTag(this)">✕</span></span>
+          <span class="tag-pill" onclick="selectTag(this)">Costco<span class="tag-remove" onclick="event.stopPropagation();removeTag(this)">✕</span></span>
+          <span class="tag-pill" onclick="selectTag(this)">2025<span class="tag-remove" onclick="event.stopPropagation();removeTag(this)">✕</span></span>
+          <span class="tag-pill" style="border:1px solid #e5e7eb;background:#fff;" onclick="selectTag(this)">v2<span class="tag-remove" onclick="event.stopPropagation();removeTag(this)">✕</span></span>
+          <span class="add-tag" id="add-tag-btn" onclick="showTagInput()">+ Add tag</span>
+          <input type="text" class="tag-input" id="tag-input" placeholder="New tag…" style="display:none;" onkeydown="handleTagInput(event)" onblur="cancelTagInput()">
+          <span style="margin-left:16px;" class="note-anchor">
+            <span class="add-note" onclick="toggleNotePopover(event)">💬 Add Note</span>
+            <div class="note-popover" id="note-popover">
+              <textarea id="note-textarea" placeholder="Add a note for this document…"></textarea>
+              <div class="note-popover-footer">
+                <button class="note-cancel" onclick="closeNotePopover()">Cancel</button>
+                <button class="note-save" onclick="saveNote()">Save Note</button>
+              </div>
+            </div>
+          </span>
+          <div class="bottom-actions">
+            <button class="btn-actions" onclick="toggleActionsMenu(event)">Actions ▾</button>
+            <div class="actions-dropdown" id="actions-dropdown">
+              <div class="action-item success" onclick="handleApprove();closeActionsMenu()">✓ Approve</div>
+              <div class="action-item" onclick="closeActionsMenu()">⚑ Flag for Review</div>
+              <div class="action-item" onclick="closeActionsMenu()">↩ Request Revision</div>
+              <div class="action-divider"></div>
+              <div class="action-item" onclick="closeActionsMenu()">📋 Add to Condition</div>
+              <div class="action-divider"></div>
+              <div class="action-item danger" onclick="closeActionsMenu()">✕ Reject</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end detail-main -->
+
+    </div><!-- end screen-detail -->
+
+  </div><!-- end main -->
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right-sidebar">
+
+    <!-- Collapsible Tasks Panel -->
+    <div class="right-panel-wrap" id="right-panel-wrap">
+      <div class="right-panel-header">
+        <span class="right-panel-title">Tasks</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer;" onclick="collapseRightPanel()" title="Collapse"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="right-panel-body">
+
+        <!-- DOCUMENTS tasks -->
+        <div class="tasks-group">
+          <div class="tasks-group-label">Documents</div>
+          <div class="task-card">
+            <div class="task-card-title">Upload W-2 forms (2023–2024)</div>
+            <div class="task-card-desc">Request and upload W-2 tax forms for the past two years from the borrower.</div>
+            <div class="task-card-footer">
+              <span class="task-card-due today">Due: Today</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- OTHER tasks -->
+        <div class="tasks-group">
+          <div class="tasks-group-label">Other Tasks</div>
+          <div class="task-card">
+            <div class="task-card-title">Verify employment for Jim Halpert</div>
+            <div class="task-card-desc">Contact Dunder Mifflin Paper Company to verify employment status and income.</div>
+            <div class="task-card-footer">
+              <span class="task-card-tag">Income &amp; Employment</span>
+              <span class="task-card-due today">Due: Today</span>
+            </div>
+          </div>
+          <div class="task-card">
+            <div class="task-card-title">Review appraisal report</div>
+            <div class="task-card-desc">Review the property appraisal report and ensure the value meets loan requirements.</div>
+            <div class="task-card-footer">
+              <span class="task-card-tag">Property &amp; Loan</span>
+              <span class="task-card-due">Due: Tomorrow</span>
+            </div>
+          </div>
+          <div class="task-card">
+            <div class="task-card-title">Obtain homeowners insurance quote</div>
+            <div class="task-card-desc">Borrower must obtain homeowners insurance quote for the subject property.</div>
+            <div class="task-card-footer">
+              <span class="task-card-tag">Property &amp; Loan</span>
+              <span class="task-card-due">Due: 2 days</span>
+            </div>
+          </div>
+          <div class="task-card">
+            <div class="task-card-title">Complete title search</div>
+            <div class="task-card-desc">Order and review full title search for 1725 Slough Ave, Scranton, PA.</div>
+            <div class="task-card-footer">
+              <span class="task-card-tag">Title</span>
+              <span class="task-card-due">Due: 3 days</span>
+            </div>
+          </div>
+          <div class="task-card">
+            <div class="task-card-title">Request bank statements (last 2 months)</div>
+            <div class="task-card-desc">Collect two most recent bank statements from all active accounts.</div>
+            <div class="task-card-footer">
+              <span class="task-card-tag">Assets &amp; Liabilities</span>
+              <span class="task-card-due">Due: 4 days</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end right-panel-body -->
+
+      <!-- Demo Stage -->
+      <div class="demo-stage-section">
+        <div class="demo-stage-header">
+          <span style="opacity:.5;font-size:14px;letter-spacing:2px;">⠿</span> Demo Stage
+        </div>
+        <div class="demo-stage-tabs">
+          <button class="demo-stage-tab" onclick="setDemoStage(this)">Sales</button>
+          <button class="demo-stage-tab active" onclick="setDemoStage(this)">Processing</button>
+          <button class="demo-stage-tab" onclick="setDemoStage(this)">Underwriting</button>
+          <button class="demo-stage-tab" onclick="setDemoStage(this)">All</button>
+        </div>
+      </div>
+
+    </div><!-- end right-panel-wrap -->
+
+    <!-- Vertical icon strip — visible only when panel is collapsed -->
+    <div class="right-icon-strip hidden" id="right-icon-strip">
+      <div class="right-tab-icon" title="Contact" onclick="openRightPanel('contact')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="right-tab-label">Contact</span>
+      </div>
+      <div class="right-tab-icon" title="Follow Up" onclick="openRightPanel('followup')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="right-tab-label">Follow Up</span>
+      </div>
+      <div class="right-tab-icon active" id="right-tab-tasks" title="Tasks" onclick="openRightPanel('tasks')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="right-tab-badge">3</span>
+        <span class="right-tab-label">Tasks</span>
+      </div>
+      <div class="right-tab-icon" title="Team" onclick="openRightPanel('team')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="right-tab-label">Team</span>
+      </div>
+      <div class="right-tab-icon" title="Notes" onclick="openRightPanel('notes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span class="right-tab-label">Notes</span>
+      </div>
+      <div class="right-tab-spacer"></div>
+      <div class="right-tab-icon right-tab-ai" title="AI Assistant" onclick="openRightPanel('ai')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="right-tab-label" style="color:#7c3aed;">AI Assistant</span>
+      </div>
+    </div>
+
+  </div><!-- end right-sidebar -->
+
+</div><!-- end app-body -->
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay hidden" id="upload-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Upload Document</h2>
+      <button class="modal-close" onclick="closeUpload()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="automation-row">
+        <div class="auto-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="auto-text">
+          <div class="auto-title">Doc Automation <span style="color:#9ca3af;font-size:12px;">ℹ</span></div>
+          <div class="auto-sub" id="auto-sub-text">Auto-classify and extract fields</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" checked id="auto-toggle" onchange="toggleAutomation()">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+
+      <!-- Manual classification fields (hidden when automation on) -->
+      <div id="manual-fields" style="display:none;">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <div class="modal-section-label" style="margin-bottom:6px;">Classification</div>
+            <input type="text" class="modal-input" placeholder="">
+          </div>
+          <div>
+            <div class="modal-section-label" style="margin-bottom:6px;">Tags (comma separated)</div>
+            <input type="text" class="modal-input" placeholder="e.g., income, employment">
+          </div>
+        </div>
+      </div>
+
+      <!-- Drop zone or file preview -->
+      <div id="drop-zone-empty" class="drop-zone" onclick="simulateFilePick()">
+        <span class="drop-icon">⬆</span>
+        <span class="drop-text">Click to browse or drag and drop</span>
+        <span class="drop-sub">PDF, JPG, PNG up to 10MB</span>
+      </div>
+
+      <div id="file-selected" style="display:none;flex-direction:column;gap:12px;">
+        <div class="file-item">
+          <span class="file-item-icon">📄</span>
+          <div class="file-item-info">
+            <div class="file-item-name">sample-document.pdf</div>
+            <div class="file-item-size">2.4 MB</div>
+          </div>
+          <button class="file-remove" onclick="removeFile()">×</button>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:#374151;">Add More Documents</div>
+        <div class="add-more" onclick="simulateFilePick()">
+          <span class="drop-icon" style="font-size:20px;">⬆</span>
+          <span class="add-more-label">Drag &amp; drop files here</span>
+          <span>or <span class="add-more-link">browse</span> to upload</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeUpload()">Cancel</button>
+      <button class="btn-upload-doc" id="upload-doc-btn" disabled onclick="doUpload()">Upload Document</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const allDocs = [
+  { id:1, star:true,  classification:'Flood Cert',             name:'Flood Certification',                          status:'approved',     version:'v1', source:'Borrower Portal', uploadedBy:'Mike Ross',  date:'Jan 26', expires:'Jan 26, 2027', decision:true,  linked:true,  comment:'unread', commentCount:2, comments:[{author:'Sarah Chen',text:'Confirm flood zone A coverage meets lender minimum.'},{author:'Mike Ross',text:'Zone confirmed — attached cert is current.'}], conditions:['Flood Insurance Requirement'] },
+  { id:2, star:true,  classification:'Appraisal',              name:'Property Appraisal Report',                    status:'received',     version:'v1', source:'Vendor',          uploadedBy:'Mike Ross',  date:'Jan 25', expires:'Jul 25, 2026', decision:true,  linked:false, comment:'read',   commentCount:1, comments:[{author:'Sarah Chen',text:'Comparable sales on page 4 need secondary review.'}] },
+  { id:3, star:false, classification:'Insurance',              name:'Homeowners Insurance Declaration',             status:'received',     version:'v1', source:'Borrower Portal', uploadedBy:'Sarah Chen', date:'Jan 24', expires:'Jan 24, 2027', decision:false, linked:false, comment:null,     commentCount:0 },
+  { id:4, star:true,  classification:'Title Document',         name:'Title Commitment',                             status:'under-review', version:'v1', source:'Vendor',          uploadedBy:'Mike Ross',  date:'Jan 23', expires:'Apr 23, 2026', decision:true,  linked:true,  comment:'unread', commentCount:3, comments:[{author:'Mike Ross',text:'Outstanding lien from 2022 — needs resolution before close.'},{author:'Sarah Chen',text:'Borrower confirmed lien will be paid at settlement.'},{author:'Mike Ross',text:'Title co. updated — lien payoff confirmed.'}], conditions:['Title Insurance','Clear Title Requirement'] },
+  { id:5, star:true,  classification:'Tax Return',             name:'Tax Return 2025 - Joint Filing',               status:'needs-action', version:'v1', source:'Borrower Portal', uploadedBy:'Mike Ross',  date:'Jan 22', expires:'Jan 22, 2028', decision:true,  linked:true,  comment:'read',   commentCount:1, comments:[{author:'Sarah Chen',text:'Schedule C income not consistent with prior year — flag for UW.'}], conditions:['Income Verification — 2 Years W-2'] },
+  { id:6, star:false, classification:'Gift Letter',            name:'Gift Letter - Pam Halpert',                    status:'needs-action', version:'v1', source:'Borrower Portal', uploadedBy:'Sarah Chen', date:'Jan 21', expires:'Apr 21, 2026', decision:false, linked:false, comment:'unread', commentCount:2, comments:[{author:'Mike Ross',text:'Gift donor relationship not documented — need bank statement.'},{author:'Sarah Chen',text:'Requested additional documentation from borrower.'}] },
+  { id:7, star:true,  classification:'Bank Statement',         name:'Bank Statement - Chase ****4532 (Jan 2026)',   status:'under-review', version:'v1', source:'Borrower Portal', uploadedBy:'Mike Ross',  date:'Jan 20', expires:'Mar 20, 2026', decision:true,  linked:false, comment:null,     commentCount:0 },
+  { id:8, star:true,  classification:'Employment Verification',name:'Employment Verification Letter',               status:'under-review', version:'v1', source:'Third Party',     uploadedBy:'Sarah Chen', date:'Jan 19', expires:'Jun 19, 2026', decision:true,  linked:true,  comment:'read',   commentCount:1, comments:[{author:'Mike Ross',text:'Start date on letter is 6 months off — verify with employer.'}], conditions:['Employment History — 2 Year Continuous'] },
+  { id:9, star:true,  classification:'W-2 Form',               name:'W2 - Alice Firstimer - Costco - 2025',        status:'approved',     version:'v2', source:'Borrower Portal', uploadedBy:'Sarah Chen', date:'Jan 18', expires:'Jan 18, 2028', decision:true,  linked:true,  comment:'unread', commentCount:4, comments:[{author:'Sarah Chen',text:'Employer name must match state records exactly.'},{author:'Mike Ross',text:'Confirmed — Costco Wholesale Corp. matches.'},{author:'Sarah Chen',text:'Address on W-2 differs from file — borrower moved in Mar 2025.'},{author:'Sarah Chen',text:'Address discrepancy noted. No further action needed.'}], conditions:['Income Verification — 2 Years W-2'], tag:'v2' },
+  { id:10,star:false, classification:'W-2 Form',               name:'W2 - Johnny Firstimer - Walmart - 2024',      status:'under-review', version:'v1.1',source:'Borrower Portal',uploadedBy:'Sarah Chen', date:'Jan 17', expires:'Jan 17, 2026', decision:false, linked:false, comment:null,     commentCount:0, tag:'amended' },
+  { id:11,star:true,  classification:'Pay Stub',               name:'Pay Stub - Jim Halpert (Dunder Mifflin)',      status:'approved',     version:'v1', source:'Borrower Portal', uploadedBy:'Sarah Chen', date:'Jan 15', expires:'Mar 15, 2026', decision:true,  linked:true,  comment:'read',   commentCount:1, comments:[{author:'Mike Ross',text:'Pay period end date is outside 30-day window — request current stub.'}], conditions:['Income Verification — 2 Years W-2'] },
+  { id:12,star:false, classification:'Pay Stub',               name:'Pay Stub - Alice Firstimer (Costco)',         status:'received',     version:'v1', source:'Borrower Portal', uploadedBy:'Sarah Chen', date:'Jan 14', expires:'Mar 14, 2026', decision:false, linked:false, comment:null,     commentCount:0 },
+];
+
+let currentTab = 'decision';
+let searchQuery = '';
+let docStatus = 'approved';
+let extractedVisible = true;
+let _sortCol = null;
+let _sortAsc = true;
+
+// ===================== INIT =====================
+renderTable();
+
+// ===================== LIST SCREEN =====================
+function switchListTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-all').classList.toggle('active', tab === 'all');
+  document.getElementById('tab-decision').classList.toggle('active', tab === 'decision');
+  document.getElementById('search-input').value = '';
+  searchQuery = '';
+  renderTable();
+}
+
+function filterDocs() {
+  searchQuery = document.getElementById('search-input').value.toLowerCase();
+  renderTable();
+}
+
+// ===================== SORT =====================
+function sortBy(col) {
+  if (_sortCol === col) {
+    _sortAsc = !_sortAsc;
+  } else {
+    _sortCol = col;
+    _sortAsc = true;
+  }
+  // Update chevron indicators
+  document.querySelectorAll('.sort-chevron').forEach(el => {
+    el.textContent = '';
+    el.classList.remove('active');
+  });
+  document.querySelectorAll('.sortable-th').forEach(el => el.classList.remove('sort-active'));
+  const chevron = document.getElementById('sort-chevron-' + col);
+  if (chevron) {
+    chevron.textContent = _sortAsc ? ' ▲' : ' ▼';
+    chevron.classList.add('active');
+  }
+  const th = chevron?.closest('th');
+  if (th) th.classList.add('sort-active');
+  renderTable();
+}
+
+function getSortValue(d, col) {
+  if (col === 'date') return new Date(d.date + ' 2026').getTime() || 0;
+  if (col === 'expires') return d.expires ? new Date(d.expires).getTime() : Infinity;
+  if (col === 'status') return { approved:1, received:2, 'under-review':3, 'needs-action':4 }[d.status] ?? 5;
+  return (d[col] || '').toString().toLowerCase();
+}
+
+function renderTable() {
+  let docs = allDocs.filter(d => {
+    const matchTab = currentTab === 'all' || d.decision;
+    const matchSearch = !searchQuery || d.name.toLowerCase().includes(searchQuery) || d.classification.toLowerCase().includes(searchQuery);
+    return matchTab && matchSearch;
+  });
+  if (_sortCol) {
+    docs = [...docs].sort((a, b) => {
+      const av = getSortValue(a, _sortCol), bv = getSortValue(b, _sortCol);
+      if (av < bv) return _sortAsc ? -1 : 1;
+      if (av > bv) return _sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  document.getElementById('result-count').textContent = `${docs.length} results found`;
+
+  const isEmpty = docs.length === 0 && currentTab === 'decision';
+  document.getElementById('decision-empty-state').style.display = isEmpty ? 'block' : 'none';
+  document.querySelector('.table-wrap').style.display = isEmpty ? 'none' : '';
+
+  const today = new Date('2026-05-19');
+  const tbody = document.getElementById('doc-table-body');
+  tbody.innerHTML = docs.map(d => {
+    const expDate = d.expires ? new Date(d.expires) : null;
+    const expired = expDate && expDate < today;
+    return `
+    <tr onclick="openDoc(${d.id})" class="${expired ? 'row-expired' : ''}">
+      <td class="star-col"><span class="star ${d.star ? 'filled' : ''}" onclick="event.stopPropagation();toggleStar(${d.id},this)">${d.star ? '★' : '☆'}</span></td>
+      <td>${d.classification}</td>
+      <td class="doc-name">
+        ${d.name}
+        ${d.tag === 'v2' ? '<span class="v-tag">v2</span>' : ''}
+        ${d.tag === 'amended' ? '<span class="amended-tag">amended</span>' : ''}
+      </td>
+      <td><span class="badge-${d.status}">${statusLabel(d.status)}</span></td>
+      <td>${d.version}</td>
+      <td>${d.source}</td>
+      <td>${d.uploadedBy}</td>
+      <td>${d.date}</td>
+      <td class="${expired ? 'exp-date expired' : 'exp-date'}">${d.expires || '—'}</td>
+      <td class="comments-col" onclick="event.stopPropagation()">
+        ${d.commentCount ? `<span class="comment-badge ${d.comment}" onmouseenter="showCommentTooltip(event,${d.id})" onmouseleave="hideTooltip()">${d.commentCount}</span>` : ''}
+      </td>
+      <td class="links-col" onclick="event.stopPropagation()">
+        ${d.linked ? `<svg class="chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" onmouseenter="showLinksTooltip(event,${d.id})" onmouseleave="hideTooltip()" style="cursor:default"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>` : ''}
+      </td>
+      <td class="kebab-col" onclick="event.stopPropagation()">
+        <button class="kebab-btn" onclick="toggleKebab(event,${d.id})">···</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function statusLabel(s) {
+  return { approved:'Approved', received:'Received', 'under-review':'Under Review', 'needs-action':'Needs Action' }[s] || s;
+}
+
+function toggleStar(id, el) {
+  const doc = allDocs.find(d => d.id === id);
+  doc.star = !doc.star;
+  doc.decision = doc.star;
+  el.textContent = doc.star ? '★' : '☆';
+  el.classList.toggle('filled', doc.star);
+  const decisionCount = allDocs.filter(d => d.decision).length;
+  document.getElementById('count-decision').textContent = decisionCount;
+  if (currentTab === 'decision') renderTable();
+}
+
+// ===================== TAXONOMY TREE =====================
+function toggleTree(row) {
+  const children = row.nextElementSibling;
+  if (!children || !children.classList.contains('tree-children')) return;
+  const isCollapsed = children.classList.contains('collapsed');
+  children.classList.toggle('collapsed', !isCollapsed);
+  const toggle = row.querySelector('.tree-toggle');
+  if (toggle) toggle.textContent = isCollapsed ? '▼' : '▶';
+}
+
+function toggleTaxonomy() {
+  const panel = document.querySelector('.taxonomy-panel');
+  panel.classList.toggle('collapsed');
+}
+
+let treeAllExpanded = false;
+function toggleExpandAll() {
+  treeAllExpanded = !treeAllExpanded;
+  if (treeAllExpanded) {
+    document.querySelectorAll('.tree-children').forEach(el => el.classList.remove('collapsed'));
+    document.querySelectorAll('.tree-toggle').forEach(el => el.textContent = '▼');
+    document.getElementById('expand-all-btn').textContent = 'Collapse All';
+  } else {
+    document.querySelectorAll('.tree-children').forEach(el => el.classList.add('collapsed'));
+    document.querySelectorAll('.tree-toggle').forEach(el => el.textContent = '▶');
+    document.getElementById('expand-all-btn').textContent = 'Expand All';
+  }
+}
+
+// ===================== NAVIGATION =====================
+function navTo(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===================== RIGHT SIDEBAR =====================
+// Icon strip = collapsed state. Panel = expanded state. They're mutually exclusive.
+function openRightPanel(tab) {
+  // Show panel, hide strip
+  document.getElementById('right-panel-wrap').classList.remove('collapsed');
+  document.getElementById('right-icon-strip').classList.add('hidden');
+}
+function collapseRightPanel() {
+  // Hide panel, show strip
+  document.getElementById('right-panel-wrap').classList.add('collapsed');
+  document.getElementById('right-icon-strip').classList.remove('hidden');
+}
+function toggleRightPanel(tab) {
+  const wrap = document.getElementById('right-panel-wrap');
+  if (wrap.classList.contains('collapsed')) {
+    openRightPanel(tab);
+  } else {
+    collapseRightPanel();
+  }
+}
+
+function setDemoStage(btn) {
+  document.querySelectorAll('.demo-stage-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function openDoc(id) {
+  document.getElementById('screen-list').style.display = 'none';
+  document.getElementById('screen-detail').classList.add('visible');
+  switchDetailTab('overview');
+  docStatus = 'approved';
+  updateStatus('approved');
+  resetExtracted();
+}
+
+function backToList() { goBack(); }
+function goBack() {
+  document.getElementById('screen-detail').classList.remove('visible');
+  document.getElementById('screen-list').style.display = 'flex';
+  // Hide extracted panel
+  document.getElementById('extracted-panel').classList.add('hidden');
+  document.getElementById('view-extracted-btn').style.display = 'flex';
+  extractedVisible = false;
+}
+
+// ===================== DETAIL TABS =====================
+let tabExpanded = true;
+let activeTab = 'overview';
+
+function switchDetailTab(tab) {
+  // Clicking the already-active tab collapses the content
+  if (tab === activeTab && tabExpanded) {
+    tabExpanded = false;
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('overview-props-section').style.display = 'none';
+    updateApproveBtn();
+    return;
+  }
+
+  // Otherwise expand and switch
+  tabExpanded = true;
+  activeTab = tab;
+
+  ['overview','conditions','communications','history'].forEach(t => {
+    document.getElementById('dtab-' + t).classList.toggle('active', t === tab);
+    const panel = document.getElementById('panel-' + t);
+    if (panel) panel.classList.toggle('active', t === tab);
+  });
+
+  document.getElementById('overview-props-section').style.display = tab === 'overview' ? 'block' : 'none';
+  if (tab !== 'history') setTimeout(() => initPanelCollapse(tab), 0);
+  updateApproveBtn();
+}
+
+function updateApproveBtn() {
+  const btn = document.getElementById('approve-btn');
+  // Show approve button when status is not approved
+  btn.style.display = docStatus !== 'approved' ? 'flex' : 'none';
+}
+
+// ===================== STATUS =====================
+function updateStatus(val) {
+  docStatus = val;
+  const wrap = document.getElementById('status-wrap');
+  wrap.className = 'status-select-wrap ' + val;
+  document.getElementById('status-select').value = val;
+  updateApproveBtn();
+}
+
+function handleApprove() {
+  updateStatus('approved');
+}
+
+// ===================== EXTRACTED PANEL =====================
+function toggleExtracted() {
+  extractedVisible = !extractedVisible;
+  document.getElementById('extracted-panel').classList.toggle('hidden', !extractedVisible);
+  const btn = document.getElementById('view-extracted-btn');
+  btn.style.display = extractedVisible ? 'none' : 'flex';
+}
+
+function togglePanelExpand(id) {
+  const panel = document.getElementById('panel-' + id);
+  const btn = document.getElementById('vmb-' + id);
+  if (panel.classList.contains('clamped')) {
+    panel.classList.remove('clamped');
+    btn.textContent = 'See less ↑';
+  } else {
+    panel.classList.add('clamped');
+    btn.textContent = 'View more ↓';
+  }
+}
+function initPanelCollapse(id) {
+  const panel = document.getElementById('panel-' + id);
+  const btn = document.getElementById('vmb-' + id);
+  if (!panel || !btn) return;
+  // Measure full height before clamping
+  panel.classList.remove('clamped');
+  const fullHeight = panel.scrollHeight;
+  btn.textContent = 'View more ↓';
+  if (fullHeight > 120) {
+    panel.classList.add('clamped');
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function selectTag(el) {
+  const isSelected = el.classList.contains('selected');
+  document.querySelectorAll('.tag-pill').forEach(t => t.classList.remove('selected'));
+  if (!isSelected) el.classList.add('selected');
+}
+function removeTag(xEl) {
+  xEl.closest('.tag-pill').remove();
+}
+function showTagInput() {
+  document.getElementById('add-tag-btn').style.display = 'none';
+  const input = document.getElementById('tag-input');
+  input.style.display = 'inline-block';
+  input.value = '';
+  input.focus();
+}
+function handleTagInput(e) {
+  if (e.key === 'Enter') {
+    const val = document.getElementById('tag-input').value.trim();
+    if (val) {
+      const pill = document.createElement('span');
+      pill.className = 'tag-pill';
+      pill.innerHTML = `${val}<span class="tag-remove" onclick="event.stopPropagation();removeTag(this)">✕</span>`;
+      pill.onclick = function() { selectTag(this); };
+      document.getElementById('add-tag-btn').before(pill);
+    }
+    cancelTagInput();
+  } else if (e.key === 'Escape') {
+    cancelTagInput();
+  }
+}
+function cancelTagInput() {
+  document.getElementById('tag-input').style.display = 'none';
+  document.getElementById('add-tag-btn').style.display = 'inline-flex';
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.tag-pill')) {
+    document.querySelectorAll('.tag-pill').forEach(t => t.classList.remove('selected'));
+  }
+});
+
+function toggleNotePopover(e) {
+  e.stopPropagation();
+  const popover = document.getElementById('note-popover');
+  const isOpen = popover.classList.toggle('open');
+  if (isOpen) document.getElementById('note-textarea').focus();
+}
+function closeNotePopover() {
+  document.getElementById('note-popover').classList.remove('open');
+}
+function saveNote() {
+  const val = document.getElementById('note-textarea').value.trim();
+  if (val) document.getElementById('note-textarea').value = '';
+  closeNotePopover();
+}
+document.addEventListener('click', function(e) {
+  const popover = document.getElementById('note-popover');
+  if (popover && !popover.closest('.note-anchor').contains(e.target)) closeNotePopover();
+});
+
+function toggleActionsMenu(e) {
+  e.stopPropagation();
+  document.getElementById('actions-dropdown').classList.toggle('open');
+}
+function closeActionsMenu() {
+  document.getElementById('actions-dropdown').classList.remove('open');
+}
+document.addEventListener('click', function() { closeActionsMenu(); });
+
+function startEdit(icon) {
+  const row = icon.closest('.ext-value-row');
+  const valueSpan = row.querySelector('.ext-value');
+  const currentVal = valueSpan.textContent;
+  const input = document.createElement('input');
+  input.className = 'ext-value-input';
+  input.value = currentVal;
+  valueSpan.replaceWith(input);
+  input.focus();
+  icon.textContent = '✓';
+  icon.className = 'confirm-icon';
+  icon.onclick = function(e) { e.stopPropagation(); confirmEdit(this); };
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') confirmEdit(icon);
+    if (e.key === 'Escape') { input.value = currentVal; confirmEdit(icon); }
+  });
+}
+function confirmEdit(icon) {
+  const row = icon.closest('.ext-value-row');
+  const input = row.querySelector('.ext-value-input');
+  const span = document.createElement('span');
+  span.className = 'ext-value';
+  span.textContent = input.value;
+  input.replaceWith(span);
+  icon.textContent = '✎';
+  icon.className = 'edit-icon';
+  icon.onclick = function(e) { e.stopPropagation(); startEdit(this); };
+}
+
+function selectField(key) {
+  // Clear all highlights
+  document.querySelectorAll('.ext-field').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('[data-field]').forEach(el => {
+    if (!el.classList.contains('ext-field')) el.classList.remove('doc-field-highlight');
+  });
+
+  // Highlight the clicked ext-field row
+  const extRow = document.querySelector(`.ext-field[data-field="${key}"]`);
+  if (extRow) extRow.classList.add('selected');
+
+  // Highlight the matching doc element
+  const docEl = document.querySelector(`.w2-doc [data-field="${key}"]`);
+  if (docEl) docEl.classList.add('doc-field-highlight');
+}
+
+function resetExtracted() {
+  extractedVisible = true;
+  document.getElementById('extracted-panel').classList.remove('hidden');
+  document.getElementById('view-extracted-btn').style.display = 'none';
+}
+
+// ===================== UPLOAD MODAL =====================
+let fileSelected = false;
+
+function openUpload() {
+  fileSelected = false;
+  document.getElementById('drop-zone-empty').style.display = 'flex';
+  document.getElementById('file-selected').style.display = 'none';
+  document.getElementById('upload-doc-btn').disabled = true;
+  document.getElementById('auto-toggle').checked = true;
+  document.getElementById('manual-fields').style.display = 'none';
+  document.getElementById('auto-sub-text').textContent = 'Auto-classify and extract fields';
+  document.getElementById('upload-modal').classList.remove('hidden');
+}
+
+function closeUpload() {
+  document.getElementById('upload-modal').classList.add('hidden');
+}
+
+function toggleAutomation() {
+  const on = document.getElementById('auto-toggle').checked;
+  document.getElementById('manual-fields').style.display = on ? 'none' : 'block';
+  document.getElementById('auto-sub-text').textContent = on ? 'Auto-classify and extract fields' : 'Manually classify and tag document';
+}
+
+function simulateFilePick() {
+  if (!fileSelected) {
+    fileSelected = true;
+    document.getElementById('drop-zone-empty').style.display = 'none';
+    document.getElementById('file-selected').style.display = 'flex';
+    document.getElementById('upload-doc-btn').disabled = false;
+  }
+}
+
+function removeFile() {
+  fileSelected = false;
+  document.getElementById('file-selected').style.display = 'none';
+  document.getElementById('drop-zone-empty').style.display = 'flex';
+  document.getElementById('upload-doc-btn').disabled = true;
+}
+
+function doUpload() {
+  closeUpload();
+  // Could add a success toast here
+}
+
+// Close modal on overlay click
+document.getElementById('upload-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeUpload();
+});
+
+// Initialize status wrap class
+document.getElementById('status-wrap').className = 'status-select-wrap approved';
+
+// ===================== ROW TOOLTIPS =====================
+function showCommentTooltip(e, id) {
+  const doc = allDocs.find(d => d.id === id);
+  if (!doc?.comments?.length) return;
+  const tt = document.getElementById('row-tooltip');
+  tt.innerHTML = `<div class="tt-title">Comments</div>` +
+    doc.comments.map(c => `<div class="tt-item"><span class="tt-author">${c.author}:</span> ${c.text}</div>`).join('');
+  positionTooltip(e, tt);
+}
+function showLinksTooltip(e, id) {
+  const doc = allDocs.find(d => d.id === id);
+  if (!doc?.conditions?.length) return;
+  const tt = document.getElementById('row-tooltip');
+  tt.innerHTML = `<div class="tt-title">Linked Conditions</div>` +
+    doc.conditions.map(c => `<div class="tt-item">· ${c}</div>`).join('');
+  positionTooltip(e, tt);
+}
+function positionTooltip(e, tt) {
+  tt.style.display = 'block';
+  const tw = tt.offsetWidth, th = tt.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY - th / 2;
+  if (x + tw > window.innerWidth - 8) x = e.clientX - tw - 14;
+  if (y < 8) y = 8;
+  if (y + th > window.innerHeight - 8) y = window.innerHeight - th - 8;
+  tt.style.left = x + 'px';
+  tt.style.top = y + 'px';
+}
+function hideTooltip() {
+  document.getElementById('row-tooltip').style.display = 'none';
+}
+
+// ===================== ROW KEBAB MENU =====================
+let _kebabDocId = null;
+function toggleKebab(e, id) {
+  const dd = document.getElementById('kebab-dropdown');
+  if (_kebabDocId === id && dd.style.display === 'block') { closeKebab(); return; }
+  _kebabDocId = id;
+  dd.style.display = 'block';
+  const r = e.currentTarget.getBoundingClientRect();
+  dd.style.left = '0px'; dd.style.top = '0px'; // reset to measure
+  const dw = dd.offsetWidth, dh = dd.offsetHeight;
+  let x = r.right - dw, y = r.bottom + 4;
+  if (x < 8) x = 8;
+  if (y + dh > window.innerHeight - 8) y = r.top - dh - 4;
+  dd.style.left = x + 'px'; dd.style.top = y + 'px';
+}
+function closeKebab() {
+  document.getElementById('kebab-dropdown').style.display = 'none';
+  _kebabDocId = null;
+}
+document.addEventListener('click', closeKebab);
+</script>
+
+<!-- Shared hover tooltip -->
+<div id="row-tooltip" class="row-tooltip"></div>
+
+<!-- Row kebab dropdown -->
+<div id="kebab-dropdown" class="kebab-dropdown" onclick="event.stopPropagation()">
+  <div class="kebab-item success" onclick="closeKebab()">✓ Approve</div>
+  <div class="kebab-item" onclick="closeKebab()">⚑ Flag for Review</div>
+  <div class="kebab-item" onclick="closeKebab()">↩ Request Revision</div>
+  <div class="kebab-divider"></div>
+  <div class="kebab-item" onclick="closeKebab()">📋 Add to Condition</div>
+  <div class="kebab-divider"></div>
+  <div class="kebab-item danger" onclick="closeKebab()">✕ Reject</div>
+</div>
+
+</body>
+</html>
