@@ -2539,16 +2539,17 @@ function renderCompareDocBody(doc) {
       <table class="mock-ps-table" style="margin-top:6px;">
         <thead><tr><th>Deductions</th><th></th><th></th><th>Current</th><th>YTD</th></tr></thead>
         <tbody>
-          <tr><td>Federal Income Tax</td><td></td><td></td><td>${fedTax}</td><td>${isJim ? '$1,250.00' : '$1,038.46'}</td></tr>
-          <tr><td>State Income Tax (PA)</td><td></td><td></td><td>${stTax}</td><td>${isJim ? '$256.34' : '$212.80'}</td></tr>
-          <tr><td>Social Security (6.2%)</td><td></td><td></td><td>${ss}</td><td>${isJim ? '$516.67' : '$429.60'}</td></tr>
+          <tr><td>Federal Income Tax</td><td></td><td></td><td><span data-field="fed-tax">${fedTax}</span></td><td>${isJim ? '$1,250.00' : '$1,038.46'}</td></tr>
+          <tr><td>State Income Tax (PA)</td><td></td><td></td><td><span data-field="state-tax">${stTax}</span></td><td>${isJim ? '$256.34' : '$212.80'}</td></tr>
+          <tr><td>Social Security (6.2%)</td><td></td><td></td><td><span data-field="soc-sec">${ss}</span></td><td>${isJim ? '$516.67' : '$429.60'}</td></tr>
           <tr><td>Medicare (1.45%)</td><td></td><td></td><td>${medicare}</td><td>${isJim ? '$120.83' : '$100.50'}</td></tr>
         </tbody>
       </table>
       <div class="mock-ps-totals">
-        <div class="mock-ps-total"><span class="mock-ps-total-label">Gross Pay</span><span class="mock-ps-total-value">${gross}</span></div>
+        <div class="mock-ps-total"><span class="mock-ps-total-label">Gross Pay</span><span class="mock-ps-total-value" data-field="gross-pay">${gross}</span></div>
+        <div class="mock-ps-total"><span class="mock-ps-total-label">YTD Gross</span><span class="mock-ps-total-value" data-field="ytd-gross">${ytdGross}</span></div>
         <div class="mock-ps-total"><span class="mock-ps-total-label">Deductions</span><span class="mock-ps-total-value">${deductions}</span></div>
-        <div class="mock-ps-total"><span class="mock-ps-total-label">Net Pay</span><span class="mock-ps-total-value net">${netPay}</span></div>
+        <div class="mock-ps-total"><span class="mock-ps-total-label">Net Pay</span><span class="mock-ps-total-value net" data-field="net-pay">${netPay}</span></div>
       </div>
     </div>`;
   }
