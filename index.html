@@ -1411,31 +1411,20 @@
 
     <!-- SCREEN: DOCUMENT COMPARE -->
     <div id="screen-compare">
-      <!-- Toolbar -->
+      <!-- Toolbar: back + "Compare" label + doc pills -->
       <div class="compare-toolbar">
         <span class="compare-back-btn" onclick="exitCompareMode()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          Back to Documents
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
         </span>
         <div class="compare-toolbar-divider"></div>
-        <span class="compare-toolbar-title">Compare</span>
-        <span class="compare-toolbar-sub" id="compare-toolbar-sub">2 documents</span>
+        <span class="compare-toolbar-label">Compare</span>
+        <!-- Doc pills rendered by JS -->
+        <div class="compare-doc-pills" id="compare-doc-pills"></div>
       </div>
 
-      <!-- Body: left panel + center scroll + right extracted -->
+      <!-- Body: center scroll + right extracted (no left panel) -->
       <div class="compare-body">
-
-        <!-- Left: selected doc list -->
-        <div class="compare-docs-list">
-          <div class="compare-docs-list-header">Comparing</div>
-          <div id="compare-docs-list-items" style="flex:1;overflow-y:auto;"></div>
-          <div class="compare-docs-list-footer">
-            <div class="compare-add-more-btn" onclick="exitCompareMode()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Add more docs
-            </div>
-          </div>
-        </div>
 
         <!-- Center: stacked scrollable docs -->
         <div class="compare-center">
@@ -1446,13 +1435,6 @@
 
         <!-- Right: extracted fields synced to active doc -->
         <div class="compare-ext-panel">
-          <div class="compare-ext-header">
-            <h3>Extracted Fields</h3>
-            <div class="compare-ext-now">
-              <span class="compare-ext-now-dot" id="compare-ext-now-dot" style="background:#2563eb;"></span>
-              <span class="compare-ext-now-name" id="compare-ext-now-name">—</span>
-            </div>
-          </div>
           <div class="compare-ext-doc-tabs" id="compare-ext-doc-tabs"></div>
           <div class="compare-ext-fields-wrap" id="compare-ext-fields-wrap"></div>
         </div>
