@@ -2355,12 +2355,12 @@ function selectCompareField(fieldKey) {
 
 // Scale each doc inner to fit its container without overflow
 function scaleCompareDocSections() {
-  // Reset all zooms first so body widths reflect true flex-layout size
-  document.querySelectorAll('.compare-doc-inner').forEach(el => { el.style.zoom = '1'; });
-  // Force layout recalc, then measure and apply
   document.querySelectorAll('.compare-doc-body').forEach(body => {
     const inner = body.querySelector('.compare-doc-inner');
     if (!inner) return;
+    inner.style.zoom = '1';
+    // Reading clientWidth here forces a synchronous reflow with zoom=1,
+    // so the body width reflects its true flex-layout size
     const bodyW = body.clientWidth;
     if (bodyW > 0) inner.style.zoom = (bodyW / 816).toFixed(3);
   });
