@@ -2303,6 +2303,7 @@ function setupCompareObserver(docs) {
 }
 
 function setActiveCompareDoc(docId, shouldScroll = true) {
+  if (shouldScroll) lockCompareObserver(); // manual tab/pill click — freeze observer briefly
   activeCompareDocId = docId;
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
   const idx = docs.findIndex(d => d.id === docId);
