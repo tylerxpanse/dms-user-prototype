@@ -2529,7 +2529,7 @@ function renderCompareDocBody(doc) {
     const deductions = isJim ? '$1,071.92' : '$890.68';
     return `<div class="mock-paystub">
       <div class="mock-paystub-header">
-        <div><h2>${employer}</h2><div class="sub">Pay Statement — Period: Jan 1–15, 2026</div></div>
+        <div><h2 data-field="employer">${employer}</h2><div class="sub">Pay Statement — Period: <span data-field="pay-period">Jan 1–15, 2026</span></div></div>
         <div style="text-align:right;font-size:11px;"><div style="font-weight:700;font-size:13px;">PAY DATE: Jan 15, 2026</div></div>
       </div>
       <div class="mock-paystub-meta">
