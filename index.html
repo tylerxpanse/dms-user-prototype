@@ -2202,8 +2202,18 @@ function clearSelection() {
 let compareObserver = null;
 let activeCompareDocId = null;
 
+let _rightPanelWasOpen = false;
+
 function enterCompareMode() {
   if (selectedDocIds.size < 2) return;
+  // Collapse right sidebar to give center area room
+  const rpw = document.getElementById('right-panel-wrap');
+  const ris = document.getElementById('right-icon-strip');
+  _rightPanelWasOpen = !rpw.classList.contains('collapsed');
+  if (_rightPanelWasOpen) {
+    rpw.classList.add('collapsed');
+    ris.classList.remove('hidden');
+  }
   document.getElementById('screen-list').style.display = 'none';
   document.getElementById('screen-compare').classList.add('visible');
   document.getElementById('compare-bar').classList.add('hidden');
@@ -2214,6 +2224,11 @@ function exitCompareMode() {
   document.getElementById('screen-compare').classList.remove('visible');
   document.getElementById('screen-list').style.display = '';
   if (compareObserver) { compareObserver.disconnect(); compareObserver = null; }
+  // Restore right sidebar state
+  if (_rightPanelWasOpen) {
+    document.getElementById('right-panel-wrap').classList.remove('collapsed');
+    document.getElementById('right-icon-strip').classList.add('hidden');
+  }
   if (selectedDocIds.size > 0) document.getElementById('compare-bar').classList.remove('hidden');
 }
 
