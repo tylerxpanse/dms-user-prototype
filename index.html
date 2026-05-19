@@ -475,61 +475,56 @@
   /* ===== COMPARE SCREEN ===== */
   #screen-compare { display: none; flex: 1; overflow: hidden; flex-direction: column; }
   #screen-compare.visible { display: flex; }
-  .compare-toolbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 20px; display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-  .compare-back-btn { display: flex; align-items: center; gap: 5px; color: #2563eb; font-size: 13px; cursor: pointer; font-weight: 500; white-space: nowrap; }
-  .compare-back-btn:hover { text-decoration: underline; }
-  .compare-toolbar-divider { width: 1px; height: 18px; background: #e5e7eb; flex-shrink: 0; }
-  .compare-toolbar-title { font-size: 15px; font-weight: 600; color: #111827; }
-  .compare-toolbar-sub { font-size: 13px; color: #6b7280; }
-  .compare-body { flex: 1; display: flex; flex-direction: row; overflow: hidden; }
 
-  /* Left: selected docs list */
-  .compare-docs-list { width: 200px; background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
-  .compare-docs-list-header { padding: 11px 14px; font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .6px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
-  .compare-doc-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #f3f4f6; transition: background .1s; }
-  .compare-doc-item:hover { background: #f9fafb; }
-  .compare-doc-item.active { background: #eff6ff; }
-  .compare-doc-item-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .compare-doc-item-name { flex: 1; font-size: 12px; color: #374151; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.35; }
-  .compare-doc-item.active .compare-doc-item-name { color: #2563eb; font-weight: 500; }
-  .compare-doc-item-badge { font-size: 10px; font-weight: 700; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .compare-doc-item-remove { color: #9ca3af; font-size: 13px; cursor: pointer; width: 18px; height: 18px; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .1s, color .1s; }
-  .compare-doc-item-remove:hover { color: #dc2626; background: #fee2e2; }
-  .compare-docs-list-footer { padding: 10px 12px; border-top: 1px solid #e5e7eb; flex-shrink: 0; }
-  .compare-add-more-btn { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #2563eb; cursor: pointer; padding: 5px 8px; border-radius: 5px; border: 1px dashed #93c5fd; justify-content: center; }
-  .compare-add-more-btn:hover { background: #eff6ff; }
+  /* Toolbar: back + title + doc pills */
+  .compare-toolbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 0 20px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; height: 48px; overflow: hidden; }
+  .compare-back-btn { display: flex; align-items: center; gap: 5px; color: #6b7280; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; padding: 6px 0; }
+  .compare-back-btn:hover { color: #111827; }
+  .compare-back-btn svg { flex-shrink: 0; }
+  .compare-toolbar-divider { width: 1px; height: 16px; background: #e5e7eb; flex-shrink: 0; }
+  .compare-toolbar-label { font-size: 13px; font-weight: 600; color: #111827; white-space: nowrap; flex-shrink: 0; }
+  .compare-doc-pills { display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1; }
+  .compare-doc-pill { display: flex; align-items: center; gap: 5px; padding: 4px 8px 4px 6px; border-radius: 20px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; font-size: 12px; color: #374151; white-space: nowrap; max-width: 160px; transition: border-color .15s, background .15s; flex-shrink: 0; }
+  .compare-doc-pill:hover { border-color: #9ca3af; background: #f9fafb; }
+  .compare-doc-pill.active { border-color: currentColor; background: #f9fafb; }
+  .compare-doc-pill-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .compare-doc-pill-name { overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+  .compare-doc-pill-x { color: #9ca3af; font-size: 12px; margin-left: 1px; line-height: 1; padding: 1px 2px; border-radius: 2px; flex-shrink: 0; }
+  .compare-doc-pill-x:hover { color: #dc2626; }
+
+  .compare-body { flex: 1; display: flex; flex-direction: row; overflow: hidden; }
 
   /* Center: stacked doc viewer */
   .compare-center { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .compare-scroll-area { flex: 1; overflow-y: auto; background: #374151; padding: 20px 24px; display: flex; flex-direction: column; gap: 24px; }
-  .compare-doc-section { display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 16px rgba(0,0,0,.3); flex-shrink: 0; }
-  .compare-doc-header { position: sticky; top: 4px; z-index: 10; background: #1f2937; color: #fff; padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,.07); }
-  .compare-doc-num { width: 22px; height: 22px; border-radius: 50%; background: #374151; border: 1.5px solid #4b5563; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #9ca3af; transition: all .2s; }
-  .compare-doc-num.active { border-color: #2563eb; color: #60a5fa; background: rgba(37,99,235,.22); }
-  .compare-doc-color-bar { width: 4px; height: 26px; border-radius: 2px; flex-shrink: 0; }
+  .compare-scroll-area { flex: 1; overflow-y: auto; background: #2d3748; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+  .compare-doc-section { display: flex; flex-direction: column; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.35); flex-shrink: 0; }
+  /* Color left-border is the only identity marker — no number badges */
+  .compare-doc-header { position: sticky; top: 0; z-index: 10; background: #1f2937; color: #fff; padding: 9px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .compare-doc-color-strip { width: 3px; height: 20px; border-radius: 2px; flex-shrink: 0; }
   .compare-doc-header-name { flex: 1; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .compare-doc-header-type { font-size: 11px; color: #6b7280; white-space: nowrap; }
-  .compare-status-pill { border-radius: 9999px; padding: 2px 8px; font-size: 11px; font-weight: 500; white-space: nowrap; }
-  .compare-doc-body { background: #fff; padding: 24px 28px; display: flex; justify-content: center; align-items: flex-start; overflow-x: auto; }
+  .compare-doc-header-meta { font-size: 11px; color: #6b7280; white-space: nowrap; }
+  .compare-status-pill { border-radius: 9999px; padding: 2px 7px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  /* The doc body — content scales to fit via JS zoom */
+  .compare-doc-body { background: #fff; padding: 0; display: block; overflow: hidden; }
+  .compare-doc-inner { padding: 28px; display: flex; justify-content: center; transform-origin: top center; }
 
-  /* Right: extracted fields panel */
-  .compare-ext-panel { width: 248px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
-  .compare-ext-header { padding: 12px 16px 10px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
-  .compare-ext-header h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-  .compare-ext-now { font-size: 11px; color: #6b7280; display: flex; align-items: center; gap: 5px; overflow: hidden; }
-  .compare-ext-now-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; transition: background .2s; }
-  .compare-ext-now-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; color: #374151; }
-  .compare-ext-doc-tabs { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
-  .compare-ext-doc-tab { display: flex; align-items: center; gap: 7px; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; color: #374151; transition: background .1s; }
-  .compare-ext-doc-tab:hover { background: #f3f4f6; }
+  /* Right: extracted fields — clean, no header clutter */
+  .compare-ext-panel { width: 232px; background: #fff; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
+  .compare-ext-doc-tabs { display: flex; flex-direction: column; gap: 1px; padding: 8px 8px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
+  .compare-ext-doc-tab { display: flex; align-items: center; gap: 7px; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; color: #6b7280; transition: background .1s; }
+  .compare-ext-doc-tab:hover { background: #f3f4f6; color: #111827; }
   .compare-ext-doc-tab.active { background: #eff6ff; color: #2563eb; font-weight: 500; }
   .compare-ext-doc-tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .compare-ext-doc-tab-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .compare-ext-fields-wrap { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
-  .compare-ext-field { display: flex; flex-direction: column; gap: 2px; }
+  .compare-ext-fields-wrap { flex: 1; overflow-y: auto; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; }
+  /* Clickable fields — same behavior as single-doc view */
+  .compare-ext-field { display: flex; flex-direction: column; gap: 2px; border-radius: 6px; padding: 5px 6px; margin: 0 -6px; transition: background .12s; }
+  .compare-ext-field.has-highlight { cursor: pointer; }
+  .compare-ext-field.has-highlight:hover { background: #f3f4f6; }
+  .compare-ext-field.selected { background: #dbeafe; }
   .compare-ext-label { font-size: 11px; color: #6b7280; }
   .compare-ext-value { font-size: 13px; font-weight: 600; color: #111827; }
-  .compare-ext-section-title { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .5px; padding-top: 6px; border-top: 1px solid #f3f4f6; margin-top: 2px; }
+  .compare-ext-divider { height: 1px; background: #f3f4f6; margin: 4px 0; }
 
   /* Mock document content */
   .mock-paystub { width: 100%; max-width: 560px; font-family: Arial, sans-serif; font-size: 12px; }
