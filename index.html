@@ -2660,6 +2660,13 @@ function closeKebab() {
   _kebabDocId = null;
 }
 document.addEventListener('click', closeKebab);
+
+// Re-scale compare docs whenever the window resizes
+window.addEventListener('resize', () => {
+  if (document.getElementById('screen-compare')?.classList.contains('visible')) {
+    scaleCompareDocSections();
+  }
+});
 </script>
 
 <!-- Shared hover tooltip -->
