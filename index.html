@@ -2169,6 +2169,407 @@ function hideTooltip() {
   document.getElementById('row-tooltip').style.display = 'none';
 }
 
+// ===================== MULTI-SELECT =====================
+function toggleDocSelect(id, checkbox) {
+  if (checkbox.checked) {
+    if (selectedDocIds.size >= 5) { checkbox.checked = false; return; }
+    selectedDocIds.add(id);
+  } else {
+    selectedDocIds.delete(id);
+  }
+  const row = checkbox.closest('tr');
+  row.classList.toggle('row-selected', checkbox.checked);
+  updateCompareBar();
+}
+
+function updateCompareBar() {
+  const n = selectedDocIds.size;
+  const bar = document.getElementById('compare-bar');
+  document.getElementById('compare-bar-count').textContent = n === 1 ? '1 document selected' : `${n} documents selected`;
+  const btn = document.getElementById('btn-compare');
+  btn.disabled = n < 2;
+  bar.classList.toggle('hidden', n === 0);
+}
+
+function clearSelection() {
+  selectedDocIds.clear();
+  document.querySelectorAll('.doc-checkbox').forEach(cb => { cb.checked = false; });
+  document.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('row-selected'));
+  updateCompareBar();
+}
+
+// ===================== COMPARE MODE =====================
+let compareObserver = null;
+let activeCompareDocId = null;
+
+function enterCompareMode() {
+  if (selectedDocIds.size < 2) return;
+  document.getElementById('screen-list').style.display = 'none';
+  document.getElementById('screen-compare').classList.add('visible');
+  document.getElementById('compare-bar').classList.add('hidden');
+  renderCompareView();
+}
+
+function exitCompareMode() {
+  document.getElementById('screen-compare').classList.remove('visible');
+  document.getElementById('screen-list').style.display = '';
+  if (compareObserver) { compareObserver.disconnect(); compareObserver = null; }
+  if (selectedDocIds.size > 0) document.getElementById('compare-bar').classList.remove('hidden');
+}
+
+function renderCompareView() {
+  const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
+  document.getElementById('compare-toolbar-sub').textContent = `${docs.length} document${docs.length > 1 ? 's' : ''}`;
+
+  // Left panel
+  document.getElementById('compare-docs-list-items').innerHTML = docs.map((doc, i) => `
+    <div class="compare-doc-item" id="compare-list-item-${doc.id}" onclick="scrollToCompareDoc(${doc.id})">
+      <span class="compare-doc-item-badge" style="background:${getDocColor(i)};color:#fff;">${i+1}</span>
+      <span class="compare-doc-item-name" title="${doc.name}">${doc.name}</span>
+      <span class="compare-doc-item-remove" onclick="event.stopPropagation();removeFromCompare(${doc.id})" title="Remove">✕</span>
+    </div>
+  `).join('');
+
+  // Stacked center docs
+  const today = new Date('2026-05-19');
+  const statusColors = {
+    'approved':      { bg:'#dcfce7', col:'#166534' },
+    'received':      { bg:'#f3f4f6', col:'#374151' },
+    'under-review':  { bg:'#eff6ff', col:'#1d4ed8' },
+    'needs-action':  { bg:'#fee2e2', col:'#dc2626' },
+  };
+  document.getElementById('compare-scroll-area').innerHTML = docs.map((doc, i) => {
+    const expired = doc.expires && new Date(doc.expires) < today;
+    const sc = statusColors[doc.status] || statusColors['received'];
+    return `
+      <div class="compare-doc-section" id="compare-section-${doc.id}" data-doc-id="${doc.id}">
+        <div class="compare-doc-header">
+          <div class="compare-doc-num" id="compare-num-${doc.id}">${i+1}</div>
+          <div class="compare-doc-color-bar" style="background:${getDocColor(i)};"></div>
+          <div class="compare-doc-header-name" title="${doc.name}">${doc.name}</div>
+          <span class="compare-doc-header-type">${doc.classification}</span>
+          <span class="compare-status-pill" style="background:${sc.bg};color:${sc.col};">${statusLabel(doc.status)}</span>
+          ${expired ? '<span class="compare-status-pill" style="background:#fee2e2;color:#dc2626;margin-left:2px;">Expired</span>' : ''}
+        </div>
+        <div class="compare-doc-body">${renderCompareDocBody(doc)}</div>
+      </div>`;
+  }).join('');
+
+  // Extracted tab bar
+  document.getElementById('compare-ext-doc-tabs').innerHTML = docs.map((doc, i) => `
+    <div class="compare-ext-doc-tab" id="compare-tab-${doc.id}" onclick="setActiveCompareDoc(${doc.id})">
+      <span class="compare-ext-doc-tab-dot" style="background:${getDocColor(i)};"></span>
+      <span class="compare-ext-doc-tab-name" title="${doc.name}">${doc.name}</span>
+    </div>
+  `).join('');
+
+  // Set first doc active
+  activeCompareDocId = docs[0].id;
+  setActiveCompareDoc(docs[0].id, false);
+  setupCompareObserver(docs);
+}
+
+function setupCompareObserver(docs) {
+  if (compareObserver) compareObserver.disconnect();
+  const scrollArea = document.getElementById('compare-scroll-area');
+  const ratios = {};
+  compareObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { ratios[e.target.dataset.docId] = e.intersectionRatio; });
+    let bestId = null, bestRatio = -1;
+    Object.entries(ratios).forEach(([id, r]) => { if (r > bestRatio) { bestRatio = r; bestId = parseInt(id); } });
+    if (bestId && bestId !== activeCompareDocId && bestRatio > 0.05) {
+      setActiveCompareDoc(bestId, false);
+    }
+  }, { root: scrollArea, threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0] });
+  docs.forEach(doc => {
+    const el = document.getElementById(`compare-section-${doc.id}`);
+    if (el) { ratios[doc.id] = 0; compareObserver.observe(el); }
+  });
+}
+
+function setActiveCompareDoc(docId, shouldScroll = true) {
+  activeCompareDocId = docId;
+  const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
+  const idx = docs.findIndex(d => d.id === docId);
+  const doc = docs[idx];
+  if (!doc) return;
+
+  // "Now viewing" indicator
+  document.getElementById('compare-ext-now-name').textContent = doc.name;
+  document.getElementById('compare-ext-now-dot').style.background = getDocColor(idx);
+
+  // Tab + list active states
+  document.querySelectorAll('.compare-ext-doc-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById(`compare-tab-${docId}`);
+  if (tab) tab.classList.add('active');
+  document.querySelectorAll('.compare-doc-item').forEach(t => t.classList.remove('active'));
+  const li = document.getElementById(`compare-list-item-${docId}`);
+  if (li) li.classList.add('active');
+  document.querySelectorAll('.compare-doc-num').forEach(el => el.classList.remove('active'));
+  const numEl = document.getElementById(`compare-num-${docId}`);
+  if (numEl) numEl.classList.add('active');
+
+  // Render extracted fields
+  const fields = getDocExtractedFields(doc);
+  document.getElementById('compare-ext-fields-wrap').innerHTML = fields.map(f =>
+    f.section
+      ? `<div class="compare-ext-section-title">${f.section}</div>`
+      : `<div class="compare-ext-field"><span class="compare-ext-label">${f.label}</span><span class="compare-ext-value">${f.value}</span></div>`
+  ).join('');
+
+  if (shouldScroll) scrollToCompareDoc(docId);
+}
+
+function scrollToCompareDoc(docId) {
+  const section = document.getElementById(`compare-section-${docId}`);
+  const scrollArea = document.getElementById('compare-scroll-area');
+  if (section && scrollArea) scrollArea.scrollTo({ top: section.offsetTop - 16, behavior: 'smooth' });
+}
+
+function removeFromCompare(docId) {
+  selectedDocIds.delete(docId);
+  const cb = document.querySelector(`.doc-checkbox[data-id="${docId}"]`);
+  if (cb) { cb.checked = false; const row = cb.closest('tr'); if (row) row.classList.remove('row-selected'); }
+  updateCompareBar();
+  if (selectedDocIds.size < 2) { exitCompareMode(); }
+  else renderCompareView();
+}
+
+// ===================== EXTRACTED FIELDS DATA =====================
+function getDocExtractedFields(doc) {
+  const c = doc.classification;
+  if (c === 'W-2 Form') return [
+    { section:'Employee' },
+    { label:'Employee SSN', value:'***-**-1234' },
+    { label:'Employer EIN', value:'12-3456789' },
+    { label:'Employer', value:'ABC Corporation' },
+    { section:'Income' },
+    { label:'Wages, tips, other comp', value:'$85,000.00' },
+    { label:'Federal income tax', value:'$12,450.00' },
+    { label:'Social security wages', value:'$85,000.00' },
+    { label:'Medicare wages', value:'$85,000.00' },
+    { section:'State' },
+    { label:'State', value:'NY' },
+    { label:'State wages', value:'$85,000.00' },
+    { label:'State income tax', value:'$5,950.00' },
+  ];
+  if (c === 'Pay Stub') {
+    const isJim = doc.name.includes('Jim');
+    return [
+      { section:'Employee' },
+      { label:'Employee', value: isJim ? 'Jim Halpert' : 'Alice Firstimer' },
+      { label:'Employer', value: isJim ? 'Dunder Mifflin Paper Co.' : 'Costco Wholesale Corp.' },
+      { label:'Pay Period', value:'Jan 1 – Jan 15, 2026' },
+      { section:'Earnings' },
+      { label:'Gross Pay (Period)', value: isJim ? '$4,166.67' : '$3,461.54' },
+      { label:'YTD Gross', value: isJim ? '$8,333.34' : '$6,923.08' },
+      { section:'Deductions' },
+      { label:'Federal Tax', value: isJim ? '$625.00' : '$519.23' },
+      { label:'State Tax', value: isJim ? '$128.17' : '$106.40' },
+      { label:'Social Security', value: isJim ? '$258.33' : '$214.80' },
+      { label:'Net Pay', value: isJim ? '$3,094.75' : '$2,570.86' },
+    ];
+  }
+  if (c === 'Bank Statement') return [
+    { section:'Account' },
+    { label:'Bank', value:'Chase Bank, N.A.' },
+    { label:'Account Number', value:'****4532' },
+    { label:'Account Type', value:'Checking' },
+    { section:'Statement Period' },
+    { label:'Period', value:'Jan 1 – Jan 31, 2026' },
+    { label:'Beginning Balance', value:'$42,150.33' },
+    { label:'Ending Balance', value:'$38,920.47' },
+    { section:'Activity' },
+    { label:'Total Deposits', value:'$8,500.00' },
+    { label:'Total Withdrawals', value:'$11,729.86' },
+    { label:'Average Daily Balance', value:'$40,535.90' },
+  ];
+  if (c === 'Tax Return') return [
+    { section:'Filing' },
+    { label:'Tax Year', value:'2025' },
+    { label:'Filing Status', value:'Married Filing Jointly' },
+    { label:'Taxpayer SSN', value:'***-**-1234' },
+    { section:'Income' },
+    { label:'Total Income', value:'$182,500.00' },
+    { label:'Adjusted Gross Income', value:'$178,200.00' },
+    { label:'Taxable Income', value:'$152,600.00' },
+    { section:'Tax' },
+    { label:'Total Tax', value:'$28,450.00' },
+    { label:'Withholdings', value:'$30,760.00' },
+    { label:'Refund', value:'$2,310.00' },
+  ];
+  if (c === 'Appraisal') return [
+    { section:'Property' },
+    { label:'Address', value:'1725 Slough Ave, Scranton, PA' },
+    { label:'Type', value:'Single Family Residence' },
+    { label:'Appraisal Date', value:'Jan 25, 2026' },
+    { section:'Valuation' },
+    { label:'Appraised Value', value:'$545,000' },
+    { label:'LTV', value:'95.4%' },
+    { label:'Appraiser', value:'Heritage Appraisals LLC' },
+  ];
+  if (c === 'Title Document') return [
+    { section:'Property' },
+    { label:'Address', value:'1725 Slough Ave, Scranton, PA' },
+    { label:'Commitment Date', value:'Jan 23, 2026' },
+    { section:'Title' },
+    { label:'Title Company', value:'Keystone Title & Trust' },
+    { label:'Policy Amount', value:'$520,000' },
+    { label:'Open Exceptions', value:'2' },
+  ];
+  // Default
+  return [
+    { section:'Document Info' },
+    { label:'Classification', value:doc.classification },
+    { label:'Status', value:statusLabel(doc.status) },
+    { label:'Version', value:doc.version },
+    { label:'Uploaded By', value:doc.uploadedBy },
+    { label:'Upload Date', value:doc.date },
+    { label:'Source', value:doc.source },
+    ...(doc.expires ? [{ label:'Expiration', value:doc.expires }] : []),
+  ];
+}
+
+// ===================== COMPARE DOC BODY CONTENT =====================
+function renderCompareDocBody(doc) {
+  const c = doc.classification;
+
+  if (c === 'W-2 Form') {
+    const name = doc.name.includes('Alice') ? 'Alice J. Firstimer' : 'Jim Halpert';
+    return `<div class="w2-doc" style="width:560px;">
+      <div class="w2-form-title" style="margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div><h2 style="font-size:14px;font-weight:900;letter-spacing:.3px;">W-2 Wage and Tax Statement</h2>
+          <div class="w2-subtitle">Department of the Treasury — Internal Revenue Service</div></div>
+          <div class="w2-year" style="font-size:20px;">2025</div>
+        </div>
+      </div>
+      <div class="w2-grid">
+        <div class="w2-row">
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">a</span><span class="w2-box-label">Employee's social security number</span><span class="w2-box-value">***-**-1234</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">b</span><span class="w2-box-label">Employer identification number (EIN)</span><span class="w2-box-value">12-3456789</span></div>
+        </div>
+        <div class="w2-row">
+          <div class="w2-box w2-box-full w2-tall"><span class="w2-box-num">c</span><span class="w2-box-label">Employer's name, address, and ZIP code</span><span class="w2-box-value" style="font-weight:400;line-height:1.7;">ABC Corporation<br>123 Business Ave, New York, NY 10001</span></div>
+        </div>
+        <div class="w2-row">
+          <div class="w2-box w2-box-full w2-tall"><span class="w2-box-num">e</span><span class="w2-box-label">Employee's name</span><span class="w2-box-value" style="font-weight:400;">${name}</span></div>
+        </div>
+        <div class="w2-row">
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">1</span><span class="w2-box-label">Wages, tips, other compensation</span><span class="w2-box-value">$85,000.00</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">2</span><span class="w2-box-label">Federal income tax withheld</span><span class="w2-box-value">$12,450.00</span></div>
+        </div>
+        <div class="w2-row">
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">3</span><span class="w2-box-label">Social security wages</span><span class="w2-box-value">$85,000.00</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">4</span><span class="w2-box-label">Social security tax withheld</span><span class="w2-box-value">$5,270.00</span></div>
+        </div>
+        <div class="w2-row">
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">5</span><span class="w2-box-label">Medicare wages and tips</span><span class="w2-box-value">$85,000.00</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">6</span><span class="w2-box-label">Medicare tax withheld</span><span class="w2-box-value">$1,232.50</span></div>
+        </div>
+        <div class="w2-row">
+          <div class="w2-box" style="flex:0 0 38px;"><span class="w2-box-num">15</span><span class="w2-box-label">St</span><span class="w2-box-value">NY</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-label">Employer's state ID</span><span class="w2-box-value">NY-987654</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">16</span><span class="w2-box-label">State wages</span><span class="w2-box-value">$85,000.00</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">17</span><span class="w2-box-label">State income tax</span><span class="w2-box-value">$5,950.00</span></div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if (c === 'Pay Stub') {
+    const isJim = doc.name.includes('Jim');
+    const employer = isJim ? 'Dunder Mifflin Paper Co.' : 'Costco Wholesale Corp.';
+    const empName = isJim ? 'Jim Halpert' : 'Alice Firstimer';
+    const rate = isJim ? '$50.00' : '$40.00';
+    const gross = isJim ? '$4,166.67' : '$3,461.54';
+    const ytdGross = isJim ? '$8,333.34' : '$6,923.08';
+    const fedTax = isJim ? '$625.00' : '$519.23';
+    const stTax = isJim ? '$128.17' : '$106.40';
+    const ss = isJim ? '$258.33' : '$214.80';
+    const medicare = isJim ? '$60.42' : '$50.25';
+    const netPay = isJim ? '$3,094.75' : '$2,570.86';
+    const deductions = isJim ? '$1,071.92' : '$890.68';
+    return `<div class="mock-paystub">
+      <div class="mock-paystub-header">
+        <div><h2>${employer}</h2><div class="sub">Pay Statement — Period: Jan 1–15, 2026</div></div>
+        <div style="text-align:right;font-size:11px;"><div style="font-weight:700;font-size:13px;">PAY DATE: Jan 15, 2026</div></div>
+      </div>
+      <div class="mock-paystub-meta">
+        <div class="mock-ps-meta-item"><span class="mock-ps-meta-label">Employee</span><span class="mock-ps-meta-value">${empName}</span></div>
+        <div class="mock-ps-meta-item"><span class="mock-ps-meta-label">Employee ID</span><span class="mock-ps-meta-value">${isJim ? '00421' : '00876'}</span></div>
+        <div class="mock-ps-meta-item"><span class="mock-ps-meta-label">Title</span><span class="mock-ps-meta-value">${isJim ? 'Regional Manager' : 'Department Lead'}</span></div>
+        <div class="mock-ps-meta-item"><span class="mock-ps-meta-label">Pay Type</span><span class="mock-ps-meta-value">Hourly + Commission</span></div>
+      </div>
+      <table class="mock-ps-table">
+        <thead><tr><th>Earnings</th><th>Rate</th><th>Hours</th><th>Current</th><th>YTD</th></tr></thead>
+        <tbody>
+          <tr><td>Regular Pay</td><td>${rate}/hr</td><td>80.0</td><td>${isJim ? '$4,000.00' : '$3,200.00'}</td><td>${isJim ? '$8,000.00' : '$6,400.00'}</td></tr>
+          <tr><td>Commission</td><td>—</td><td>—</td><td>${isJim ? '$166.67' : '$261.54'}</td><td>${isJim ? '$333.34' : '$523.08'}</td></tr>
+        </tbody>
+      </table>
+      <table class="mock-ps-table" style="margin-top:6px;">
+        <thead><tr><th>Deductions</th><th></th><th></th><th>Current</th><th>YTD</th></tr></thead>
+        <tbody>
+          <tr><td>Federal Income Tax</td><td></td><td></td><td>${fedTax}</td><td>${isJim ? '$1,250.00' : '$1,038.46'}</td></tr>
+          <tr><td>State Income Tax (PA)</td><td></td><td></td><td>${stTax}</td><td>${isJim ? '$256.34' : '$212.80'}</td></tr>
+          <tr><td>Social Security (6.2%)</td><td></td><td></td><td>${ss}</td><td>${isJim ? '$516.67' : '$429.60'}</td></tr>
+          <tr><td>Medicare (1.45%)</td><td></td><td></td><td>${medicare}</td><td>${isJim ? '$120.83' : '$100.50'}</td></tr>
+        </tbody>
+      </table>
+      <div class="mock-ps-totals">
+        <div class="mock-ps-total"><span class="mock-ps-total-label">Gross Pay</span><span class="mock-ps-total-value">${gross}</span></div>
+        <div class="mock-ps-total"><span class="mock-ps-total-label">Deductions</span><span class="mock-ps-total-value">${deductions}</span></div>
+        <div class="mock-ps-total"><span class="mock-ps-total-label">Net Pay</span><span class="mock-ps-total-value net">${netPay}</span></div>
+      </div>
+    </div>`;
+  }
+
+  if (c === 'Bank Statement') return `<div class="mock-bankstmt">
+    <div class="mock-bank-header">
+      <div>
+        <div class="mock-bank-logo">CHASE</div>
+        <div style="font-size:11px;color:#6b7280;margin-top:2px;">JPMorgan Chase Bank, N.A.</div>
+      </div>
+      <div class="mock-bank-acct">
+        <div style="font-size:11px;color:#6b7280;">Checking Account</div>
+        <div style="font-weight:700;font-size:15px;color:#111;">****4532</div>
+        <div style="font-size:11px;color:#6b7280;">Jim &amp; Pam Halpert</div>
+      </div>
+    </div>
+    <div class="mock-bank-period">Statement Period: January 1, 2026 – January 31, 2026</div>
+    <div class="mock-bank-summary">
+      <div class="mock-bank-sum-item"><div class="mock-bank-sum-label">Beginning Balance</div><div class="mock-bank-sum-value">$42,150.33</div></div>
+      <div class="mock-bank-sum-item"><div class="mock-bank-sum-label">Ending Balance</div><div class="mock-bank-sum-value">$38,920.47</div></div>
+      <div class="mock-bank-sum-item"><div class="mock-bank-sum-label">Net Change</div><div class="mock-bank-sum-value neg">−$3,229.86</div></div>
+    </div>
+    <div class="mock-bank-txn-head"><span>Date</span><span>Description</span><span style="text-align:right;">Amount</span><span style="text-align:right;">Balance</span></div>
+    <div class="mock-bank-txn"><span>Jan 2</span><span>Payroll – Dunder Mifflin</span><span class="credit">+$3,094.75</span><span class="bal">$45,245.08</span></div>
+    <div class="mock-bank-txn"><span>Jan 5</span><span>Mortgage – First Federal Bank</span><span class="debit">$2,184.50</span><span class="bal">$43,060.58</span></div>
+    <div class="mock-bank-txn"><span>Jan 7</span><span>Whole Foods Market</span><span class="debit">$287.43</span><span class="bal">$42,773.15</span></div>
+    <div class="mock-bank-txn"><span>Jan 10</span><span>PPL Electric Utility</span><span class="debit">$198.22</span><span class="bal">$42,574.93</span></div>
+    <div class="mock-bank-txn"><span>Jan 15</span><span>Transfer – Savings Account</span><span class="debit">$1,500.00</span><span class="bal">$41,074.93</span></div>
+    <div class="mock-bank-txn"><span>Jan 16</span><span>Payroll – Dunder Mifflin</span><span class="credit">+$3,094.75</span><span class="bal">$44,169.68</span></div>
+    <div class="mock-bank-txn"><span>Jan 20</span><span>Progressive Car Insurance</span><span class="debit">$312.00</span><span class="bal">$43,857.68</span></div>
+    <div class="mock-bank-txn"><span>Jan 23</span><span>Amazon.com</span><span class="debit">$248.39</span><span class="bal">$43,609.29</span></div>
+    <div class="mock-bank-txn"><span>Jan 28</span><span>PNC Mortgage Escrow</span><span class="debit">$4,288.82</span><span class="bal">$39,320.47</span></div>
+    <div class="mock-bank-txn"><span>Jan 31</span><span>ATM Withdrawal</span><span class="debit">$400.00</span><span class="bal">$38,920.47</span></div>
+  </div>`;
+
+  // Generic placeholder for other doc types
+  const icons = { 'Tax Return':'📋', 'Appraisal':'🏠', 'Insurance':'🛡', 'Title Document':'📜', 'Flood Cert':'🌊', 'Employment Verification':'💼', 'Gift Letter':'📝', 'Credit':'💳', 'Appraisal':'🏠' };
+  const icon = icons[c] || '📄';
+  return `<div class="mock-doc-placeholder" style="text-align:center;">
+    <div class="mock-doc-placeholder-icon">${icon}</div>
+    <div class="mock-doc-placeholder-title">${doc.name}</div>
+    <div class="mock-doc-placeholder-sub">${doc.classification} · ${doc.source}</div>
+    <div class="mock-doc-props">
+      <div class="mock-doc-props-head">Document Properties</div>
+      ${[['Status', statusLabel(doc.status)], ['Version', doc.version], ['Uploaded by', doc.uploadedBy], ['Upload date', doc.date], ['Expiration', doc.expires || '—'], ['Source', doc.source]].map(([k,v]) => `<div class="mock-doc-props-row"><span>${k}</span><span>${v}</span></div>`).join('')}
+    </div>
+  </div>`;
+}
+
 // ===================== ROW KEBAB MENU =====================
 let _kebabDocId = null;
 function toggleKebab(e, id) {
