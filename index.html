@@ -2299,30 +2299,60 @@ function setActiveCompareDoc(docId, shouldScroll = true) {
   const doc = docs[idx];
   if (!doc) return;
 
-  // "Now viewing" indicator
-  document.getElementById('compare-ext-now-name').textContent = doc.name;
-  document.getElementById('compare-ext-now-dot').style.background = getDocColor(idx);
+  // Update pill active state
+  document.querySelectorAll('.compare-doc-pill').forEach(p => p.classList.remove('active'));
+  const pill = document.getElementById(`compare-pill-${docId}`);
+  if (pill) pill.classList.add('active');
 
-  // Tab + list active states
+  // Update tab active state
   document.querySelectorAll('.compare-ext-doc-tab').forEach(t => t.classList.remove('active'));
   const tab = document.getElementById(`compare-tab-${docId}`);
   if (tab) tab.classList.add('active');
-  document.querySelectorAll('.compare-doc-item').forEach(t => t.classList.remove('active'));
-  const li = document.getElementById(`compare-list-item-${docId}`);
-  if (li) li.classList.add('active');
-  document.querySelectorAll('.compare-doc-num').forEach(el => el.classList.remove('active'));
-  const numEl = document.getElementById(`compare-num-${docId}`);
-  if (numEl) numEl.classList.add('active');
 
-  // Render extracted fields
+  // Render extracted fields — clickable where data-field exists
   const fields = getDocExtractedFields(doc);
-  document.getElementById('compare-ext-fields-wrap').innerHTML = fields.map(f =>
-    f.section
-      ? `<div class="compare-ext-section-title">${f.section}</div>`
-      : `<div class="compare-ext-field"><span class="compare-ext-label">${f.label}</span><span class="compare-ext-value">${f.value}</span></div>`
-  ).join('');
+  document.getElementById('compare-ext-fields-wrap').innerHTML = fields.map(f => {
+    if (f.divider) return `<div class="compare-ext-divider"></div>`;
+    const hasField = !!f.field;
+    return `<div class="compare-ext-field${hasField ? ' has-highlight' : ''}" data-field="${f.field || ''}"
+      ${hasField ? `onclick="selectCompareField('${f.field}')"` : ''}>
+      <span class="compare-ext-label">${f.label}</span>
+      <span class="compare-ext-value">${f.value}</span>
+    </div>`;
+  }).join('');
 
   if (shouldScroll) scrollToCompareDoc(docId);
+}
+
+// Highlight extracted field + matching element in the visible doc
+function selectCompareField(fieldKey) {
+  if (!fieldKey) return;
+  // Clear previous
+  document.querySelectorAll('.compare-ext-field').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.compare-doc-inner [data-field]').forEach(el => el.classList.remove('doc-field-highlight'));
+  // Highlight selected field row
+  const extEl = document.querySelector(`.compare-ext-field[data-field="${fieldKey}"]`);
+  if (extEl) extEl.classList.add('selected');
+  // Highlight in the active doc section
+  const section = document.getElementById(`compare-section-${activeCompareDocId}`);
+  if (section) {
+    const docEl = section.querySelector(`[data-field="${fieldKey}"]`);
+    if (docEl) docEl.classList.add('doc-field-highlight');
+  }
+}
+
+// Scale each doc inner to fit its container without overflow
+function scaleCompareDocSections() {
+  document.querySelectorAll('.compare-doc-body').forEach(body => {
+    const inner = body.querySelector('.compare-doc-inner');
+    if (!inner) return;
+    inner.style.zoom = '1';
+    const bodyW = body.clientWidth;
+    const innerW = inner.scrollWidth;
+    if (innerW > bodyW && bodyW > 0) {
+      inner.style.zoom = String((bodyW / innerW).toFixed(3));
+    }
+  });
 }
 
 function scrollToCompareDoc(docId) {
