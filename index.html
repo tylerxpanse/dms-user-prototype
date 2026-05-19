@@ -2223,14 +2223,13 @@ function exitCompareMode() {
 
 function renderCompareView() {
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
-  document.getElementById('compare-toolbar-sub').textContent = `${docs.length} document${docs.length > 1 ? 's' : ''}`;
 
-  // Left panel
-  document.getElementById('compare-docs-list-items').innerHTML = docs.map((doc, i) => `
-    <div class="compare-doc-item" id="compare-list-item-${doc.id}" onclick="scrollToCompareDoc(${doc.id})">
-      <span class="compare-doc-item-badge" style="background:${getDocColor(i)};color:#fff;">${i+1}</span>
-      <span class="compare-doc-item-name" title="${doc.name}">${doc.name}</span>
-      <span class="compare-doc-item-remove" onclick="event.stopPropagation();removeFromCompare(${doc.id})" title="Remove">✕</span>
+  // Toolbar pills
+  document.getElementById('compare-doc-pills').innerHTML = docs.map((doc, i) => `
+    <div class="compare-doc-pill" id="compare-pill-${doc.id}" onclick="setActiveCompareDoc(${doc.id})" style="color:${getDocColor(i)}">
+      <span class="compare-doc-pill-dot" style="background:${getDocColor(i)};"></span>
+      <span class="compare-doc-pill-name" title="${doc.name}">${doc.name}</span>
+      <span class="compare-doc-pill-x" onclick="event.stopPropagation();removeFromCompare(${doc.id})">✕</span>
     </div>
   `).join('');
 
@@ -2246,20 +2245,21 @@ function renderCompareView() {
     const expired = doc.expires && new Date(doc.expires) < today;
     const sc = statusColors[doc.status] || statusColors['received'];
     return `
-      <div class="compare-doc-section" id="compare-section-${doc.id}" data-doc-id="${doc.id}">
+      <div class="compare-doc-section" id="compare-section-${doc.id}" data-doc-id="${doc.id}" style="border-top: 3px solid ${getDocColor(i)};">
         <div class="compare-doc-header">
-          <div class="compare-doc-num" id="compare-num-${doc.id}">${i+1}</div>
-          <div class="compare-doc-color-bar" style="background:${getDocColor(i)};"></div>
+          <div class="compare-doc-color-strip" style="background:${getDocColor(i)};"></div>
           <div class="compare-doc-header-name" title="${doc.name}">${doc.name}</div>
-          <span class="compare-doc-header-type">${doc.classification}</span>
+          <span class="compare-doc-header-meta">${doc.classification}</span>
           <span class="compare-status-pill" style="background:${sc.bg};color:${sc.col};">${statusLabel(doc.status)}</span>
-          ${expired ? '<span class="compare-status-pill" style="background:#fee2e2;color:#dc2626;margin-left:2px;">Expired</span>' : ''}
+          ${expired ? '<span class="compare-status-pill" style="background:#fee2e2;color:#dc2626;">Expired</span>' : ''}
         </div>
-        <div class="compare-doc-body">${renderCompareDocBody(doc)}</div>
+        <div class="compare-doc-body">
+          <div class="compare-doc-inner" id="compare-inner-${doc.id}">${renderCompareDocBody(doc)}</div>
+        </div>
       </div>`;
   }).join('');
 
-  // Extracted tab bar
+  // Extracted fields tab bar (no header — tabs are self-explanatory)
   document.getElementById('compare-ext-doc-tabs').innerHTML = docs.map((doc, i) => `
     <div class="compare-ext-doc-tab" id="compare-tab-${doc.id}" onclick="setActiveCompareDoc(${doc.id})">
       <span class="compare-ext-doc-tab-dot" style="background:${getDocColor(i)};"></span>
@@ -2267,10 +2267,11 @@ function renderCompareView() {
     </div>
   `).join('');
 
-  // Set first doc active
+  // Set first doc active, then scale
   activeCompareDocId = docs[0].id;
   setActiveCompareDoc(docs[0].id, false);
   setupCompareObserver(docs);
+  requestAnimationFrame(scaleCompareDocSections);
 }
 
 function setupCompareObserver(docs) {
