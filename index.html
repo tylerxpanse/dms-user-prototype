@@ -2399,9 +2399,9 @@ function getDocExtractedFields(doc) {
   if (c === 'Pay Stub') {
     const isJim = doc.name.includes('Jim');
     return [
-      { label:'Employee', value: isJim ? 'Jim Halpert' : 'Alice Firstimer' },
-      { label:'Employer', value: isJim ? 'Dunder Mifflin Paper Co.' : 'Costco Wholesale Corp.' },
-      { label:'Pay Period', value:'Jan 1 – Jan 15, 2026' },
+      { label:'Employee', value: isJim ? 'Jim Halpert' : 'Alice Firstimer', field:'employee' },
+      { label:'Employer', value: isJim ? 'Dunder Mifflin Paper Co.' : 'Costco Wholesale Corp.', field:'employer' },
+      { label:'Pay Period', value:'Jan 1 – Jan 15, 2026', field:'pay-period' },
       { divider: true },
       { label:'Gross Pay', value: isJim ? '$4,166.67' : '$3,461.54', field:'gross-pay' },
       { label:'YTD Gross', value: isJim ? '$8,333.34' : '$6,923.08', field:'ytd-gross' },
