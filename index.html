@@ -2206,12 +2206,13 @@ let _rightPanelWasOpen = false;
 
 function enterCompareMode() {
   if (selectedDocIds.size < 2) return;
-  // Hide entire right sidebar to give center area maximum room
+  // Hide right sidebar + nav section list to give center area maximum room
   const rpw = document.getElementById('right-panel-wrap');
   const ris = document.getElementById('right-icon-strip');
   _rightPanelWasOpen = !rpw.classList.contains('collapsed');
   rpw.classList.add('collapsed');
-  ris.classList.add('hidden'); // hide strip too
+  ris.classList.add('hidden');
+  document.querySelector('.nav-section-list').style.display = 'none';
   document.getElementById('screen-list').style.display = 'none';
   document.getElementById('screen-compare').classList.add('visible');
   document.getElementById('compare-bar').classList.add('hidden');
