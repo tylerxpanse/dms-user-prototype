@@ -2464,7 +2464,7 @@ function renderCompareDocBody(doc) {
 
   if (c === 'W-2 Form') {
     const name = doc.name.includes('Alice') ? 'Alice J. Firstimer' : 'Jim Halpert';
-    return `<div class="w2-doc" style="width:560px;">
+    return `<div class="w2-doc" style="width:580px;">
       <div class="w2-form-title" style="margin-bottom:8px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div><h2 style="font-size:14px;font-weight:900;letter-spacing:.3px;">W-2 Wage and Tax Statement</h2>
@@ -2474,8 +2474,8 @@ function renderCompareDocBody(doc) {
       </div>
       <div class="w2-grid">
         <div class="w2-row">
-          <div class="w2-box w2-box-wide"><span class="w2-box-num">a</span><span class="w2-box-label">Employee's social security number</span><span class="w2-box-value">***-**-1234</span></div>
-          <div class="w2-box w2-box-wide"><span class="w2-box-num">b</span><span class="w2-box-label">Employer identification number (EIN)</span><span class="w2-box-value">12-3456789</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">a</span><span class="w2-box-label">Employee's social security number</span><span class="w2-box-value" data-field="ssn">***-**-1234</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">b</span><span class="w2-box-label">Employer identification number (EIN)</span><span class="w2-box-value" data-field="ein">12-3456789</span></div>
         </div>
         <div class="w2-row">
           <div class="w2-box w2-box-full w2-tall"><span class="w2-box-num">c</span><span class="w2-box-label">Employer's name, address, and ZIP code</span><span class="w2-box-value" style="font-weight:400;line-height:1.7;">ABC Corporation<br>123 Business Ave, New York, NY 10001</span></div>
@@ -2484,8 +2484,8 @@ function renderCompareDocBody(doc) {
           <div class="w2-box w2-box-full w2-tall"><span class="w2-box-num">e</span><span class="w2-box-label">Employee's name</span><span class="w2-box-value" style="font-weight:400;">${name}</span></div>
         </div>
         <div class="w2-row">
-          <div class="w2-box w2-box-wide"><span class="w2-box-num">1</span><span class="w2-box-label">Wages, tips, other compensation</span><span class="w2-box-value">$85,000.00</span></div>
-          <div class="w2-box w2-box-wide"><span class="w2-box-num">2</span><span class="w2-box-label">Federal income tax withheld</span><span class="w2-box-value">$12,450.00</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">1</span><span class="w2-box-label">Wages, tips, other compensation</span><span class="w2-box-value" data-field="wages">$85,000.00</span></div>
+          <div class="w2-box w2-box-wide"><span class="w2-box-num">2</span><span class="w2-box-label">Federal income tax withheld</span><span class="w2-box-value" data-field="fed-tax">$12,450.00</span></div>
         </div>
         <div class="w2-row">
           <div class="w2-box w2-box-wide"><span class="w2-box-num">3</span><span class="w2-box-label">Social security wages</span><span class="w2-box-value">$85,000.00</span></div>
