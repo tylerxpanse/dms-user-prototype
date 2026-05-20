@@ -2562,8 +2562,9 @@ let _cmpFieldPanelOpen = true;
 function toggleCmpFieldPanel() {
   _cmpFieldPanelOpen = !_cmpFieldPanelOpen;
   document.getElementById('cmp-fields-panel').classList.toggle('collapsed', !_cmpFieldPanelOpen);
-  // Re-scale papers after the CSS transition settles
-  setTimeout(scaleCmpPapers, 220);
+  const toggle = document.getElementById('cmp-fields-toggle');
+  if (toggle) toggle.classList.toggle('visible', !_cmpFieldPanelOpen);
+  // Docs don't move — no need to rescale
 }
 
 // ---- Hover preview ----
