@@ -2246,7 +2246,7 @@ function exitSelectMode() {
 // ===================== MULTI-SELECT =====================
 function toggleDocSelect(id, checkbox) {
   if (checkbox.checked) {
-    if (selectedDocIds.size >= 5) { checkbox.checked = false; return; }
+    if (selectedDocIds.size >= 2) { checkbox.checked = false; return; }
     selectedDocIds.add(id);
   } else {
     selectedDocIds.delete(id);
