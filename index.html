@@ -2067,7 +2067,7 @@ function selectField(key) {
   if (extRow) extRow.classList.add('selected');
 
   // Highlight the matching doc element
-  const docEl = document.querySelector(`.w2-doc [data-field="${key}"]`);
+  const docEl = document.querySelector(`#detail-doc-paper [data-field="${key}"]`);
   if (docEl) docEl.classList.add('doc-field-highlight');
 }
 
