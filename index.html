@@ -2310,6 +2310,13 @@ function renderCompareView() {
           <span class="compare-doc-header-meta">${doc.classification}</span>
           <span class="compare-status-pill" style="background:${sc.bg};color:${sc.col};">${statusLabel(doc.status)}</span>
           ${expired ? '<span class="compare-status-pill" style="background:#fee2e2;color:#dc2626;">Expired</span>' : ''}
+          <div class="cdoc-controls">
+            <button class="cdoc-ctrl-btn" onclick="event.stopPropagation();compareZoomOut(${doc.id})" title="Zoom out">−</button>
+            <span class="cdoc-ctrl-pct" id="compare-zoom-pct-${doc.id}">100%</span>
+            <button class="cdoc-ctrl-btn" onclick="event.stopPropagation();compareZoomIn(${doc.id})" title="Zoom in">+</button>
+            <div class="cdoc-ctrl-divider"></div>
+            <button class="cdoc-ctrl-btn" onclick="event.stopPropagation();openCompareFullscreen(${doc.id})" title="Fullscreen" style="font-size:14px;">⤢</button>
+          </div>
         </div>
         <div class="compare-doc-body">
           <div class="compare-doc-inner" id="compare-inner-${doc.id}">${renderCompareDocBody(doc)}</div>
