@@ -2238,6 +2238,7 @@ let _rightPanelWasOpen = false;
 
 function enterCompareMode() {
   if (selectedDocIds.size < 2) return;
+  exitSelectMode();
   // Hide right sidebar + nav section list to give center area maximum room
   const rpw = document.getElementById('right-panel-wrap');
   const ris = document.getElementById('right-icon-strip');
