@@ -1213,11 +1213,11 @@
                   <button class="page-btn">›</button>
                 </div>
                 <div class="zoom-ctrl" style="margin-left:12px;">
-                  <button class="page-btn">−</button>
-                  100%
-                  <button class="page-btn">+</button>
+                  <button class="page-btn" onclick="detailZoomOut()">−</button>
+                  <span id="detail-zoom-pct" style="min-width:32px;text-align:center;">100%</span>
+                  <button class="page-btn" onclick="detailZoomIn()">+</button>
                 </div>
-                <button class="fullscreen-btn" style="margin-left:8px;">⤢</button>
+                <button class="fullscreen-btn" style="margin-left:8px;" onclick="openDetailFullscreen()" title="Fullscreen">⤢</button>
               </div>
               <div class="doc-preview-content">
                 <button class="view-extracted-btn" id="view-extracted-btn" onclick="toggleExtracted()" style="display:none;">
