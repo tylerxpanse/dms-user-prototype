@@ -2963,11 +2963,10 @@ function openDetailFullscreen() {
   document.getElementById('doc-fs-overlay').requestFullscreen?.().catch(() => {});
 }
 
-function openCompareFullscreen(docId) {
-  const inner = document.getElementById(`compare-inner-${docId}`);
+function openCompareFullscreen(side) {
+  const inner = document.getElementById(`cmp-inner-${side}`);
   if (!inner) return;
-  const section = document.getElementById(`compare-section-${docId}`);
-  const title = section?.querySelector('.compare-doc-header-name')?.textContent || 'Document';
+  const title = document.getElementById(`cmp-header-${side}`)?.querySelector('.cmp-doc-header-name')?.textContent || 'Document';
   document.getElementById('doc-fs-title').textContent = title;
   document.getElementById('doc-fs-paper').innerHTML = inner.innerHTML;
   _fsUserZoom = Math.min((window.innerHeight - 80) / 1056, 1.0);
