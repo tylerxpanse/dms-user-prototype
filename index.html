@@ -2299,7 +2299,7 @@ function enterCompareMode() {
 function exitCompareMode() {
   document.getElementById('screen-compare').classList.remove('visible');
   document.getElementById('screen-list').style.display = '';
-  if (compareObserver) { compareObserver.disconnect(); compareObserver = null; }
+  _activeCmpField = null;
   // Restore nav section list and right sidebar
   document.querySelector('.nav-section-list').style.display = '';
   if (_rightPanelWasOpen) {
