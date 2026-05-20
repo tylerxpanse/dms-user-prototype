@@ -2309,177 +2309,251 @@ function exitCompareMode() {
   if (selectedDocIds.size > 0) document.getElementById('compare-bar').classList.remove('hidden');
 }
 
+// ===================== COMPARE VIEW — SIDE BY SIDE =====================
+const CMP_COLOR_A = '#2563eb';
+const CMP_COLOR_B = '#7c3aed';
+let _cmpUserZoom = { a: 1.0, b: 1.0 };
+let _cmpBaseZoom = { a: 1.0, b: 1.0 };
+let _activeCmpField = null;
+
 function renderCompareView() {
-  _compareUserZooms = {};
+  _cmpUserZoom = { a: 1.0, b: 1.0 };
+  _activeCmpField = null;
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
+  if (docs.length < 2) return;
+  const [docA, docB] = docs;
 
-  // Toolbar pills
-  document.getElementById('compare-doc-pills').innerHTML = docs.map((doc, i) => `
-    <div class="compare-doc-pill" id="compare-pill-${doc.id}" onclick="setActiveCompareDoc(${doc.id})" style="color:${getDocColor(i)}">
-      <span class="compare-doc-pill-dot" style="background:${getDocColor(i)};"></span>
-      <span class="compare-doc-pill-name" title="${doc.name}">${doc.name}</span>
-      <span class="compare-doc-pill-x" onclick="event.stopPropagation();removeFromCompare(${doc.id})">✕</span>
-    </div>
-  `).join('');
+  // Toolbar pills — show A vs B
+  document.getElementById('compare-doc-pills').innerHTML =
+    `<div class="compare-doc-pill" style="border-color:${CMP_COLOR_A};color:${CMP_COLOR_A};background:#eff6ff;">
+       <span class="compare-doc-pill-dot" style="background:${CMP_COLOR_A};"></span>
+       <span class="compare-doc-pill-name" title="${docA.name}">${docA.name}</span>
+     </div>
+     <span style="font-size:11px;color:#9ca3af;flex-shrink:0;padding:0 2px;">vs</span>
+     <div class="compare-doc-pill" style="border-color:${CMP_COLOR_B};color:${CMP_COLOR_B};background:#f5f3ff;">
+       <span class="compare-doc-pill-dot" style="background:${CMP_COLOR_B};"></span>
+       <span class="compare-doc-pill-name" title="${docB.name}">${docB.name}</span>
+     </div>`;
 
-  // Stacked center docs
-  const today = new Date('2026-05-19');
-  const statusColors = {
-    'approved':      { bg:'#dcfce7', col:'#166534' },
-    'received':      { bg:'#f3f4f6', col:'#374151' },
-    'under-review':  { bg:'#eff6ff', col:'#1d4ed8' },
-    'needs-action':  { bg:'#fee2e2', col:'#dc2626' },
-  };
-  document.getElementById('compare-scroll-area').innerHTML = docs.map((doc, i) => {
-    const expired = doc.expires && new Date(doc.expires) < today;
-    const sc = statusColors[doc.status] || statusColors['received'];
-    return `
-      <div class="compare-doc-section" id="compare-section-${doc.id}" data-doc-id="${doc.id}" style="border-top: 3px solid ${getDocColor(i)};">
-        <div class="compare-doc-header">
-          <div class="compare-doc-color-strip" style="background:${getDocColor(i)};"></div>
-          <div class="compare-doc-header-name" title="${doc.name}">${doc.name}</div>
-          <span class="compare-doc-header-meta">${doc.classification}</span>
-          <span class="compare-status-pill" style="background:${sc.bg};color:${sc.col};">${statusLabel(doc.status)}</span>
-          ${expired ? '<span class="compare-status-pill" style="background:#fee2e2;color:#dc2626;">Expired</span>' : ''}
-          <div class="cdoc-controls">
-            <button class="cdoc-ctrl-btn" onclick="event.stopPropagation();compareZoomOut(${doc.id})" title="Zoom out">−</button>
-            <span class="cdoc-ctrl-pct" id="compare-zoom-pct-${doc.id}">100%</span>
-            <button class="cdoc-ctrl-btn" onclick="event.stopPropagation();compareZoomIn(${doc.id})" title="Zoom in">+</button>
-            <div class="cdoc-ctrl-divider"></div>
-            <button class="cdoc-ctrl-btn" onclick="event.stopPropagation();openCompareFullscreen(${doc.id})" title="Fullscreen" style="font-size:14px;">⤢</button>
-          </div>
-        </div>
-        <div class="compare-doc-body">
-          <div class="compare-doc-inner" id="compare-inner-${doc.id}">${renderCompareDocBody(doc)}</div>
-        </div>
-      </div>`;
-  }).join('');
+  // Render each doc panel
+  renderCmpDocPanel('a', docA, CMP_COLOR_A);
+  renderCmpDocPanel('b', docB, CMP_COLOR_B);
 
-  // Extracted fields tab bar (no header — tabs are self-explanatory)
-  document.getElementById('compare-ext-doc-tabs').innerHTML = docs.map((doc, i) => `
-    <div class="compare-ext-doc-tab" id="compare-tab-${doc.id}" onclick="setActiveCompareDoc(${doc.id})">
-      <span class="compare-ext-doc-tab-dot" style="background:${getDocColor(i)};"></span>
-      <span class="compare-ext-doc-tab-name" title="${doc.name}">${doc.name}</span>
-    </div>
-  `).join('');
+  // Render center comparison panel
+  renderCmpFieldPanel(docA, docB);
 
-  // Set first doc active, then scale
-  activeCompareDocId = docs[0].id;
-  setActiveCompareDoc(docs[0].id, false);
-  setupCompareObserver(docs);
-  setTimeout(scaleCompareDocSections, 0);
-  setTimeout(scaleCompareDocSections, 250); // second pass ensures layout is fully settled
+  // Scale both papers to fit
+  setTimeout(scaleCmpPapers, 0);
+  setTimeout(scaleCmpPapers, 260);
 }
 
-let _compareObserverLocked = false;
-let _compareObserverLockTimer = null;
-function lockCompareObserver() {
-  _compareObserverLocked = true;
-  clearTimeout(_compareObserverLockTimer);
-  _compareObserverLockTimer = setTimeout(() => { _compareObserverLocked = false; }, 600);
+function renderCmpDocPanel(side, doc, color) {
+  const today = new Date('2026-05-20');
+  const expired = doc.expires && new Date(doc.expires) < today;
+  const sc = { approved:{bg:'#dcfce7',col:'#166534'}, received:{bg:'#f3f4f6',col:'#374151'}, 'under-review':{bg:'#eff6ff',col:'#1d4ed8'}, 'needs-action':{bg:'#fee2e2',col:'#dc2626'} }[doc.status] || {bg:'#f3f4f6',col:'#374151'};
+
+  document.getElementById(`cmp-header-${side}`).innerHTML = `
+    <div class="cmp-doc-color-bar" style="background:${color};"></div>
+    <div class="cmp-doc-header-name" title="${doc.name}">${doc.name}</div>
+    <span class="cmp-doc-header-meta">${doc.classification}</span>
+    <span class="compare-status-pill" style="background:${sc.bg};color:${sc.col};">${statusLabel(doc.status)}</span>
+    ${expired ? '<span class="compare-status-pill" style="background:#fee2e2;color:#dc2626;margin-left:2px;">Expired</span>' : ''}
+    <div class="cdoc-controls">
+      <button class="cdoc-ctrl-btn" onclick="cmpZoomOut('${side}')" title="Zoom out">−</button>
+      <span class="cdoc-ctrl-pct" id="cmp-zoom-pct-${side}">100%</span>
+      <button class="cdoc-ctrl-btn" onclick="cmpZoomIn('${side}')" title="Zoom in">+</button>
+      <div class="cdoc-ctrl-divider"></div>
+      <button class="cdoc-ctrl-btn" onclick="openCmpFullscreen('${side}')" title="Fullscreen" style="font-size:14px;">⤢</button>
+    </div>`;
+
+  document.getElementById(`cmp-inner-${side}`).innerHTML = renderCompareDocBody(doc);
 }
 
-function setupCompareObserver(docs) {
-  if (compareObserver) compareObserver.disconnect();
-  const scrollArea = document.getElementById('compare-scroll-area');
-  const ratios = {};
-  compareObserver = new IntersectionObserver((entries) => {
-    if (_compareObserverLocked) return;
-    entries.forEach(e => { ratios[e.target.dataset.docId] = e.intersectionRatio; });
-    let bestId = null, bestRatio = -1;
-    Object.entries(ratios).forEach(([id, r]) => { if (r > bestRatio) { bestRatio = r; bestId = parseInt(id); } });
-    if (bestId && bestId !== activeCompareDocId && bestRatio > 0.05) {
-      setActiveCompareDoc(bestId, false);
-    }
-  }, { root: scrollArea, threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0] });
-  docs.forEach(doc => {
-    const el = document.getElementById(`compare-section-${doc.id}`);
-    if (el) { ratios[doc.id] = 0; compareObserver.observe(el); }
+function scaleCmpPapers() {
+  ['a','b'].forEach(side => {
+    const scroll = document.getElementById(`cmp-scroll-${side}`);
+    const paper = document.getElementById(`cmp-paper-${side}`);
+    if (!scroll || !paper) return;
+    paper.style.zoom = '1';
+    const availW = scroll.clientWidth - 40;
+    _cmpBaseZoom[side] = availW > 0 ? Math.min(availW / 816, 1.0) : 1.0;
+    applyCmpZoom(side);
   });
 }
 
-function setActiveCompareDoc(docId, shouldScroll = true) {
-  if (shouldScroll) lockCompareObserver(); // manual tab/pill click — freeze observer briefly
-  activeCompareDocId = docId;
-  const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
-  const idx = docs.findIndex(d => d.id === docId);
-  const doc = docs[idx];
-  if (!doc) return;
-
-  // Update pill active state
-  document.querySelectorAll('.compare-doc-pill').forEach(p => p.classList.remove('active'));
-  const pill = document.getElementById(`compare-pill-${docId}`);
-  if (pill) pill.classList.add('active');
-
-  // Update tab active state
-  document.querySelectorAll('.compare-ext-doc-tab').forEach(t => t.classList.remove('active'));
-  const tab = document.getElementById(`compare-tab-${docId}`);
-  if (tab) tab.classList.add('active');
-
-  // Render extracted fields — clickable where data-field exists
-  const fields = getDocExtractedFields(doc);
-  document.getElementById('compare-ext-fields-wrap').innerHTML =
-    `<div class="compare-ext-section-label">Extracted data</div>` +
-    fields.map(f => {
-      if (f.divider) return `<div class="compare-ext-divider"></div>`;
-      const hasField = !!f.field;
-      return `<div class="compare-ext-field${hasField ? ' has-highlight' : ''}" data-field="${f.field || ''}"
-        ${hasField ? `onclick="selectCompareField('${f.field}')"` : ''}>
-        <span class="compare-ext-label">${f.label}</span>
-        <div class="compare-ext-value-row">
-          <span class="compare-ext-value">${f.value}</span>
-          <span class="edit-icon" onclick="event.stopPropagation();startCompareEdit(this)">✎</span>
-        </div>
-      </div>`;
-    }).join('');
-
-  if (shouldScroll) scrollToCompareDoc(docId);
+function applyCmpZoom(side) {
+  const paper = document.getElementById(`cmp-paper-${side}`);
+  if (!paper) return;
+  paper.style.zoom = (_cmpBaseZoom[side] * _cmpUserZoom[side]).toFixed(3);
+  const pctEl = document.getElementById(`cmp-zoom-pct-${side}`);
+  if (pctEl) pctEl.textContent = Math.round(_cmpUserZoom[side] * 100) + '%';
 }
 
-// Highlight extracted field + matching element in the visible doc
-function selectCompareField(fieldKey) {
-  if (!fieldKey) return;
-  // Clear previous
-  document.querySelectorAll('.compare-ext-field').forEach(el => el.classList.remove('selected'));
-  document.querySelectorAll('.compare-doc-inner [data-field]').forEach(el => el.classList.remove('doc-field-highlight'));
-  // Highlight selected field row
-  const extEl = document.querySelector(`.compare-ext-field[data-field="${fieldKey}"]`);
-  if (extEl) extEl.classList.add('selected');
-  // Highlight in the active doc section
-  const section = document.getElementById(`compare-section-${activeCompareDocId}`);
-  if (section) {
-    const docEl = section.querySelector(`[data-field="${fieldKey}"]`);
-    if (docEl) docEl.classList.add('doc-field-highlight');
+function cmpZoomIn(side)  { _cmpUserZoom[side] = Math.min(_cmpUserZoom[side] + 0.1, 3.0); applyCmpZoom(side); }
+function cmpZoomOut(side) { _cmpUserZoom[side] = Math.max(_cmpUserZoom[side] - 0.1, 0.2); applyCmpZoom(side); }
+
+function openCmpFullscreen(side) {
+  const inner = document.getElementById(`cmp-inner-${side}`);
+  const hdr   = document.getElementById(`cmp-header-${side}`);
+  const title = hdr?.querySelector('.cmp-doc-header-name')?.textContent || 'Document';
+  document.getElementById('doc-fs-title').textContent = title;
+  document.getElementById('doc-fs-paper').innerHTML = inner?.innerHTML || '';
+  _fsUserZoom = Math.min((window.innerHeight - 80) / 1056, 1.0);
+  applyFsZoom();
+  document.getElementById('doc-fs-overlay').classList.remove('hidden');
+  document.getElementById('doc-fs-overlay').requestFullscreen?.().catch(() => {});
+}
+
+// ---- Field Comparison Panel ----
+function getComparedFields(docA, docB) {
+  const fA = getDocExtractedFields(docA);
+  const fB = getDocExtractedFields(docB);
+  const mapA = {}, mapB = {};
+  fA.forEach(f => { if (f.field) mapA[f.field] = f; });
+  fB.forEach(f => { if (f.field) mapB[f.field] = f; });
+
+  const result = [];
+  const seen = new Set();
+
+  fA.forEach(f => {
+    if (f.divider || !f.field) return;
+    seen.add(f.field);
+    const b = mapB[f.field];
+    result.push({ key: f.field, label: f.label, valueA: f.value, valueB: b ? b.value : null, inBoth: !!b, match: b ? (f.value === b.value) : null });
+  });
+  fB.forEach(f => {
+    if (f.divider || !f.field || seen.has(f.field)) return;
+    result.push({ key: f.field, label: f.label, valueA: null, valueB: f.value, inBoth: false, match: null });
+  });
+  return result;
+}
+
+function renderCmpFieldPanel(docA, docB) {
+  const fields = getComparedFields(docA, docB);
+  const shared  = fields.filter(f => f.inBoth);
+  const onlyA   = fields.filter(f => !f.inBoth && f.valueA).length;
+  const onlyB   = fields.filter(f => !f.inBoth && f.valueB).length;
+  const matches = shared.filter(f => f.match).length;
+  const differs = shared.filter(f => !f.match).length;
+
+  // Summary chips
+  let summaryHTML = `<span class="cmp-summary-chip match"><span class="chip-badge">${matches}</span> field${matches !== 1 ? 's' : ''} match</span>`;
+  if (differs > 0) summaryHTML += `<span class="cmp-summary-chip differ"><span class="chip-badge">${differs}</span> field${differs !== 1 ? 's' : ''} differ</span>`;
+  document.getElementById('cmp-summary-row').innerHTML = summaryHTML;
+
+  // Render rows — shared fields first (most useful), then one-sided
+  const sharedRows = shared.map(f => renderCmpFieldRow(f)).join('');
+  let oneSidedRows = '';
+  const oneSided = fields.filter(f => !f.inBoth);
+  if (oneSided.length > 0) {
+    oneSidedRows = `<div class="cmp-section-head">Unique fields</div>` + oneSided.map(f => renderCmpFieldRow(f)).join('');
   }
+
+  const uniqueNote = (onlyA > 0 || onlyB > 0)
+    ? `<div class="cmp-unique-note">${onlyA} unique to A · ${onlyB} unique to B</div>` : '';
+
+  document.getElementById('cmp-fields-scroll').innerHTML =
+    (shared.length > 0 ? sharedRows : `<div class="cmp-no-shared"><div class="cmp-no-shared-text">No shared fields between these document types.</div></div>`)
+    + oneSidedRows
+    + uniqueNote;
 }
 
-// Scale each doc inner to fit its container, multiplied by per-doc user zoom
-function scaleCompareDocSections() {
-  document.querySelectorAll('.compare-doc-body').forEach(body => {
-    const section = body.closest('.compare-doc-section');
-    const docId = section ? parseInt(section.dataset.docId) : null;
-    const userZoom = (docId && _compareUserZooms[docId] != null) ? _compareUserZooms[docId] : 1.0;
-    const inner = body.querySelector('.compare-doc-inner');
-    if (!inner) return;
-    inner.style.zoom = '1';
-    // Reading clientWidth forces a synchronous reflow with zoom=1
-    const bodyW = body.clientWidth;
-    if (bodyW > 0) {
-      const baseZoom = bodyW / 816;
-      inner.style.zoom = (baseZoom * userZoom).toFixed(3);
-      if (docId) {
-        const pctEl = document.getElementById(`compare-zoom-pct-${docId}`);
-        if (pctEl) pctEl.textContent = Math.round(userZoom * 100) + '%';
-      }
-    }
+function renderCmpFieldRow(f) {
+  const isClickable = f.inBoth; // only cross-highlight if field exists in both docs
+  const rowCls = `cmp-field-row${!isClickable ? ' no-click' : ''}${!f.inBoth ? ' only-one' : ''}`;
+  const onclick = isClickable ? `onclick="selectCmpField('${f.key}')"` : '';
+
+  let indicator, valHTML;
+
+  if (f.inBoth && f.match) {
+    indicator = `<span class="cmp-field-indicator match">✓</span>`;
+    valHTML   = `<div class="cmp-val-match">${f.valueA}</div>`;
+  } else if (f.inBoth && !f.match) {
+    indicator = `<span class="cmp-field-indicator differ">≠</span>`;
+    valHTML   = `<div class="cmp-val-differ">
+      <div class="cmp-val-line">
+        <span class="cmp-val-tag" style="color:${CMP_COLOR_A};">A</span>
+        <span class="cmp-val-text" style="color:${CMP_COLOR_A};" title="${f.valueA}">${f.valueA}</span>
+      </div>
+      <div class="cmp-val-line">
+        <span class="cmp-val-tag" style="color:${CMP_COLOR_B};">B</span>
+        <span class="cmp-val-text" style="color:${CMP_COLOR_B};" title="${f.valueB}">${f.valueB}</span>
+      </div>
+    </div>`;
+  } else if (f.valueA) {
+    indicator = `<span class="cmp-field-indicator one-side">A</span>`;
+    valHTML   = `<div class="cmp-val-differ">
+      <div class="cmp-val-line">
+        <span class="cmp-val-tag" style="color:${CMP_COLOR_A};">A</span>
+        <span class="cmp-val-text" style="color:${CMP_COLOR_A};">${f.valueA}</span>
+      </div>
+      <div class="cmp-val-line">
+        <span class="cmp-val-tag">B</span>
+        <span class="cmp-val-text missing">—</span>
+      </div>
+    </div>`;
+  } else {
+    indicator = `<span class="cmp-field-indicator one-side">B</span>`;
+    valHTML   = `<div class="cmp-val-differ">
+      <div class="cmp-val-line">
+        <span class="cmp-val-tag">A</span>
+        <span class="cmp-val-text missing">—</span>
+      </div>
+      <div class="cmp-val-line">
+        <span class="cmp-val-tag" style="color:${CMP_COLOR_B};">B</span>
+        <span class="cmp-val-text" style="color:${CMP_COLOR_B};">${f.valueB}</span>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="${rowCls}" data-field="${f.key}" ${onclick}>
+    <div class="cmp-field-top">
+      ${indicator}
+      <span class="cmp-field-name" title="${f.label}">${f.label}</span>
+    </div>
+    ${valHTML}
+  </div>`;
+}
+
+// Click a shared field → highlight + scroll in both doc papers
+function selectCmpField(key) {
+  if (!key) return;
+
+  // Toggle off if already selected
+  if (_activeCmpField === key) {
+    _activeCmpField = null;
+    document.querySelectorAll('.cmp-field-row').forEach(r => r.classList.remove('selected'));
+    document.querySelectorAll('#cmp-inner-a [data-field], #cmp-inner-b [data-field]').forEach(el => el.classList.remove('doc-field-highlight'));
+    return;
+  }
+  _activeCmpField = key;
+
+  // Clear previous state
+  document.querySelectorAll('.cmp-field-row').forEach(r => r.classList.remove('selected'));
+  document.querySelectorAll('#cmp-inner-a [data-field], #cmp-inner-b [data-field]').forEach(el => el.classList.remove('doc-field-highlight'));
+
+  // Select the panel row
+  const row = document.querySelector(`.cmp-field-row[data-field="${key}"]`);
+  if (row) row.classList.add('selected');
+
+  // Highlight and scroll in each doc
+  ['a','b'].forEach(side => {
+    const el = document.querySelector(`#cmp-inner-${side} [data-field="${key}"]`);
+    if (!el) return;
+    el.classList.add('doc-field-highlight');
+    // Scroll the doc panel to center the highlighted element
+    const scroll = document.getElementById(`cmp-scroll-${side}`);
+    if (!scroll) return;
+    const scrollRect = scroll.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const elMidInViewport = elRect.top + elRect.height / 2;
+    const scrollMid = scrollRect.top + scrollRect.height / 3;
+    scroll.scrollTop += (elMidInViewport - scrollMid);
   });
 }
 
-function scrollToCompareDoc(docId) {
-  const section = document.getElementById(`compare-section-${docId}`);
-  const scrollArea = document.getElementById('compare-scroll-area');
-  if (section && scrollArea) scrollArea.scrollTo({ top: section.offsetTop - 16, behavior: 'smooth' });
-}
+// Keep removeFromCompare working (exits compare mode if < 2 docs remain)
+function scrollToCompareDoc() {} // stub — no longer needed
 
 function removeFromCompare(docId) {
   selectedDocIds.delete(docId);
