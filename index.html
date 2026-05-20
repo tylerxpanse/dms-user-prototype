@@ -516,9 +516,29 @@
   .cmp-paper-inner { padding: 48px 64px; }
 
   /* Center field comparison panel */
-  .cmp-fields-panel { width: 214px; flex-shrink: 0; background: #fff; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,.08); z-index: 2; }
-  .cmp-fields-header { padding: 13px 14px 10px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0; }
-  .cmp-fields-title { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 10px; }
+  .cmp-fields-panel { width: 214px; flex-shrink: 0; background: #fff; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,.08); z-index: 2; transition: width .2s cubic-bezier(.4,0,.2,1); }
+  .cmp-fields-panel.collapsed { width: 34px; }
+  .cmp-fields-panel.collapsed .cmp-fields-header,
+  .cmp-fields-panel.collapsed .cmp-fields-scroll { display: none; }
+
+  /* Collapsed strip — visible only when panel is closed */
+  .cmp-fields-strip { display: none; flex-direction: column; align-items: center; padding: 10px 0 14px; flex: 1; overflow: hidden; }
+  .cmp-fields-panel.collapsed .cmp-fields-strip { display: flex; }
+  .cmp-strip-expand-btn { background: none; border: none; cursor: pointer; color: #94a3b8; padding: 5px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cmp-strip-expand-btn:hover { background: #f1f5f9; color: #374151; }
+  .cmp-strip-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .7px; white-space: nowrap; flex: 1; display: flex; align-items: center; justify-content: center; padding: 6px 0; }
+  .cmp-strip-chips { display: flex; flex-direction: column; gap: 5px; align-items: center; padding-top: 6px; }
+  .cmp-strip-chip { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; flex-shrink: 0; }
+  .cmp-strip-chip.match { background: #dcfce7; color: #16a34a; }
+  .cmp-strip-chip.differ { background: #fff7ed; color: #ea580c; }
+
+  /* Collapse toggle in the expanded header */
+  .cmp-fields-title-row { display: flex; align-items: center; margin-bottom: 9px; }
+  .cmp-fields-title { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .7px; flex: 1; }
+  .cmp-collapse-btn { background: none; border: none; cursor: pointer; color: #94a3b8; padding: 2px 4px; border-radius: 4px; font-size: 15px; line-height: 1; display: flex; align-items: center; flex-shrink: 0; transition: color .12s; }
+  .cmp-collapse-btn:hover { color: #374151; }
+
+  .cmp-fields-header { padding: 12px 12px 10px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0; }
   .cmp-summary-row { display: flex; flex-direction: column; gap: 5px; }
   .cmp-summary-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; }
   .cmp-summary-chip .chip-badge { padding: 2px 7px; border-radius: 9999px; font-size: 11px; font-weight: 700; }
@@ -529,6 +549,9 @@
 
   .cmp-fields-scroll { flex: 1; overflow-y: auto; }
   .cmp-section-head { padding: 8px 14px 4px; font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .6px; }
+
+  /* Hover preview highlight (lighter than click) */
+  [data-field].field-hover { background: #dbeafe; border-radius: 4px; padding: 1px 4px; }
 
   /* Individual field comparison rows */
   .cmp-field-row { padding: 9px 14px; border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background .1s; }
