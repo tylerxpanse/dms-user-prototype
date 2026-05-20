@@ -516,21 +516,13 @@
   .cmp-paper-inner { padding: 48px 64px; }
 
   /* Center field comparison panel */
-  .cmp-fields-panel { width: 214px; flex-shrink: 0; background: #fff; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,.08); z-index: 2; transition: width .2s cubic-bezier(.4,0,.2,1); }
-  .cmp-fields-panel.collapsed { width: 34px; }
-  .cmp-fields-panel.collapsed .cmp-fields-header,
-  .cmp-fields-panel.collapsed .cmp-fields-scroll { display: none; }
-
-  /* Collapsed strip — visible only when panel is closed */
-  .cmp-fields-strip { display: none; flex-direction: column; align-items: center; padding: 10px 0 14px; flex: 1; overflow: hidden; }
-  .cmp-fields-panel.collapsed .cmp-fields-strip { display: flex; }
-  .cmp-strip-expand-btn { background: none; border: none; cursor: pointer; color: #94a3b8; padding: 5px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .cmp-strip-expand-btn:hover { background: #f1f5f9; color: #374151; }
-  .cmp-strip-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .7px; white-space: nowrap; flex: 1; display: flex; align-items: center; justify-content: center; padding: 6px 0; }
-  .cmp-strip-chips { display: flex; flex-direction: column; gap: 5px; align-items: center; padding-top: 6px; }
-  .cmp-strip-chip { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; flex-shrink: 0; }
-  .cmp-strip-chip.match { background: #dcfce7; color: #16a34a; }
-  .cmp-strip-chip.differ { background: #fff7ed; color: #ea580c; }
+  /* Field comparison panel — floats as an overlay between the two docs */
+  .cmp-fields-panel { position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(-50%); width: 224px; background: #fff; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 32px rgba(0,0,0,.13); z-index: 10; }
+  .cmp-fields-panel.collapsed { display: none; }
+  /* Blue floating toggle — appears when panel is collapsed, just like individual doc page */
+  .cmp-fields-toggle { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 10; background: #2563eb; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 500; cursor: pointer; display: none; align-items: center; gap: 7px; box-shadow: 0 2px 14px rgba(37,99,235,.45); white-space: nowrap; }
+  .cmp-fields-toggle:hover { background: #1d4ed8; }
+  .cmp-fields-toggle.visible { display: flex; }
 
   /* Collapse toggle in the expanded header */
   .cmp-fields-title-row { display: flex; align-items: center; margin-bottom: 9px; }
