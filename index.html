@@ -3008,7 +3008,7 @@ document.addEventListener('fullscreenchange', function() {
 // Re-scale compare docs whenever the window resizes
 window.addEventListener('resize', () => {
   if (document.getElementById('screen-compare')?.classList.contains('visible')) {
-    scaleCompareDocSections();
+    scaleCmpPapers();
   }
   if (document.getElementById('screen-detail')?.classList.contains('visible')) {
     initDetailDocScale();
