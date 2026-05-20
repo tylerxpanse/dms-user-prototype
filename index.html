@@ -2352,6 +2352,8 @@ function renderCompareView() {
   _activeCmpField = null;
   _cmpFieldPanelOpen = true;
   document.getElementById('cmp-fields-panel')?.classList.remove('collapsed');
+  const toggleBtn = document.getElementById('cmp-fields-toggle');
+  if (toggleBtn) toggleBtn.classList.remove('visible');
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
   if (docs.length < 2) return;
   const [docA, docB] = docs;
