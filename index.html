@@ -1379,20 +1379,36 @@
         <div class="compare-doc-pills" id="compare-doc-pills"></div>
       </div>
 
-      <!-- Body: center scroll + right extracted (no left panel) -->
-      <div class="compare-body">
+      <!-- Body: side-by-side docs with field comparison panel in center -->
+      <div class="cmp-body">
 
-        <!-- Center: stacked scrollable docs -->
-        <div class="compare-center">
-          <div class="compare-scroll-area" id="compare-scroll-area">
-            <!-- rendered by JS -->
+        <!-- Left: Doc A -->
+        <div class="cmp-doc-panel" id="cmp-panel-a">
+          <div class="cmp-doc-header" id="cmp-header-a"></div>
+          <div class="cmp-doc-scroll" id="cmp-scroll-a">
+            <div class="cmp-paper-outer" id="cmp-paper-a">
+              <div class="cmp-paper-inner" id="cmp-inner-a"></div>
+            </div>
           </div>
         </div>
 
-        <!-- Right: extracted fields synced to active doc -->
-        <div class="compare-ext-panel">
-          <div class="compare-ext-doc-tabs" id="compare-ext-doc-tabs"></div>
-          <div class="compare-ext-fields-wrap" id="compare-ext-fields-wrap"></div>
+        <!-- Center: field comparison panel -->
+        <div class="cmp-fields-panel">
+          <div class="cmp-fields-header">
+            <div class="cmp-fields-title">Field Comparison</div>
+            <div class="cmp-summary-row" id="cmp-summary-row"></div>
+          </div>
+          <div class="cmp-fields-scroll" id="cmp-fields-scroll"></div>
+        </div>
+
+        <!-- Right: Doc B -->
+        <div class="cmp-doc-panel" id="cmp-panel-b">
+          <div class="cmp-doc-header" id="cmp-header-b"></div>
+          <div class="cmp-doc-scroll" id="cmp-scroll-b">
+            <div class="cmp-paper-outer" id="cmp-paper-b">
+              <div class="cmp-paper-inner" id="cmp-inner-b"></div>
+            </div>
+          </div>
         </div>
 
       </div>
