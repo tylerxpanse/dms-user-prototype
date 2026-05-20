@@ -2260,6 +2260,8 @@ function updateCompareBar() {
   const n = selectedDocIds.size;
   const bar = document.getElementById('compare-bar');
   document.getElementById('compare-bar-count').textContent = n === 1 ? '1 document selected' : `${n} documents selected`;
+  const hint = document.getElementById('compare-bar-hint');
+  if (hint) hint.textContent = n === 0 ? 'Select 2 documents to compare' : n === 1 ? 'Select 1 more document to compare' : 'Ready to compare';
   const btn = document.getElementById('btn-compare');
   btn.disabled = n < 2;
   bar.classList.toggle('hidden', n === 0);
