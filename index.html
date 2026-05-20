@@ -2422,16 +2422,25 @@ function selectCompareField(fieldKey) {
   }
 }
 
-// Scale each doc inner to fit its container without overflow
+// Scale each doc inner to fit its container, multiplied by per-doc user zoom
 function scaleCompareDocSections() {
   document.querySelectorAll('.compare-doc-body').forEach(body => {
+    const section = body.closest('.compare-doc-section');
+    const docId = section ? parseInt(section.dataset.docId) : null;
+    const userZoom = (docId && _compareUserZooms[docId] != null) ? _compareUserZooms[docId] : 1.0;
     const inner = body.querySelector('.compare-doc-inner');
     if (!inner) return;
     inner.style.zoom = '1';
-    // Reading clientWidth here forces a synchronous reflow with zoom=1,
-    // so the body width reflects its true flex-layout size
+    // Reading clientWidth forces a synchronous reflow with zoom=1
     const bodyW = body.clientWidth;
-    if (bodyW > 0) inner.style.zoom = (bodyW / 816).toFixed(3);
+    if (bodyW > 0) {
+      const baseZoom = bodyW / 816;
+      inner.style.zoom = (baseZoom * userZoom).toFixed(3);
+      if (docId) {
+        const pctEl = document.getElementById(`compare-zoom-pct-${docId}`);
+        if (pctEl) pctEl.textContent = Math.round(userZoom * 100) + '%';
+      }
+    }
   });
 }
 
