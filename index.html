@@ -1876,6 +1876,8 @@ function openDoc(id) {
   docStatus = 'approved';
   updateStatus('approved');
   resetExtracted();
+  _detailUserZoom = 1.0;
+  setTimeout(initDetailDocScale, 60);
 }
 
 function addCurrentDocToCompare() {
