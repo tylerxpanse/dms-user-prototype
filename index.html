@@ -2552,7 +2552,7 @@ function renderCmpFieldRow(f) {
     </div>`;
   }
 
-  return `<div class="${rowCls}" data-field="${f.key}" ${onclick}>
+  return `<div class="${rowCls}" data-field="${f.key}" ${onclick} ${onhover}>
     <div class="cmp-field-top">
       ${indicator}
       <span class="cmp-field-name" title="${f.label}">${f.label}</span>
