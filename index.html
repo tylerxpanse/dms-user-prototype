@@ -1407,26 +1407,23 @@
           </div>
         </div>
 
-        <!-- Center: field comparison panel -->
+        <!-- Center: field comparison panel (position:absolute overlay) -->
         <div class="cmp-fields-panel" id="cmp-fields-panel">
-          <!-- Expanded state -->
           <div class="cmp-fields-header">
             <div class="cmp-fields-title-row">
               <span class="cmp-fields-title">Field Comparison</span>
-              <button class="cmp-collapse-btn" onclick="toggleCmpFieldPanel()" title="Collapse panel">‹</button>
+              <button class="cmp-collapse-btn" onclick="toggleCmpFieldPanel()" title="Close panel">×</button>
             </div>
             <div class="cmp-summary-row" id="cmp-summary-row"></div>
           </div>
           <div class="cmp-fields-scroll" id="cmp-fields-scroll"></div>
-          <!-- Collapsed strip -->
-          <div class="cmp-fields-strip">
-            <button class="cmp-strip-expand-btn" onclick="toggleCmpFieldPanel()" title="Expand panel">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
-            </button>
-            <span class="cmp-strip-label">Extracted Fields</span>
-            <div class="cmp-strip-chips" id="cmp-strip-chips"></div>
-          </div>
         </div>
+
+        <!-- Floating blue toggle button — shown when panel is collapsed -->
+        <button class="cmp-fields-toggle" id="cmp-fields-toggle" onclick="toggleCmpFieldPanel()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
+          Field Comparison
+        </button>
 
         <!-- Right: Doc B -->
         <div class="cmp-doc-panel" id="cmp-panel-b">
