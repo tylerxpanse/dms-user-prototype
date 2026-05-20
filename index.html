@@ -2476,14 +2476,6 @@ function renderCmpFieldPanel(docA, docB) {
   if (differs > 0) summaryHTML += `<span class="cmp-summary-chip differ"><span class="chip-badge">${differs}</span> field${differs !== 1 ? 's' : ''} differ</span>`;
   document.getElementById('cmp-summary-row').innerHTML = summaryHTML;
 
-  // Collapsed strip chips
-  const stripChips = document.getElementById('cmp-strip-chips');
-  if (stripChips) {
-    let chipsHTML = `<span class="cmp-strip-chip match" title="${matches} match">${matches}</span>`;
-    if (differs > 0) chipsHTML += `<span class="cmp-strip-chip differ" title="${differs} differ">${differs}</span>`;
-    stripChips.innerHTML = chipsHTML;
-  }
-
   // Render rows — shared fields first (most useful), then one-sided
   const sharedRows = shared.map(f => renderCmpFieldRow(f)).join('');
   let oneSidedRows = '';
