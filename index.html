@@ -578,6 +578,23 @@
   .mock-doc-props-row span:first-child { color: #6b7280; }
   .mock-doc-props-row span:last-child { font-weight: 500; color: #111; }
 
+  /* Expired document banner */
+  .expired-doc-banner { background: #fff5f5; border-top: 3px solid #dc2626; padding: 14px 20px; display: flex; align-items: flex-start; gap: 14px; flex-shrink: 0; }
+  .expired-doc-banner.hidden { display: none; }
+  .expired-banner-icon { width: 36px; height: 36px; background: #fee2e2; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .expired-banner-icon svg { width: 18px; height: 18px; color: #dc2626; }
+  .expired-banner-body { flex: 1; }
+  .expired-banner-title { font-size: 13px; font-weight: 600; color: #dc2626; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
+  .expired-banner-since { font-size: 11px; font-weight: 400; background: #fee2e2; color: #b91c1c; border-radius: 9999px; padding: 1px 8px; }
+  .expired-banner-sub { font-size: 12px; color: #6b7280; line-height: 1.5; }
+  .expired-banner-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-reupload { background: #dc2626; color: #fff; border: none; border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .btn-reupload:hover { background: #b91c1c; }
+  .btn-dismiss-expired { background: #fff; color: #374151; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+  .btn-dismiss-expired:hover { background: #f9fafb; }
+  /* Dim the doc content when expired */
+  .doc-preview-content.doc-is-expired .doc-preview-scroll { opacity: 0.55; }
+
   /* Detail view — paper wrapper (816×1056 US Letter, zoomed to fit) */
   .detail-doc-paper { width: 816px; min-height: 1056px; background: #fff; box-sizing: border-box; flex-shrink: 0; display: flex; justify-content: center; padding: 28px 24px; }
   /* Make doc-preview-scroll start content at top */
