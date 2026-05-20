@@ -290,7 +290,7 @@
 
   /* Extracted fields panel — lives inside the dark doc-preview-content */
   .doc-preview-scroll { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 20px; position: relative; }
-  .extracted-panel { width: 220px; border-left: 1px solid rgba(255,255,255,.12); background: #fff; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
+  .extracted-panel { position: absolute; right: 0; top: 0; bottom: 0; width: 256px; border-left: 1px solid rgba(255,255,255,.12); background: #fff; display: flex; flex-direction: column; overflow: hidden; z-index: 5; box-shadow: -4px 0 18px rgba(0,0,0,.18); }
   .extracted-panel.hidden { display: none; }
   .extracted-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #e5e7eb; }
   .extracted-header h3 { font-size: 14px; font-weight: 600; }
