@@ -1879,7 +1879,9 @@ function openDoc(id) {
   updateStatus(status);
   resetExtracted();
   _detailUserZoom = 1.0;
-  setTimeout(initDetailDocScale, 60);
+  // Collapse right panel to give the doc viewer more width, then scale after transition
+  collapseRightPanel();
+  setTimeout(initDetailDocScale, 250);
 
   // Show/hide expired banner
   const today = new Date('2026-05-20');
