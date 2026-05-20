@@ -577,6 +577,26 @@
   .mock-doc-props-row span:first-child { color: #6b7280; }
   .mock-doc-props-row span:last-child { font-weight: 500; color: #111; }
 
+  /* Detail view — paper wrapper (816×1056 US Letter, zoomed to fit) */
+  .detail-doc-paper { width: 816px; min-height: 1056px; background: #fff; box-sizing: border-box; flex-shrink: 0; display: flex; justify-content: center; padding: 28px 24px; }
+  /* Make doc-preview-scroll start content at top */
+  .doc-preview-scroll { align-items: flex-start !important; }
+
+  /* Compare doc header controls (zoom + fullscreen) */
+  .cdoc-controls { display: flex; align-items: center; gap: 0; margin-left: auto; flex-shrink: 0; }
+  .cdoc-ctrl-btn { background: none; border: none; color: #6b7280; cursor: pointer; font-size: 13px; padding: 3px 7px; border-radius: 4px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+  .cdoc-ctrl-btn:hover { background: rgba(255,255,255,.1); color: #e5e7eb; }
+  .cdoc-ctrl-pct { font-size: 11px; color: #6b7280; min-width: 30px; text-align: center; cursor: default; }
+  .cdoc-ctrl-divider { width: 1px; height: 12px; background: rgba(255,255,255,.12); margin: 0 4px; flex-shrink: 0; }
+
+  /* Fullscreen overlay */
+  .doc-fs-overlay { position: fixed; inset: 0; background: #1a202c; z-index: 9000; display: flex; flex-direction: column; }
+  .doc-fs-overlay.hidden { display: none; }
+  .doc-fs-bar { background: #111827; color: #fff; padding: 9px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .doc-fs-title { font-size: 13px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e5e7eb; }
+  .doc-fs-scroll { flex: 1; overflow-y: auto; overflow-x: auto; background: #2d3748; display: flex; justify-content: center; align-items: flex-start; padding: 28px; }
+  .doc-fs-paper { width: 816px; min-height: 1056px; background: #fff; padding: 56px 72px; box-sizing: border-box; flex-shrink: 0; transform-origin: top left; }
+
   /* Status dropdown in detail bar */
   .status-select-wrap { position: relative; display: inline-flex; align-items: center; }
   .status-select-wrap select { border: none; border-radius: 9999px; padding: 2px 24px 2px 10px; font-size: 12px; font-weight: 500; cursor: pointer; appearance: none; outline: none; }
