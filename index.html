@@ -1935,6 +1935,8 @@ function goBack() {
   document.getElementById('extracted-panel').classList.add('hidden');
   document.getElementById('view-extracted-btn').style.display = 'flex';
   extractedVisible = false;
+  // Restore right panel when returning to list
+  openRightPanel();
 }
 
 // ===================== DETAIL TABS =====================
