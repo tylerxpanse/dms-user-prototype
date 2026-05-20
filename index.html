@@ -2174,6 +2174,33 @@ function hideTooltip() {
   document.getElementById('row-tooltip').style.display = 'none';
 }
 
+// ===================== SELECT MODE =====================
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  const list = document.getElementById('screen-list');
+  const btn = document.getElementById('compare-cta-btn');
+  if (selectMode) {
+    list.classList.add('select-mode');
+    btn.classList.add('active');
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel`;
+  } else {
+    list.classList.remove('select-mode');
+    btn.classList.remove('active');
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg> Compare`;
+    clearSelection();
+  }
+}
+
+function exitSelectMode() {
+  selectMode = false;
+  document.getElementById('screen-list').classList.remove('select-mode');
+  const btn = document.getElementById('compare-cta-btn');
+  if (btn) {
+    btn.classList.remove('active');
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg> Compare`;
+  }
+}
+
 // ===================== MULTI-SELECT =====================
 function toggleDocSelect(id, checkbox) {
   if (checkbox.checked) {
