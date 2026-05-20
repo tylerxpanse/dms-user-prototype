@@ -2356,6 +2356,8 @@ let _activeCmpField = null;
 function renderCompareView() {
   _cmpUserZoom = { a: 1.0, b: 1.0 };
   _activeCmpField = null;
+  _cmpFieldPanelOpen = true;
+  document.getElementById('cmp-fields-panel')?.classList.remove('collapsed');
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
   if (docs.length < 2) return;
   const [docA, docB] = docs;
