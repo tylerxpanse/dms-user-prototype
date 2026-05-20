@@ -1765,15 +1765,35 @@ function openDoc(id) {
   document.getElementById('screen-detail').classList.add('visible');
   switchDetailTab('overview');
   const doc = allDocs.find(d => d.id === id);
-  const status = doc?.status || 'approved';
+  if (!doc) return;
+
+  // Update doc bar title
+  const barName = document.getElementById('doc-bar-name');
+  if (barName) barName.textContent = doc.name;
+
+  // Render doc paper content
+  const paper = document.getElementById('detail-doc-paper');
+  if (paper) paper.innerHTML = renderCompareDocBody(doc);
+
+  // Render extracted fields panel
+  renderDetailExtractedFields(doc);
+
+  // Update tree active state
+  document.querySelectorAll('.tree-row[data-doc-id]').forEach(row => {
+    const rowId = parseInt(row.dataset.docId);
+    row.classList.toggle('active', rowId === id);
+  });
+
+  const status = doc.status || 'approved';
   docStatus = status;
   updateStatus(status);
   resetExtracted();
   _detailUserZoom = 1.0;
   setTimeout(initDetailDocScale, 60);
+
   // Show/hide expired banner
   const today = new Date('2026-05-20');
-  const expired = doc?.expires && new Date(doc.expires) < today;
+  const expired = doc.expires && new Date(doc.expires) < today;
   const banner = document.getElementById('expired-doc-banner');
   const content = document.getElementById('doc-preview-content');
   if (expired) {
@@ -1784,6 +1804,23 @@ function openDoc(id) {
     banner.classList.add('hidden');
     content.classList.remove('doc-is-expired');
   }
+}
+
+function renderDetailExtractedFields(doc) {
+  const container = document.getElementById('extracted-fields-content');
+  if (!container) return;
+  const fields = getDocExtractedFields(doc);
+  container.innerHTML = fields.map(f => {
+    if (f.divider) return '<div class="ext-divider"></div>';
+    const field = f.field || '';
+    const onclickAttr = field ? ` onclick="selectField('${field}')"` : '';
+    const dataAttr = field ? ` data-field="${field}"` : '';
+    const editBtn = field ? `<span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span>` : '';
+    return `<div class="ext-field"${dataAttr}${onclickAttr}>
+      <span class="ext-label">${f.label}</span>
+      <div class="ext-value-row"><span class="ext-value">${f.value}</span>${editBtn}</div>
+    </div>`;
+  }).join('');
 }
 
 function dismissExpiredBanner() {
