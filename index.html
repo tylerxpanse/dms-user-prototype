@@ -1914,11 +1914,31 @@ function openDoc(id) {
   document.getElementById('screen-list').style.display = 'none';
   document.getElementById('screen-detail').classList.add('visible');
   switchDetailTab('overview');
-  docStatus = 'approved';
-  updateStatus('approved');
+  const doc = allDocs.find(d => d.id === id);
+  const status = doc?.status || 'approved';
+  docStatus = status;
+  updateStatus(status);
   resetExtracted();
   _detailUserZoom = 1.0;
   setTimeout(initDetailDocScale, 60);
+  // Show/hide expired banner
+  const today = new Date('2026-05-20');
+  const expired = doc?.expires && new Date(doc.expires) < today;
+  const banner = document.getElementById('expired-doc-banner');
+  const content = document.getElementById('doc-preview-content');
+  if (expired) {
+    document.getElementById('expired-banner-since').textContent = 'Expired ' + doc.expires;
+    banner.classList.remove('hidden');
+    content.classList.add('doc-is-expired');
+  } else {
+    banner.classList.add('hidden');
+    content.classList.remove('doc-is-expired');
+  }
+}
+
+function dismissExpiredBanner() {
+  document.getElementById('expired-doc-banner').classList.add('hidden');
+  document.getElementById('doc-preview-content').classList.remove('doc-is-expired');
 }
 
 function addCurrentDocToCompare() {
