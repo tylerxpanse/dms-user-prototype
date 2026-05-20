@@ -2552,6 +2552,27 @@ function renderCmpFieldRow(f) {
   </div>`;
 }
 
+// ---- Panel collapse / expand ----
+let _cmpFieldPanelOpen = true;
+function toggleCmpFieldPanel() {
+  _cmpFieldPanelOpen = !_cmpFieldPanelOpen;
+  document.getElementById('cmp-fields-panel').classList.toggle('collapsed', !_cmpFieldPanelOpen);
+  // Re-scale papers after the CSS transition settles
+  setTimeout(scaleCmpPapers, 220);
+}
+
+// ---- Hover preview ----
+function hoverCmpField(key) {
+  if (_activeCmpField === key) return; // already locked — don't double-style
+  ['a','b'].forEach(side => {
+    const el = document.querySelector(`#cmp-inner-${side} [data-field="${key}"]`);
+    if (el) el.classList.add('field-hover');
+  });
+}
+function unhoverCmpField() {
+  document.querySelectorAll('.field-hover').forEach(el => el.classList.remove('field-hover'));
+}
+
 // Click a shared field → highlight + scroll in both doc papers
 function selectCmpField(key) {
   if (!key) return;
