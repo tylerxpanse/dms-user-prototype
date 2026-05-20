@@ -1241,7 +1241,26 @@
                 </div>
                 <button class="fullscreen-btn" style="margin-left:8px;" onclick="openDetailFullscreen()" title="Fullscreen">⤢</button>
               </div>
-              <div class="doc-preview-content">
+
+              <!-- Expired document banner -->
+              <div class="expired-doc-banner hidden" id="expired-doc-banner">
+                <div class="expired-banner-icon">
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L1 14h14L8 1z" fill="#dc2626"/><path d="M8 6v3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="#fff"/></svg>
+                </div>
+                <div class="expired-banner-body">
+                  <div class="expired-banner-title">
+                    Document Expired
+                    <span class="expired-banner-since" id="expired-banner-since"></span>
+                  </div>
+                  <div class="expired-banner-sub">This document is past its expiration date and may no longer be valid for underwriting. A new document is required to continue.</div>
+                  <div class="expired-banner-actions">
+                    <button class="btn-reupload" onclick="openUpload()">⬆ Re-upload Document</button>
+                    <button class="btn-dismiss-expired" onclick="dismissExpiredBanner()">Dismiss</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="doc-preview-content" id="doc-preview-content">
                 <button class="view-extracted-btn" id="view-extracted-btn" onclick="toggleExtracted()" style="display:none;">
                   ⊞ View Extracted Data
                 </button>
