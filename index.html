@@ -2722,10 +2722,113 @@ function closeKebab() {
 }
 document.addEventListener('click', closeKebab);
 
+// ===================== DETAIL VIEW ZOOM =====================
+let _detailUserZoom = 1.0;
+let _detailBaseZoom = 1.0;
+
+function initDetailDocScale() {
+  const scroll = document.querySelector('.doc-preview-scroll');
+  const paper = document.getElementById('detail-doc-paper');
+  if (!scroll || !paper) return;
+  paper.style.zoom = '1';
+  const availW = scroll.clientWidth - 40;
+  _detailBaseZoom = availW > 0 ? Math.min(availW / 816, 1.0) : 1.0;
+  applyDetailZoom();
+}
+
+function applyDetailZoom() {
+  const paper = document.getElementById('detail-doc-paper');
+  if (!paper) return;
+  paper.style.zoom = (_detailBaseZoom * _detailUserZoom).toFixed(3);
+  const pctEl = document.getElementById('detail-zoom-pct');
+  if (pctEl) pctEl.textContent = Math.round(_detailUserZoom * 100) + '%';
+}
+
+function detailZoomIn() {
+  _detailUserZoom = Math.min(_detailUserZoom + 0.1, 3.0);
+  applyDetailZoom();
+}
+function detailZoomOut() {
+  _detailUserZoom = Math.max(_detailUserZoom - 0.1, 0.2);
+  applyDetailZoom();
+}
+
+// ===================== COMPARE VIEW ZOOM (per-doc) =====================
+let _compareUserZooms = {};
+
+function compareZoomIn(docId) {
+  _compareUserZooms[docId] = Math.min((_compareUserZooms[docId] || 1.0) + 0.1, 3.0);
+  scaleCompareDocSections();
+}
+function compareZoomOut(docId) {
+  _compareUserZooms[docId] = Math.max((_compareUserZooms[docId] || 1.0) - 0.1, 0.2);
+  scaleCompareDocSections();
+}
+
+// ===================== FULLSCREEN =====================
+let _fsUserZoom = 1.0;
+
+function openDetailFullscreen() {
+  const paper = document.getElementById('detail-doc-paper');
+  if (!paper) return;
+  document.getElementById('doc-fs-title').textContent = document.querySelector('.doc-bar-name')?.textContent || 'Document';
+  document.getElementById('doc-fs-paper').innerHTML = paper.innerHTML;
+  _fsUserZoom = Math.min((window.innerHeight - 80) / 1056, 1.0);
+  applyFsZoom();
+  document.getElementById('doc-fs-overlay').classList.remove('hidden');
+  document.getElementById('doc-fs-overlay').requestFullscreen?.().catch(() => {});
+}
+
+function openCompareFullscreen(docId) {
+  const inner = document.getElementById(`compare-inner-${docId}`);
+  if (!inner) return;
+  const section = document.getElementById(`compare-section-${docId}`);
+  const title = section?.querySelector('.compare-doc-header-name')?.textContent || 'Document';
+  document.getElementById('doc-fs-title').textContent = title;
+  document.getElementById('doc-fs-paper').innerHTML = inner.innerHTML;
+  _fsUserZoom = Math.min((window.innerHeight - 80) / 1056, 1.0);
+  applyFsZoom();
+  document.getElementById('doc-fs-overlay').classList.remove('hidden');
+  document.getElementById('doc-fs-overlay').requestFullscreen?.().catch(() => {});
+}
+
+function closeFullscreen() {
+  document.getElementById('doc-fs-overlay').classList.add('hidden');
+  if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+}
+function fsZoomIn() {
+  _fsUserZoom = Math.min(_fsUserZoom + 0.1, 3.0);
+  applyFsZoom();
+}
+function fsZoomOut() {
+  _fsUserZoom = Math.max(_fsUserZoom - 0.1, 0.2);
+  applyFsZoom();
+}
+function applyFsZoom() {
+  const paper = document.getElementById('doc-fs-paper');
+  if (!paper) return;
+  paper.style.zoom = _fsUserZoom.toFixed(3);
+  document.getElementById('doc-fs-zoom-pct').textContent = Math.round(_fsUserZoom * 100) + '%';
+}
+// Escape closes fullscreen overlay
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && !document.getElementById('doc-fs-overlay').classList.contains('hidden')) {
+    closeFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange', function() {
+  if (!document.fullscreenElement) {
+    document.getElementById('doc-fs-overlay').classList.add('hidden');
+  }
+});
+
 // Re-scale compare docs whenever the window resizes
 window.addEventListener('resize', () => {
   if (document.getElementById('screen-compare')?.classList.contains('visible')) {
     scaleCompareDocSections();
+  }
+  if (document.getElementById('screen-detail')?.classList.contains('visible')) {
+    initDetailDocScale();
   }
 });
 </script>
