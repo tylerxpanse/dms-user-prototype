@@ -2279,6 +2279,7 @@ function exitCompareMode() {
 }
 
 function renderCompareView() {
+  _compareUserZooms = {};
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
 
   // Toolbar pills
