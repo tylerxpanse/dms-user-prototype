@@ -1277,23 +1277,7 @@
                     <h3>Extracted Fields</h3>
                     <button class="close-btn" onclick="toggleExtracted()">×</button>
                   </div>
-                  <div class="extracted-fields">
-                    <div class="ext-field" data-field="ssn" onclick="selectField('ssn')">
-                      <span class="ext-label">Employee SSN</span>
-                      <div class="ext-value-row"><span class="ext-value">***-**-1234</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
-                    </div>
-                    <div class="ext-field" data-field="ein" onclick="selectField('ein')">
-                      <span class="ext-label">Employer EIN</span>
-                      <div class="ext-value-row"><span class="ext-value">12-3456789</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
-                    </div>
-                    <div class="ext-field" data-field="wages" onclick="selectField('wages')">
-                      <span class="ext-label">Wages, tips, other comp</span>
-                      <div class="ext-value-row"><span class="ext-value">$85,000.00</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
-                    </div>
-                    <div class="ext-field" data-field="fed-tax" onclick="selectField('fed-tax')">
-                      <span class="ext-label">Federal income tax withheld</span>
-                      <div class="ext-value-row"><span class="ext-value">$12,450.00</span><span class="edit-icon" onclick="event.stopPropagation();startEdit(this)">✎</span></div>
-                    </div>
+                  <div class="extracted-fields" id="extracted-fields-content">
                   </div><!-- end extracted-fields -->
                 </div><!-- end extracted-panel -->
 
