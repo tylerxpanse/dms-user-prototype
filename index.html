@@ -1436,13 +1436,29 @@
             <div class="cmp-summary-row" id="cmp-summary-row"></div>
           </div>
           <div class="cmp-fields-scroll" id="cmp-fields-scroll"></div>
+          <!-- Strip — shown only in push-layout collapsed state -->
+          <div class="cmp-fields-strip">
+            <button class="cmp-strip-expand-btn" onclick="toggleCmpFieldPanel()" title="Expand panel">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
+            </button>
+            <span class="cmp-strip-label">Field Comparison</span>
+          </div>
         </div>
 
-        <!-- Floating blue toggle button — shown when panel is collapsed -->
+        <!-- Floating blue toggle — shown when panel is collapsed in overlay mode -->
         <button class="cmp-fields-toggle" id="cmp-fields-toggle" onclick="toggleCmpFieldPanel()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
           Field Comparison
         </button>
+
+        <!-- Layout switch FAB -->
+        <div class="cmp-layout-fab" id="cmp-layout-fab">
+          <span class="cmp-layout-fab-label">Layout</span>
+          <div class="cmp-layout-opts">
+            <button class="cmp-layout-opt active" id="cmp-layout-a" onclick="setCmpLayout('overlay')" title="Overlay — docs stay full width">A</button>
+            <button class="cmp-layout-opt" id="cmp-layout-b" onclick="setCmpLayout('push')" title="Push — panel sits between docs">B</button>
+          </div>
+        </div>
 
         <!-- Right: Doc B -->
         <div class="cmp-doc-panel" id="cmp-panel-b">
