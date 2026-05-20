@@ -454,11 +454,19 @@
   .btn-upload-doc:disabled { opacity: .5; cursor: not-allowed; }
 
   /* ===== MULTI-SELECT & COMPARE ===== */
-  .select-col { width: 32px; text-align: center; padding-left: 6px !important; padding-right: 0 !important; }
+  .select-col { width: 32px; text-align: center; padding-left: 6px !important; padding-right: 0 !important; display: none; }
+  #screen-list.select-mode .select-col { display: table-cell; }
   .doc-checkbox { width: 14px; height: 14px; cursor: pointer; accent-color: #2563eb; vertical-align: middle; }
   tbody tr.row-selected { background: #eff6ff; }
   tbody tr.row-selected:hover { background: #dbeafe; }
   tbody tr.row-selected.row-expired { background: #fef2f2; }
+
+  /* Compare CTA button in controls bar */
+  .btn-compare-cta { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #374151; border: 1px solid #e5e7eb; background: #fff; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-weight: 500; white-space: nowrap; transition: background .15s, border-color .15s, color .15s; }
+  .btn-compare-cta:hover { background: #f9fafb; border-color: #d1d5db; }
+  .btn-compare-cta.active { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+  /* Subtle shimmer on the select-col header area in select mode */
+  #screen-list.select-mode thead tr { background: #f8faff; }
 
   /* Compare selection bar — slides up from bottom */
   .compare-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #111827; color: #fff; display: flex; align-items: center; gap: 14px; padding: 13px 28px; z-index: 300; box-shadow: 0 -4px 20px rgba(0,0,0,.28); transform: translateY(0); transition: transform .22s cubic-bezier(.4,0,.2,1); }
