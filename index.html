@@ -2054,6 +2054,35 @@ function confirmEdit(icon) {
   icon.onclick = function(e) { e.stopPropagation(); startEdit(this); };
 }
 
+function startCompareEdit(icon) {
+  const row = icon.closest('.compare-ext-value-row');
+  const valueSpan = row.querySelector('.compare-ext-value');
+  const currentVal = valueSpan.textContent;
+  const input = document.createElement('input');
+  input.className = 'ext-value-input';
+  input.value = currentVal;
+  valueSpan.replaceWith(input);
+  input.focus();
+  icon.textContent = '✓';
+  icon.className = 'confirm-icon';
+  icon.onclick = function(e) { e.stopPropagation(); confirmCompareEdit(this); };
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') confirmCompareEdit(icon);
+    if (e.key === 'Escape') { input.value = currentVal; confirmCompareEdit(icon); }
+  });
+}
+function confirmCompareEdit(icon) {
+  const row = icon.closest('.compare-ext-value-row');
+  const input = row.querySelector('.ext-value-input');
+  const span = document.createElement('span');
+  span.className = 'compare-ext-value';
+  span.textContent = input.value;
+  input.replaceWith(span);
+  icon.textContent = '✎';
+  icon.className = 'edit-icon';
+  icon.onclick = function(e) { e.stopPropagation(); startCompareEdit(this); };
+}
+
 function selectField(key) {
   // Clear all highlights
   document.querySelectorAll('.ext-field').forEach(el => el.classList.remove('selected'));
