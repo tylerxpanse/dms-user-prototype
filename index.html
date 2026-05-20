@@ -2506,7 +2506,8 @@ function renderCmpFieldPanel(docA, docB) {
 function renderCmpFieldRow(f) {
   const isClickable = f.inBoth; // only cross-highlight if field exists in both docs
   const rowCls = `cmp-field-row${!isClickable ? ' no-click' : ''}${!f.inBoth ? ' only-one' : ''}`;
-  const onclick = isClickable ? `onclick="selectCmpField('${f.key}')"` : '';
+  const onclick  = isClickable ? `onclick="selectCmpField('${f.key}')"` : '';
+  const onhover  = isClickable ? `onmouseenter="hoverCmpField('${f.key}')" onmouseleave="unhoverCmpField()"` : '';
 
   let indicator, valHTML;
 
