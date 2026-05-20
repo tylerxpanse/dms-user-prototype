@@ -1967,6 +1967,7 @@ function switchDetailTab(tab) {
 
 function updateApproveBtn() {
   const btn = document.getElementById('approve-btn');
+  if (!btn) return;
   // Show approve button when status is not approved
   btn.style.display = docStatus !== 'approved' ? 'flex' : 'none';
 }
