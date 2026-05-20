@@ -2326,15 +2326,20 @@ function setActiveCompareDoc(docId, shouldScroll = true) {
 
   // Render extracted fields — clickable where data-field exists
   const fields = getDocExtractedFields(doc);
-  document.getElementById('compare-ext-fields-wrap').innerHTML = fields.map(f => {
-    if (f.divider) return `<div class="compare-ext-divider"></div>`;
-    const hasField = !!f.field;
-    return `<div class="compare-ext-field${hasField ? ' has-highlight' : ''}" data-field="${f.field || ''}"
-      ${hasField ? `onclick="selectCompareField('${f.field}')"` : ''}>
-      <span class="compare-ext-label">${f.label}</span>
-      <span class="compare-ext-value">${f.value}</span>
-    </div>`;
-  }).join('');
+  document.getElementById('compare-ext-fields-wrap').innerHTML =
+    `<div class="compare-ext-section-label">Extracted data</div>` +
+    fields.map(f => {
+      if (f.divider) return `<div class="compare-ext-divider"></div>`;
+      const hasField = !!f.field;
+      return `<div class="compare-ext-field${hasField ? ' has-highlight' : ''}" data-field="${f.field || ''}"
+        ${hasField ? `onclick="selectCompareField('${f.field}')"` : ''}>
+        <span class="compare-ext-label">${f.label}</span>
+        <div class="compare-ext-value-row">
+          <span class="compare-ext-value">${f.value}</span>
+          <span class="edit-icon" onclick="event.stopPropagation();startCompareEdit(this)">✎</span>
+        </div>
+      </div>`;
+    }).join('');
 
   if (shouldScroll) scrollToCompareDoc(docId);
 }
