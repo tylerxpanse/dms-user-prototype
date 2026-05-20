@@ -2742,5 +2742,23 @@ window.addEventListener('resize', () => {
   <div class="kebab-item danger" onclick="closeKebab()">✕ Reject</div>
 </div>
 
+<!-- Fullscreen overlay -->
+<div id="doc-fs-overlay" class="doc-fs-overlay hidden">
+  <div class="doc-fs-bar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+    <span id="doc-fs-title" class="doc-fs-title"></span>
+    <div class="cdoc-controls" style="margin-left:auto;">
+      <button class="cdoc-ctrl-btn" onclick="fsZoomOut()" title="Zoom out">−</button>
+      <span id="doc-fs-zoom-pct" class="cdoc-ctrl-pct">100%</span>
+      <button class="cdoc-ctrl-btn" onclick="fsZoomIn()" title="Zoom in">+</button>
+      <div class="cdoc-ctrl-divider"></div>
+      <button class="cdoc-ctrl-btn" onclick="closeFullscreen()" title="Close fullscreen" style="font-size:15px;margin-left:2px;">✕</button>
+    </div>
+  </div>
+  <div class="doc-fs-scroll">
+    <div class="doc-fs-paper" id="doc-fs-paper"></div>
+  </div>
+</div>
+
 </body>
 </html>
