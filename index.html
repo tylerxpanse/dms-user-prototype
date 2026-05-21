@@ -1895,7 +1895,6 @@ function setDemoStage(btn) {
 
 let _currentDocId = null;
 function openDoc(id) {
-  if (treeSelectMode) { toggleTreeDocSelect(id); return; }
   _currentDocId = id;
   document.getElementById('screen-list').style.display = 'none';
   document.getElementById('screen-detail').classList.add('visible');
