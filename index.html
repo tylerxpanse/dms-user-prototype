@@ -2374,6 +2374,55 @@ function exitSelectMode() {
   }
 }
 
+function toggleTreeSelectMode() {
+  treeSelectMode = !treeSelectMode;
+  const panel = document.querySelector('.taxonomy-panel');
+  const btn = document.getElementById('taxonomy-compare-btn');
+  if (treeSelectMode) {
+    panel.classList.add('tree-select-mode');
+    if (btn) { btn.classList.add('active'); btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel`; }
+    syncTreeSelections();
+  } else {
+    exitTreeSelectMode();
+  }
+}
+
+function exitTreeSelectMode() {
+  treeSelectMode = false;
+  document.querySelector('.taxonomy-panel')?.classList.remove('tree-select-mode');
+  const btn = document.getElementById('taxonomy-compare-btn');
+  if (btn) { btn.classList.remove('active'); btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg> Compare`; }
+  document.querySelectorAll('.tree-row.tree-selected').forEach(r => r.classList.remove('tree-selected'));
+  document.querySelectorAll('.tree-checkbox').forEach(cb => { cb.checked = false; });
+  if (selectedDocIds.size === 0) updateCompareBar();
+}
+
+function syncTreeSelections() {
+  document.querySelectorAll('.tree-row[data-doc-id]').forEach(row => {
+    const id = parseInt(row.getAttribute('data-doc-id'));
+    const cb = row.querySelector('.tree-checkbox');
+    const sel = selectedDocIds.has(id);
+    row.classList.toggle('tree-selected', sel);
+    if (cb) cb.checked = sel;
+  });
+}
+
+function toggleTreeDocSelect(id) {
+  const row = document.querySelector(`.tree-row[data-doc-id="${id}"]`);
+  const cb = row?.querySelector('.tree-checkbox');
+  if (selectedDocIds.has(id)) {
+    selectedDocIds.delete(id);
+    row?.classList.remove('tree-selected');
+    if (cb) cb.checked = false;
+  } else {
+    if (selectedDocIds.size >= 2) return;
+    selectedDocIds.add(id);
+    row?.classList.add('tree-selected');
+    if (cb) cb.checked = true;
+  }
+  updateCompareBar();
+}
+
 // ===================== MULTI-SELECT =====================
 function toggleDocSelect(id, checkbox) {
   if (checkbox.checked) {
