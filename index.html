@@ -2001,8 +2001,9 @@ function goBack() {
   document.getElementById('extracted-panel').classList.add('hidden');
   document.getElementById('view-extracted-btn').style.display = 'flex';
   extractedVisible = false;
-  // Restore right panel when returning to list
+  // Restore right panel and nav section list when returning to list
   openRightPanel();
+  document.querySelector('.nav-section-list')?.classList.remove('detail-collapsed');
 }
 
 // ===================== DETAIL TABS =====================
