@@ -2510,9 +2510,12 @@ function renderCompareView() {
   // Render center comparison panel
   renderCmpFieldPanel(docA, docB);
 
-  // Scale both papers to fit
-  setTimeout(scaleCmpPapers, 0);
-  setTimeout(scaleCmpPapers, 260);
+  // Reset split and scale both papers to fit
+  _cmpSplitRatio = 0.5;
+  document.getElementById('cmp-panel-a').style.flex = '';
+  document.getElementById('cmp-panel-b').style.flex = '';
+  setTimeout(() => { applyCmpSplit(); scaleCmpPapers(); }, 0);
+  setTimeout(() => { applyCmpSplit(); scaleCmpPapers(); }, 260);
 }
 
 function renderCmpDocPanel(side, doc, color) {
