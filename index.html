@@ -2444,7 +2444,9 @@ function enterCompareMode() {
   _compareFromDetail = document.getElementById('screen-detail').classList.contains('visible');
   if (_compareFromDetail) {
     document.getElementById('screen-detail').classList.remove('visible');
+    const _savedIds = [...selectedDocIds]; // save before exitTreeSelectMode clears them
     exitTreeSelectMode();
+    _savedIds.forEach(id => selectedDocIds.add(id)); // restore for renderCompareView
   } else {
     document.getElementById('screen-list').style.display = 'none';
   }
