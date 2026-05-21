@@ -514,13 +514,13 @@
   .compare-doc-pill-x { color: #9ca3af; font-size: 12px; margin-left: 1px; line-height: 1; padding: 1px 2px; border-radius: 2px; flex-shrink: 0; }
   .compare-doc-pill-x:hover { color: #dc2626; }
 
-  /* ===== SIDE-BY-SIDE COMPARE BODY ===== */
-  .cmp-body { flex: 1; display: flex; flex-direction: row; overflow: hidden; min-height: 0; position: relative; }
-  /* Overlay mode (A): dark 3px gap between panels creates a clear visual separator */
-  .cmp-body:not(.cmp-push-layout) { gap: 3px; background: #111827; }
+  /* ===== SIDE-BY-SIDE COMPARE BODY (Layout C — right sidebar only) ===== */
+  .cmp-body { flex: 1; display: flex; flex-direction: row; overflow: hidden; min-height: 0; position: relative; gap: 0; background: transparent; }
 
-  /* Left / Right doc panels */
+  /* Doc panels */
   .cmp-doc-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+  #cmp-panel-a { order: 1; border-right: 2px solid #111827; }
+  #cmp-panel-b { order: 2; }
   .cmp-doc-header { background: #1f2937; color: #fff; padding: 8px 14px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,.06); }
   .cmp-doc-color-bar { width: 3px; height: 20px; border-radius: 2px; flex-shrink: 0; }
   .cmp-doc-header-name { flex: 1; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -530,48 +530,13 @@
   .cmp-paper-outer { width: 816px; min-height: 1056px; background: #fff; box-sizing: border-box; transform-origin: top center; flex-shrink: 0; }
   .cmp-paper-inner { padding: 48px 64px; }
 
-  /* Center field comparison panel */
-  /* Field comparison panel — default: overlay mode (position:absolute, docs stay full width) */
-  .cmp-fields-panel { position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(-50%); width: 224px; background: #fff; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 32px rgba(0,0,0,.13); z-index: 10; }
+  /* Field comparison panel — right sidebar */
+  .cmp-fields-panel { order: 3; position: relative; width: 256px; flex-shrink: 0; background: #fff; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; box-shadow: -4px 0 18px rgba(0,0,0,.12); z-index: 10; }
   .cmp-fields-panel.collapsed { display: none; }
-  /* Blue floating toggle — appears when panel is collapsed in overlay mode */
-  .cmp-fields-toggle { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 10; background: #2563eb; color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 500; cursor: pointer; display: none; align-items: center; gap: 7px; box-shadow: 0 2px 14px rgba(37,99,235,.45); white-space: nowrap; }
-  .cmp-fields-toggle:hover { background: #1d4ed8; }
-  .cmp-fields-toggle.visible { display: flex; }
-  /* Push layout mode (B) — panel is a flex sibling that pushes docs apart */
-  .cmp-body.cmp-push-layout .cmp-fields-panel { position: relative; left: auto; top: auto; bottom: auto; transform: none; width: 214px; flex-shrink: 0; }
-  .cmp-body.cmp-push-layout .cmp-fields-panel.collapsed { display: flex; width: 34px; }
-  .cmp-body.cmp-push-layout .cmp-fields-panel.collapsed .cmp-fields-header,
-  .cmp-body.cmp-push-layout .cmp-fields-panel.collapsed .cmp-fields-scroll { display: none; }
-  .cmp-fields-strip { display: none; flex-direction: column; align-items: center; padding: 10px 0 14px; flex: 1; overflow: hidden; }
-  .cmp-body.cmp-push-layout .cmp-fields-panel.collapsed .cmp-fields-strip { display: flex; }
-  .cmp-strip-expand-btn { background: none; border: none; cursor: pointer; color: #94a3b8; padding: 5px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .cmp-strip-expand-btn:hover { background: #f1f5f9; color: #374151; }
-  .cmp-strip-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .7px; white-space: nowrap; flex: 1; display: flex; align-items: center; justify-content: center; padding: 6px 0; }
-  /* Hide blue toggle in push mode */
-  .cmp-body.cmp-push-layout .cmp-fields-toggle { display: none !important; }
-  /* Right layout mode (C) — panel is a right sidebar, docs are side-by-side on the left */
-  .cmp-body.cmp-right-layout { gap: 0; background: transparent; }
-  .cmp-body.cmp-right-layout #cmp-panel-a { order: 1; }
-  .cmp-body.cmp-right-layout #cmp-panel-b { order: 2; }
-  .cmp-body.cmp-right-layout .cmp-fields-panel { order: 3; position: relative; left: auto; top: auto; bottom: auto; transform: none; width: 256px; flex-shrink: 0; border-left: 1px solid #e2e8f0; border-right: none; box-shadow: -4px 0 18px rgba(0,0,0,.12); }
-  .cmp-body.cmp-right-layout .cmp-fields-panel.collapsed { display: none; }
-  .cmp-body.cmp-right-layout .cmp-doc-panel { border-right: none; }
-  .cmp-body.cmp-right-layout #cmp-panel-a { border-right: 2px solid #111827; }
-  /* Blue open button — upper right corner, identical to individual doc page */
+  /* Blue open button — upper right corner, shown when panel collapsed */
   .cmp-right-open-btn { position: absolute; top: 12px; right: 12px; z-index: 20; background: #2563eb; border: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; display: none; align-items: center; gap: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.3); white-space: nowrap; }
   .cmp-right-open-btn:hover { background: #1d4ed8; }
   .cmp-right-open-btn.visible { display: flex; }
-  /* Hide overlay toggle in right/push modes */
-  .cmp-body.cmp-push-layout .cmp-fields-toggle,
-  .cmp-body.cmp-right-layout .cmp-fields-toggle { display: none !important; }
-  /* Layout-switch FAB */
-  .cmp-layout-fab { position: absolute; bottom: 16px; right: 16px; z-index: 20; background: rgba(17,24,39,.88); backdrop-filter: blur(6px); border-radius: 10px; padding: 5px 8px; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.35); }
-  .cmp-layout-fab-label { font-size: 10px; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; white-space: nowrap; }
-  .cmp-layout-opts { display: flex; gap: 2px; background: rgba(255,255,255,.07); border-radius: 6px; padding: 2px; }
-  .cmp-layout-opt { width: 26px; height: 22px; border: none; border-radius: 4px; background: transparent; color: #9ca3af; font-size: 11px; font-weight: 700; cursor: pointer; transition: background .12s, color .12s; display: flex; align-items: center; justify-content: center; }
-  .cmp-layout-opt.active { background: #2563eb; color: #fff; }
-  .cmp-layout-opt:not(.active):hover { background: rgba(255,255,255,.12); color: #e5e7eb; }
 
   /* Collapse toggle in the expanded header */
   .cmp-fields-title-row { display: flex; align-items: center; margin-bottom: 9px; }
