@@ -1741,6 +1741,8 @@ let _sortCol = null;
 let _sortAsc = true;
 let selectedDocIds = new Set();
 let selectMode = false;
+let treeSelectMode = false;
+let _compareFromDetail = false;
 const DOC_COLORS = ['#2563eb', '#7c3aed', '#16a34a', '#d97706', '#dc2626'];
 function getDocColor(i) { return DOC_COLORS[i % DOC_COLORS.length]; }
 
