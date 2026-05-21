@@ -2403,9 +2403,7 @@ function exitTreeSelectMode() {
   document.querySelector('.taxonomy-panel')?.classList.remove('tree-select-mode');
   const btn = document.getElementById('taxonomy-compare-btn');
   if (btn) { btn.classList.remove('active'); btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg> Compare`; }
-  document.querySelectorAll('.tree-row.tree-selected').forEach(r => r.classList.remove('tree-selected'));
-  document.querySelectorAll('.tree-checkbox').forEach(cb => { cb.checked = false; });
-  if (selectedDocIds.size === 0) updateCompareBar();
+  clearSelection();
 }
 
 function syncTreeSelections() {
