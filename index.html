@@ -1799,7 +1799,7 @@ function renderTable() {
         ${d.tag === 'v2' ? '<span class="v-tag">v2</span>' : ''}
         ${d.tag === 'amended' ? '<span class="amended-tag">amended</span>' : ''}
       </td>
-      <td><span class="badge-${d.status}">${statusLabel(d.status)}</span></td>
+      <td>${expired ? '<span class="badge-expired">Expired</span>' : `<span class="badge-${d.status}">${statusLabel(d.status)}</span>`}</td>
       <td>${d.version}</td>
       <td>${d.source}</td>
       <td>${d.uploadedBy}</td>
