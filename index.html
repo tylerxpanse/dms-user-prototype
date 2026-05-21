@@ -2676,36 +2676,11 @@ function renderCmpFieldRow(f) {
 
 // ---- Panel collapse / expand ----
 let _cmpFieldPanelOpen = true;
-let _cmpLayout = 'overlay'; // 'overlay' | 'push'
-
 function toggleCmpFieldPanel() {
   _cmpFieldPanelOpen = !_cmpFieldPanelOpen;
   document.getElementById('cmp-fields-panel').classList.toggle('collapsed', !_cmpFieldPanelOpen);
-  if (_cmpLayout === 'overlay') {
-    document.getElementById('cmp-fields-toggle')?.classList.toggle('visible', !_cmpFieldPanelOpen);
-  } else if (_cmpLayout === 'right') {
-    document.getElementById('cmp-right-open-btn')?.classList.toggle('visible', !_cmpFieldPanelOpen);
-    setTimeout(scaleCmpPapers, 220);
-  } else {
-    // Push mode: docs move so rescale after transition
-    setTimeout(scaleCmpPapers, 220);
-  }
-}
-
-function setCmpLayout(mode) {
-  _cmpLayout = mode;
-  const body = document.querySelector('.cmp-body');
-  body.classList.toggle('cmp-push-layout', mode === 'push');
-  body.classList.toggle('cmp-right-layout', mode === 'right');
-  document.getElementById('cmp-layout-a').classList.toggle('active', mode === 'overlay');
-  document.getElementById('cmp-layout-b').classList.toggle('active', mode === 'push');
-  document.getElementById('cmp-layout-c').classList.toggle('active', mode === 'right');
-  // Reset panel to open, hide all toggle buttons, then show the right ones
-  _cmpFieldPanelOpen = true;
-  document.getElementById('cmp-fields-panel').classList.remove('collapsed');
-  document.getElementById('cmp-fields-toggle')?.classList.remove('visible');
-  document.getElementById('cmp-right-open-btn')?.classList.remove('visible');
-  setTimeout(scaleCmpPapers, 50);
+  document.getElementById('cmp-right-open-btn')?.classList.toggle('visible', !_cmpFieldPanelOpen);
+  setTimeout(scaleCmpPapers, 220);
 }
 
 // ---- Hover preview ----
