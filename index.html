@@ -209,6 +209,7 @@
   .tree-children.collapsed { display: none; }
   .tree-toggle { width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; color: #9ca3af; flex-shrink: 0; font-size: 8px; }
   .tree-icon { width: 14px; height: 14px; flex-shrink: 0; color: #6b7280; }
+  .tree-row[onclick*="openDoc"] .tree-icon { color: #93c5fd; }
   /* Leaf doc rows — no icon */
   .tree-row.indent2:not([onclick]) .tree-icon,
   .tree-row.indent3 .tree-icon { display: none; }
@@ -957,7 +958,7 @@
         <div class="taxonomy-tree">
           <div class="tree-row indent1" onclick="toggleTree(this)">
             <span class="tree-toggle">▼</span>
-            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Application
           </div>
           <div class="tree-children">
@@ -975,13 +976,13 @@
 
           <div class="tree-row indent1" onclick="toggleTree(this)">
             <span class="tree-toggle">▼</span>
-            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Income
           </div>
           <div class="tree-children">
             <div class="tree-row indent2" onclick="toggleTree(this)">
               <span class="tree-toggle">▼</span>
-              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               Paystubs
             </div>
             <div class="tree-children">
@@ -1003,7 +1004,7 @@
 
             <div class="tree-row indent2" onclick="toggleTree(this)">
               <span class="tree-toggle">▼</span>
-              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               <span style="color:#2563eb;font-weight:500;">W-2 Forms</span>
             </div>
             <div class="tree-children">
@@ -1029,7 +1030,7 @@
 
             <div class="tree-row indent2" onclick="toggleTree(this)">
               <span class="tree-toggle">▼</span>
-              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               Tax Returns
             </div>
             <div class="tree-children">
@@ -1048,7 +1049,7 @@
 
             <div class="tree-row indent2" onclick="toggleTree(this)">
               <span class="tree-toggle">▼</span>
-              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               Employment Verification
             </div>
             <div class="tree-children">
@@ -1068,13 +1069,13 @@
 
           <div class="tree-row indent1" onclick="toggleTree(this)">
             <span class="tree-toggle">▼</span>
-            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Assets
           </div>
           <div class="tree-children">
             <div class="tree-row indent2" onclick="toggleTree(this)">
               <span class="tree-toggle">▼</span>
-              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               Bank Statements
             </div>
             <div class="tree-children">
@@ -1103,7 +1104,7 @@
             </div>
             <div class="tree-row indent2" onclick="toggleTree(this)">
               <span class="tree-toggle">▼</span>
-              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               Gift Letters
             </div>
             <div class="tree-children">
@@ -1118,7 +1119,7 @@
 
           <div class="tree-row indent1" onclick="toggleTree(this)">
             <span class="tree-toggle">▼</span>
-            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Credit
           </div>
           <div class="tree-children">
@@ -1136,7 +1137,7 @@
 
           <div class="tree-row indent1" onclick="toggleTree(this)">
             <span class="tree-toggle">▼</span>
-            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Property
           </div>
           <div class="tree-children">
