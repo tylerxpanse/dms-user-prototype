@@ -2468,14 +2468,8 @@ function renderCompareView() {
   _cmpUserZoom = { a: 1.0, b: 1.0 };
   _activeCmpField = null;
   _cmpFieldPanelOpen = true;
-  _cmpLayout = 'overlay';
+  _cmpFieldPanelOpen = true;
   document.getElementById('cmp-fields-panel')?.classList.remove('collapsed');
-  const toggleBtn = document.getElementById('cmp-fields-toggle');
-  if (toggleBtn) toggleBtn.classList.remove('visible');
-  document.querySelector('.cmp-body')?.classList.remove('cmp-push-layout', 'cmp-right-layout');
-  document.getElementById('cmp-layout-a')?.classList.add('active');
-  document.getElementById('cmp-layout-b')?.classList.remove('active');
-  document.getElementById('cmp-layout-c')?.classList.remove('active');
   document.getElementById('cmp-right-open-btn')?.classList.remove('visible');
   const docs = [...selectedDocIds].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
   if (docs.length < 2) return;
