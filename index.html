@@ -2819,20 +2819,24 @@ function removeFromCompare(docId) {
 // ===================== EXTRACTED FIELDS DATA =====================
 function getDocExtractedFields(doc) {
   const c = doc.classification;
-  if (c === 'W-2 Form') return [
-    { label:'Employee SSN', value:'***-**-1234', field:'ssn' },
-    { label:'Employer EIN', value:'12-3456789', field:'ein' },
-    { label:'Employer', value:'ABC Corporation', field:'employer' },
-    { divider: true },
-    { label:'Wages, tips, other comp', value:'$85,000.00', field:'wages' },
-    { label:'Federal income tax', value:'$12,450.00', field:'fed-tax' },
-    { label:'Social security wages', value:'$85,000.00', field:'soc-wages' },
-    { label:'Medicare wages', value:'$85,000.00', field:'medicare-wages' },
-    { divider: true },
-    { label:'State', value:'NY', field:'w2-state' },
-    { label:'State wages', value:'$85,000.00', field:'state-wages' },
-    { label:'State income tax', value:'$5,950.00', field:'state-tax' },
-  ];
+  if (c === 'W-2 Form') {
+    const corrected = doc.name.includes('Corrected');
+    const wages = corrected ? '$89,000.00' : '$85,000.00';
+    return [
+      { label:'Employee SSN', value:'***-**-1234', field:'ssn' },
+      { label:'Employer EIN', value:'12-3456789', field:'ein' },
+      { label:'Employer', value:'ABC Corporation', field:'employer' },
+      { divider: true },
+      { label:'Wages, tips, other comp', value:wages, field:'wages' },
+      { label:'Federal income tax', value:'$12,450.00', field:'fed-tax' },
+      { label:'Social security wages', value:'$85,000.00', field:'soc-wages' },
+      { label:'Medicare wages', value:'$85,000.00', field:'medicare-wages' },
+      { divider: true },
+      { label:'State', value:'NY', field:'w2-state' },
+      { label:'State wages', value:'$85,000.00', field:'state-wages' },
+      { label:'State income tax', value:'$5,950.00', field:'state-tax' },
+    ];
+  }
   if (c === 'Pay Stub') {
     const isJim = doc.name.includes('Jim');
     return [
