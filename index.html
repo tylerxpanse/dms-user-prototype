@@ -2914,6 +2914,7 @@ function renderCompareDocBody(doc) {
 
   if (c === 'W-2 Form') {
     const name = doc.name.includes('Alice') ? 'Alice J. Firstimer' : 'Jim Halpert';
+    const wages = doc.name.includes('Corrected') ? '$89,000.00' : '$85,000.00';
     return `<div class="w2-doc" style="width:100%;padding:0;">
       <div class="w2-form-title" style="margin-bottom:8px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
