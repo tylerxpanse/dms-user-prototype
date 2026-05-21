@@ -519,8 +519,15 @@
 
   /* Doc panels */
   .cmp-doc-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-  #cmp-panel-a { order: 1; border-right: 2px solid #111827; }
-  #cmp-panel-b { order: 2; }
+  #cmp-panel-a { order: 1; }
+  #cmp-panel-b { order: 3; }
+  /* Resizable divider between the two doc panels */
+  .cmp-divider { order: 2; width: 12px; flex-shrink: 0; background: #111827; cursor: col-resize; display: flex; align-items: center; justify-content: center; user-select: none; position: relative; z-index: 5; transition: background .15s; }
+  .cmp-divider:hover, .cmp-divider.dragging { background: #1e3a5f; }
+  .cmp-divider-handle { width: 8px; height: 44px; background: #2d3d6b; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; pointer-events: none; transition: background .15s; }
+  .cmp-divider:hover .cmp-divider-handle, .cmp-divider.dragging .cmp-divider-handle { background: #2563eb; }
+  .cmp-divider-dot { width: 3px; height: 3px; border-radius: 50%; background: #6b7280; transition: background .15s; }
+  .cmp-divider:hover .cmp-divider-dot, .cmp-divider.dragging .cmp-divider-dot { background: #bfdbfe; }
   .cmp-doc-header { background: #1f2937; color: #fff; padding: 8px 14px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,.06); }
   .cmp-doc-color-bar { width: 3px; height: 20px; border-radius: 2px; flex-shrink: 0; }
   .cmp-doc-header-name { flex: 1; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
