@@ -1806,7 +1806,7 @@ function renderTable() {
       <td>${d.source}</td>
       <td>${d.uploadedBy}</td>
       <td>${d.date}</td>
-      <td class="${expired ? 'exp-date expired' : 'exp-date'}">${d.expires || '—'}</td>
+
       <td class="comments-col" onclick="event.stopPropagation()">
         ${d.commentCount ? `<span class="comment-badge ${d.comment}" onmouseenter="showCommentTooltip(event,${d.id})" onmouseleave="hideTooltip()">${d.commentCount}</span>` : ''}
       </td>
