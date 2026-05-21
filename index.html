@@ -2462,6 +2462,8 @@ function clearSelection() {
   selectedDocIds.clear();
   document.querySelectorAll('.doc-checkbox').forEach(cb => { cb.checked = false; });
   document.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('row-selected'));
+  document.querySelectorAll('.tree-checkbox').forEach(cb => { cb.checked = false; });
+  document.querySelectorAll('.tree-row.tree-selected').forEach(r => r.classList.remove('tree-selected'));
   updateCompareBar();
 }
 
