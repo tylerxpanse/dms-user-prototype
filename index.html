@@ -2686,11 +2686,67 @@ function renderCmpFieldRow(f) {
 
 // ---- Panel collapse / expand ----
 let _cmpFieldPanelOpen = true;
+let _cmpSplitRatio = 0.5; // fraction of available width for doc A
+const CMP_DIVIDER_W = 12;
+const CMP_FIELDS_W = 256;
+
+function applyCmpSplit() {
+  const panelA = document.getElementById('cmp-panel-a');
+  const panelB = document.getElementById('cmp-panel-b');
+  const body = document.querySelector('.cmp-body');
+  if (!panelA || !panelB || !body) return;
+  const fieldsW = _cmpFieldPanelOpen ? CMP_FIELDS_W : 0;
+  const available = body.clientWidth - CMP_DIVIDER_W - fieldsW;
+  if (available <= 0) return;
+  const aW = Math.round(available * _cmpSplitRatio);
+  panelA.style.flex = `0 0 ${aW}px`;
+  panelB.style.flex = `0 0 ${available - aW}px`;
+}
+
+function cmpDividerStart(e) {
+  if (e.button !== 0) return;
+  e.preventDefault();
+  const body = document.querySelector('.cmp-body');
+  const panelA = document.getElementById('cmp-panel-a');
+  const panelB = document.getElementById('cmp-panel-b');
+  const divider = document.getElementById('cmp-divider');
+  const startX = e.clientX;
+  const startAW = panelA.getBoundingClientRect().width;
+  const fieldsW = _cmpFieldPanelOpen ? CMP_FIELDS_W : 0;
+  const available = body.clientWidth - CMP_DIVIDER_W - fieldsW;
+  divider.classList.add('dragging');
+  document.body.style.cursor = 'col-resize';
+  document.body.style.userSelect = 'none';
+  function onMove(e) {
+    const newAW = Math.min(Math.max(startAW + (e.clientX - startX), 80), available - 80);
+    _cmpSplitRatio = newAW / available;
+    panelA.style.flex = `0 0 ${newAW}px`;
+    panelB.style.flex = `0 0 ${available - newAW}px`;
+    scaleCmpPapers();
+  }
+  function onUp() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    divider.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    scaleCmpPapers();
+  }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+function cmpDividerReset() {
+  _cmpSplitRatio = 0.5;
+  applyCmpSplit();
+  scaleCmpPapers();
+}
+
 function toggleCmpFieldPanel() {
   _cmpFieldPanelOpen = !_cmpFieldPanelOpen;
   document.getElementById('cmp-fields-panel').classList.toggle('collapsed', !_cmpFieldPanelOpen);
   document.getElementById('cmp-right-open-btn')?.classList.toggle('visible', !_cmpFieldPanelOpen);
-  setTimeout(scaleCmpPapers, 220);
+  setTimeout(() => { applyCmpSplit(); scaleCmpPapers(); }, 220);
 }
 
 // ---- Hover preview ----
