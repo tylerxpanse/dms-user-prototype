@@ -2495,7 +2495,12 @@ function enterCompareMode() {
 
 function exitCompareMode() {
   document.getElementById('screen-compare').classList.remove('visible');
-  document.getElementById('screen-list').style.display = '';
+  if (_compareFromDetail) {
+    document.getElementById('screen-detail').classList.add('visible');
+    if (selectedDocIds.size > 0) { treeSelectMode = true; document.querySelector('.taxonomy-panel')?.classList.add('tree-select-mode'); setTimeout(syncTreeSelections, 50); }
+  } else {
+    document.getElementById('screen-list').style.display = '';
+  }
   _activeCmpField = null;
   // Restore nav section list and right sidebar
   document.querySelector('.nav-section-list').style.display = '';
