@@ -211,11 +211,11 @@
   /* Leaf doc rows — no icon */
   .tree-row.indent2:not([onclick]) .tree-icon,
   .tree-row.indent3 .tree-icon { display: none; }
-  /* Expired doc rows */
-  .tree-row.tree-expired { color: #374151; }
-  .tree-row.tree-expired:hover { background: #fee2e2; }
-  .tree-row.tree-expired.active { background: #fecaca; color: #374151; }
-  .tree-expired-icon { display: block; width: 13px; height: 13px; min-width: 13px; flex-shrink: 0; }
+  /* Expired doc rows — red text, no icons */
+  .tree-row.tree-expired { color: #dc2626; }
+  .tree-row.tree-expired:hover { background: #fff1f1; }
+  .tree-row.tree-expired.active { background: #fee2e2; color: #dc2626; }
+  .tree-expired-icon { display: none; }
   .comment-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .comment-dot.unread { background: #2563eb; }
   .comment-dot.read { background: transparent; border: 1.5px solid #2563eb; }
