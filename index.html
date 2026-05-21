@@ -1445,7 +1445,16 @@
           </div>
         </div>
 
-        <!-- Center: field comparison panel (position:absolute overlay) -->
+        <!-- Resizable divider -->
+        <div class="cmp-divider" id="cmp-divider" onmousedown="cmpDividerStart(event)" ondblclick="cmpDividerReset()">
+          <div class="cmp-divider-handle">
+            <span class="cmp-divider-dot"></span>
+            <span class="cmp-divider-dot"></span>
+            <span class="cmp-divider-dot"></span>
+          </div>
+        </div>
+
+        <!-- Field comparison panel — right sidebar -->
         <div class="cmp-fields-panel" id="cmp-fields-panel">
           <div class="cmp-fields-header">
             <div class="cmp-fields-title-row">
