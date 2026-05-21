@@ -988,14 +988,14 @@
             </div>
             <div class="tree-children">
               <div class="tree-row indent3 tree-expired" data-doc-id="11" onclick="openDoc(11)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-expired-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L1 14h14L8 1z" fill="#dc2626"/><path d="M8 6v3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="#fff"/></svg>
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 Pay Stub - Jim Halpert (Jan)
                 <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
               </div>
               <div class="tree-row indent3 tree-expired" data-doc-id="12" onclick="openDoc(12)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-expired-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L1 14h14L8 1z" fill="#dc2626"/><path d="M8 6v3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="#fff"/></svg>
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 Pay Stub - Alice Firstimer (Dec)
@@ -1010,13 +1010,13 @@
             </div>
             <div class="tree-children">
               <div class="tree-row indent3 active" data-doc-id="9" onclick="openDoc(9)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 W2 - Alice Firstimer - Costco -
                 <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
               </div>
               <div class="tree-row indent3 tree-expired" data-doc-id="10" onclick="openDoc(10)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-expired-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L1 14h14L8 1z" fill="#dc2626"/><path d="M8 6v3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="#fff"/></svg>
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 W2 - Johnny Firstimer - Walma…
@@ -1036,7 +1036,7 @@
             </div>
             <div class="tree-children">
               <div class="tree-row indent3" data-doc-id="5" onclick="openDoc(5)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 Tax Return 2025 - Joint Filing
                 <span class="tree-end"><span class="comment-dot read"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
@@ -1055,7 +1055,7 @@
             </div>
             <div class="tree-children">
               <div class="tree-row indent3" data-doc-id="8" onclick="openDoc(8)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 Employment Verification Letter
                 <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
@@ -1081,7 +1081,7 @@
             </div>
             <div class="tree-children">
               <div class="tree-row indent3 tree-expired" data-doc-id="7" onclick="openDoc(7)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-expired-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L1 14h14L8 1z" fill="#dc2626"/><path d="M8 6v3.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="#fff"/></svg>
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 Chase ****4532 - Jan 2026
@@ -1110,7 +1110,7 @@
             </div>
             <div class="tree-children">
               <div class="tree-row indent3" data-doc-id="6" onclick="openDoc(6)">
-                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+                <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
                 <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
                 Gift Letter - Pam Halpert
                 <span class="tree-end"><span class="comment-dot unread"></span></span>
@@ -1143,25 +1143,25 @@
           </div>
           <div class="tree-children">
             <div class="tree-row indent2" data-doc-id="2" onclick="openDoc(2)">
-              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
               <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
               Property Appraisal Report
               <span class="tree-end"><span class="comment-dot read"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
             </div>
             <div class="tree-row indent2" data-doc-id="1" onclick="openDoc(1)">
-              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
               <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
               Flood Certification
               <span class="tree-end"><span class="comment-dot unread"></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
             </div>
             <div class="tree-row indent2" data-doc-id="3" onclick="openDoc(3)">
-              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
               <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
               Homeowners Insurance Decl.
               <span class="tree-end"></span>
             </div>
             <div class="tree-row indent2" data-doc-id="4" onclick="openDoc(4)">
-              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation()">
+              <input type="checkbox" class="tree-checkbox" onclick="event.stopPropagation(); toggleTreeDocSelect(+this.closest('[data-doc-id]').dataset.docId)">
               <svg class="tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
               Title Commitment
               <span class="tree-end"><span></span><svg class="tree-chain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
