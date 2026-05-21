@@ -537,6 +537,21 @@
   .cmp-strip-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .7px; white-space: nowrap; flex: 1; display: flex; align-items: center; justify-content: center; padding: 6px 0; }
   /* Hide blue toggle in push mode */
   .cmp-body.cmp-push-layout .cmp-fields-toggle { display: none !important; }
+  /* Right layout mode (C) — panel is a right sidebar, docs are side-by-side on the left */
+  .cmp-body.cmp-right-layout { gap: 0; background: transparent; }
+  .cmp-body.cmp-right-layout #cmp-panel-a { order: 1; }
+  .cmp-body.cmp-right-layout #cmp-panel-b { order: 2; }
+  .cmp-body.cmp-right-layout .cmp-fields-panel { order: 3; position: relative; left: auto; top: auto; bottom: auto; transform: none; width: 256px; flex-shrink: 0; border-left: 1px solid #e2e8f0; border-right: none; box-shadow: -4px 0 18px rgba(0,0,0,.12); }
+  .cmp-body.cmp-right-layout .cmp-fields-panel.collapsed { display: none; }
+  .cmp-body.cmp-right-layout .cmp-doc-panel { border-right: none; }
+  .cmp-body.cmp-right-layout #cmp-panel-a { border-right: 2px solid #111827; }
+  /* Blue open button — upper right corner, identical to individual doc page */
+  .cmp-right-open-btn { position: absolute; top: 12px; right: 12px; z-index: 20; background: #2563eb; border: none; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; display: none; align-items: center; gap: 6px; box-shadow: 0 1px 4px rgba(0,0,0,.3); white-space: nowrap; }
+  .cmp-right-open-btn:hover { background: #1d4ed8; }
+  .cmp-right-open-btn.visible { display: flex; }
+  /* Hide overlay toggle in right/push modes */
+  .cmp-body.cmp-push-layout .cmp-fields-toggle,
+  .cmp-body.cmp-right-layout .cmp-fields-toggle { display: none !important; }
   /* Layout-switch FAB */
   .cmp-layout-fab { position: absolute; bottom: 16px; right: 16px; z-index: 20; background: rgba(17,24,39,.88); backdrop-filter: blur(6px); border-radius: 10px; padding: 5px 8px; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.35); }
   .cmp-layout-fab-label { font-size: 10px; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; white-space: nowrap; }
