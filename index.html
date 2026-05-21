@@ -147,11 +147,12 @@
   .row-tooltip .tt-item { padding: 2px 0; }
   .row-tooltip .tt-author { font-weight: 600; color: #e5e7eb; }
   .star.filled { color: #f59e0b; }
-  /* Expiration column */
-  .exp-date { font-size: 13px; white-space: nowrap; color: #6b7280; }
-  .exp-date.expired { color: #dc2626; font-weight: 500; }
-  tr.row-expired { background: #fff5f5; }
-  tr.row-expired:hover { background: #fee2e2; }
+  /* Expired rows — red text, no background tint */
+  tr.row-expired td { color: #dc2626; }
+  tr.row-expired td .badge-approved,
+  tr.row-expired td .badge-received,
+  tr.row-expired td .badge-under-review,
+  tr.row-expired td .badge-needs-action { opacity: 0.75; }
   /* Sortable column headers */
   .sortable-th { cursor: pointer; user-select: none; white-space: nowrap; }
   .sortable-th:hover { color: #111827; }
