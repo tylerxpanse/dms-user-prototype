@@ -2481,7 +2481,13 @@ function enterCompareMode() {
   rpw.classList.add('collapsed');
   ris.classList.add('hidden');
   document.querySelector('.nav-section-list').style.display = 'none';
-  document.getElementById('screen-list').style.display = 'none';
+  _compareFromDetail = document.getElementById('screen-detail').classList.contains('visible');
+  if (_compareFromDetail) {
+    document.getElementById('screen-detail').classList.remove('visible');
+    exitTreeSelectMode();
+  } else {
+    document.getElementById('screen-list').style.display = 'none';
+  }
   document.getElementById('screen-compare').classList.add('visible');
   document.getElementById('compare-bar').classList.add('hidden');
   renderCompareView();
