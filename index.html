@@ -1724,6 +1724,8 @@ function switchListTab(tab) {
   document.getElementById('tab-decision').classList.toggle('active', tab === 'decision');
   document.getElementById('search-input').value = '';
   searchQuery = '';
+  const pill = document.getElementById('taxonomy-tab-pill');
+  if (pill) pill.textContent = tab === 'all' ? 'All Docs' : 'Decision Docs';
   renderTable();
 }
 
