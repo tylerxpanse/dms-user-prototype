@@ -1873,16 +1873,8 @@ function toggleExpandAll() {
 
 // ===================== NAVIGATION =====================
 function navTo(el) {
-  // No-op for non-Documents items in this prototype — Documents is always the active screen
-  // Briefly highlight the clicked item for visual feedback, then restore Documents
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
-  if (!el.textContent.trim().startsWith('Documents')) {
-    setTimeout(() => {
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.querySelector('.nav-item-documents')?.classList.add('active');
-    }, 400);
-  }
+  // Documents is always the active section in this prototype — other nav items are non-functional
+  if (!el.classList.contains('nav-item-documents')) return;
 }
 
 // ===================== RIGHT SIDEBAR =====================
