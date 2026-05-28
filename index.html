@@ -862,17 +862,23 @@
     <!-- SCREEN: DOCUMENTS LIST -->
     <div id="screen-list">
       <div class="list-header">
-        <h1>Documents</h1>
-        <div style="display:flex;align-items:flex-end;gap:0;">
-          <div class="list-tabs" style="flex:1;">
-            <div class="list-tab" id="tab-all" onclick="switchListTab('all')">
-              All Documents <span class="tab-count" id="count-all">12</span>
-            </div>
-            <div class="list-tab active" id="tab-decision" onclick="switchListTab('decision')">
-              Decision Documents <span class="tab-count" id="count-decision">8</span>
-            </div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;">
+          <div>
+            <h1>Documents</h1>
+            <p class="list-header-sub">Manage loan documents for this application</p>
           </div>
-          <button class="upload-btn" onclick="openUpload()">⬆ Upload</button>
+          <button class="upload-btn" onclick="openUpload()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            Upload
+          </button>
+        </div>
+        <div class="list-tabs">
+          <div class="list-tab" id="tab-all" onclick="switchListTab('all')">
+            All Documents <span class="tab-count" id="count-all">12</span>
+          </div>
+          <div class="list-tab active" id="tab-decision" onclick="switchListTab('decision')">
+            Decision Documents <span class="tab-count" id="count-decision">8</span>
+          </div>
         </div>
       </div>
       <div class="list-controls">
