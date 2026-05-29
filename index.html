@@ -1841,7 +1841,7 @@ function renderTable() {
 }
 
 function statusLabel(s) {
-  return { approved:'Approved', received:'Received', 'under-review':'Under Review', 'needs-action':'Needs Action' }[s] || s;
+  return { approved:'Approved', received:'Received', 'under-review':'Under Review', 'needs-action':'Needs Action', rejected:'Rejected', classified:'Classified', extracted:'Extracted' }[s] || s;
 }
 
 function toggleStar(id, el) {
