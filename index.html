@@ -2273,6 +2273,7 @@ function saveNote() {
   document.getElementById('note-textarea').value = '';
   document.getElementById('note-add-to-tasks').checked = false;
   closeNotePopover();
+  appendOverviewNote(val);
 
   if (addToTasks) {
     // Inject a task card into the right sidebar task panel
