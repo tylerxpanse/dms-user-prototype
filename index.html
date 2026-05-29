@@ -2236,8 +2236,29 @@ function closeNotePopover() {
 }
 function saveNote() {
   const val = document.getElementById('note-textarea').value.trim();
-  if (val) document.getElementById('note-textarea').value = '';
+  if (!val) { closeNotePopover(); return; }
+  const addToTasks = document.getElementById('note-add-to-tasks').checked;
+  document.getElementById('note-textarea').value = '';
+  document.getElementById('note-add-to-tasks').checked = false;
   closeNotePopover();
+
+  if (addToTasks) {
+    // Inject a task card into the right sidebar task panel
+    const docName = document.getElementById('doc-bar-name')?.textContent || 'Document';
+    const tasksPanel = document.querySelector('.right-panel-body .tasks-group');
+    if (tasksPanel) {
+      const card = document.createElement('div');
+      card.className = 'task-card';
+      card.innerHTML = `
+        <div class="task-card-title">📌 ${val.length > 60 ? val.slice(0,60)+'…' : val}</div>
+        <div class="task-card-desc" style="color:#6b7280;">From note on: ${docName}</div>
+        <div class="task-card-footer">
+          <span class="task-card-tag">DMS Note</span>
+          <span class="task-card-due today">Today</span>
+        </div>`;
+      tasksPanel.prepend(card);
+    }
+  }
 }
 document.addEventListener('click', function(e) {
   const popover = document.getElementById('note-popover');
