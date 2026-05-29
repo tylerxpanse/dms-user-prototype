@@ -150,7 +150,8 @@
   .row-tooltip .tt-author { font-weight: 600; color: #e5e7eb; }
   .star.filled { color: #f59e0b; }
   /* Expired rows — red text, no background tint */
-  tr.row-expired td { color: #dc2626; }
+  tr.row-expired:hover td { background: transparent; }
+  tr.row-expired:hover { background: #fff1f1; }
   /* Sortable column headers */
   .sortable-th { cursor: pointer; user-select: none; white-space: nowrap; }
   .sortable-th:hover { color: #111827; }
