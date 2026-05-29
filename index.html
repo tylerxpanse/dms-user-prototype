@@ -2621,14 +2621,10 @@ function exitCompareMode() {
     document.getElementById('screen-list').style.display = '';
   }
   _activeCmpField = null;
-  // Restore nav section list and right sidebar
+  // Restore nav section list; always keep right panel collapsed on return to list
   document.querySelector('.nav-section-list').style.display = '';
-  if (_rightPanelWasOpen) {
-    document.getElementById('right-panel-wrap').classList.remove('collapsed');
-    document.getElementById('right-icon-strip').classList.add('hidden');
-  } else {
-    document.getElementById('right-icon-strip').classList.remove('hidden');
-  }
+  document.getElementById('right-panel-wrap').classList.add('collapsed');
+  document.getElementById('right-icon-strip').classList.remove('hidden');
   if (selectedDocIds.size > 0) document.getElementById('compare-bar').classList.remove('hidden');
 }
 
