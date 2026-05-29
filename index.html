@@ -2236,11 +2236,7 @@ document.addEventListener('click', function(e) {
 });
 
 function saveOverviewNote() {
-  const input = document.getElementById('overview-note-input');
-  const val = input?.value.trim();
-  if (!val) return;
-  input.value = '';
-  appendOverviewNote(val);
+  // Notes are saved via the bottom bar popover — appendOverviewNote is called from saveNote()
 }
 
 function appendOverviewNote(text) {
