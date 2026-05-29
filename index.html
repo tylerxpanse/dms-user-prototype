@@ -2619,7 +2619,7 @@ function renderCompareView() {
 function renderCmpDocPanel(side, doc, color) {
   const today = new Date('2026-05-20');
   const expired = doc.expires && new Date(doc.expires) < today;
-  const sc = { approved:{bg:'#dcfce7',col:'#166534'}, received:{bg:'#f3f4f6',col:'#374151'}, 'under-review':{bg:'#eff6ff',col:'#1d4ed8'}, 'needs-action':{bg:'#fee2e2',col:'#dc2626'} }[doc.status] || {bg:'#f3f4f6',col:'#374151'};
+  const sc = { approved:{bg:'#dcfce7',col:'#166534'}, received:{bg:'#f3f4f6',col:'#374151'}, 'under-review':{bg:'#eff6ff',col:'#1d4ed8'}, 'needs-action':{bg:'#fef9c3',col:'#92400e'}, rejected:{bg:'#fee2e2',col:'#991b1b'}, classified:{bg:'#ede9fe',col:'#6d28d9'}, extracted:{bg:'#e0f2fe',col:'#0369a1'} }[doc.status] || {bg:'#f3f4f6',col:'#374151'};
 
   document.getElementById(`cmp-header-${side}`).innerHTML = `
     <div class="cmp-doc-color-bar" style="background:${color};"></div>
