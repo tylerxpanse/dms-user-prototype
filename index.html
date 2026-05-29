@@ -1218,6 +1218,18 @@
               </div>
             </div>
 
+            <!-- Notes section at bottom of overview -->
+            <div id="overview-notes-section" style="padding:16px 24px;border-top:1px solid #f3f4f6;flex-shrink:0;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <span style="font-size:11px;font-weight:500;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;">Notes</span>
+              </div>
+              <div id="overview-notes-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;"></div>
+              <div style="display:flex;gap:8px;">
+                <input id="overview-note-input" type="text" placeholder="Add a note…" style="flex:1;border:1px solid #e5e7eb;border-radius:6px;padding:6px 10px;font-size:12px;outline:none;font-family:inherit;" onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'" onkeydown="if(event.key==='Enter')saveOverviewNote()">
+                <button onclick="saveOverviewNote()" style="background:#2563eb;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">Add</button>
+              </div>
+            </div>
+
             <!-- PANEL: Conditions -->
             <div id="panel-conditions" class="tab-panel" style="padding:16px 24px;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
