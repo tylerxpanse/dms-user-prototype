@@ -877,10 +877,16 @@
             <h1>Documents</h1>
             <p class="list-header-sub">Manage loan documents for this application</p>
           </div>
-          <button class="upload-btn" onclick="openUpload()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-            Upload
-          </button>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="btn-compare-cta" id="compare-cta-btn" onclick="toggleSelectMode()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/></svg>
+              Compare
+            </button>
+            <button class="upload-btn" onclick="openUpload()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              Upload
+            </button>
+          </div>
         </div>
         <div class="list-tabs">
           <div class="list-tab" id="tab-all" onclick="switchListTab('all')">
