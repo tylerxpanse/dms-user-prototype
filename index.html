@@ -2083,6 +2083,66 @@ function updateStatus(val) {
   updateApproveBtn();
 }
 
+// Routes status changes — intercepts needs-action and rejected for modal confirmation
+function handleStatusChange(val) {
+  // Reset select to current if we're going to modal
+  if (val === 'needs-action') {
+    document.getElementById('needs-action-comment').value = '';
+    document.getElementById('needs-action-confirm').disabled = true;
+    document.getElementById('needs-action-modal').classList.remove('hidden');
+    document.getElementById('status-select').value = docStatus; // revert visual until confirmed
+    return;
+  }
+  if (val === 'rejected') {
+    document.getElementById('rejected-reason-select').value = '';
+    document.getElementById('rejected-notes').value = '';
+    document.getElementById('rejected-confirm').disabled = true;
+    document.getElementById('rejected-modal').classList.remove('hidden');
+    document.getElementById('status-select').value = docStatus; // revert visual until confirmed
+    return;
+  }
+  updateStatus(val);
+}
+
+function closeStatusModal(id) {
+  document.getElementById(id).classList.add('hidden');
+  document.getElementById('status-select').value = docStatus; // restore current status
+}
+
+function confirmNeedsAction() {
+  const comment = document.getElementById('needs-action-comment').value.trim();
+  if (!comment) return;
+  document.getElementById('needs-action-modal').classList.add('hidden');
+  updateStatus('needs-action');
+  // Inject the comment into the communications thread as a system note
+  const thread = document.getElementById('comm-thread');
+  if (thread) {
+    const note = document.createElement('div');
+    note.className = 'comm-msg';
+    note.innerHTML = `<div class="comm-avatar" style="background:#d97706;">!</div><div class="comm-body"><div class="comm-header"><span class="comm-name">You</span><span class="comm-time">Just now</span></div><div class="comm-text" style="color:#92400e;background:#fef9c3;border-radius:6px;padding:8px 10px;font-size:12px;"><strong>Needs Action:</strong> ${comment}</div></div>`;
+    thread.appendChild(note);
+    thread.scrollTop = thread.scrollHeight;
+  }
+}
+
+function confirmRejected() {
+  const reason = document.getElementById('rejected-reason-select');
+  if (!reason.value) return;
+  const reasonText = reason.options[reason.selectedIndex].text;
+  const notes = document.getElementById('rejected-notes').value.trim();
+  document.getElementById('rejected-modal').classList.add('hidden');
+  updateStatus('rejected');
+  // Inject rejection record into communications thread
+  const thread = document.getElementById('comm-thread');
+  if (thread) {
+    const note = document.createElement('div');
+    note.className = 'comm-msg';
+    note.innerHTML = `<div class="comm-avatar" style="background:#dc2626;">✕</div><div class="comm-body"><div class="comm-header"><span class="comm-name">You</span><span class="comm-time">Just now</span></div><div class="comm-text" style="color:#991b1b;background:#fee2e2;border-radius:6px;padding:8px 10px;font-size:12px;"><strong>Rejected:</strong> ${reasonText}${notes ? '<br><span style="color:#374151;">' + notes + '</span>' : ''}</div></div>`;
+    thread.appendChild(note);
+    thread.scrollTop = thread.scrollHeight;
+  }
+}
+
 function handleApprove() {
   updateStatus('approved');
 }
