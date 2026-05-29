@@ -2051,8 +2051,8 @@ function goBack() {
   document.getElementById('extracted-panel').classList.add('hidden');
   document.getElementById('view-extracted-btn').style.display = 'flex';
   extractedVisible = false;
-  // Restore right panel and nav section list when returning to list
-  openRightPanel();
+  // Always collapse right panel when returning to list
+  collapseRightPanel();
   document.querySelector('.nav-section-list')?.classList.remove('detail-collapsed');
 }
 
