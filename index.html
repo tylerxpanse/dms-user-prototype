@@ -2176,19 +2176,18 @@ function togglePanelExpand(id) {
     btn.textContent = 'See less ↑';
   } else {
     panel.classList.add('clamped');
-    btn.textContent = 'View more ↓';
+    btn.textContent = 'See more ↓';
   }
 }
 function initPanelCollapse(id) {
   const panel = document.getElementById('panel-' + id);
   const btn = document.getElementById('vmb-' + id);
   if (!panel || !btn) return;
-  // Measure full height before clamping
   panel.classList.remove('clamped');
   const fullHeight = panel.scrollHeight;
-  btn.textContent = 'View more ↓';
-  if (fullHeight > 120) {
+  if (fullHeight > 260) {
     panel.classList.add('clamped');
+    btn.textContent = 'See more ↓';
     btn.style.display = 'block';
   } else {
     btn.style.display = 'none';
