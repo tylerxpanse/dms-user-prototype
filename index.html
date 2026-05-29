@@ -2237,6 +2237,26 @@ document.addEventListener('click', function(e) {
   }
 });
 
+function saveOverviewNote() {
+  const input = document.getElementById('overview-note-input');
+  const val = input?.value.trim();
+  if (!val) return;
+  input.value = '';
+  appendOverviewNote(val);
+}
+
+function appendOverviewNote(text) {
+  const list = document.getElementById('overview-notes-list');
+  if (!list) return;
+  const now = new Date();
+  const time = now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  const item = document.createElement('div');
+  item.style.cssText = 'background:#f9fafb;border:1px solid #f3f4f6;border-radius:6px;padding:8px 10px;font-size:12px;color:#374151;line-height:1.5;';
+  item.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><span>${text}</span><span style="font-size:11px;color:#9ca3af;white-space:nowrap;margin-top:1px;">You · ${time}</span></div>`;
+  list.appendChild(item);
+  list.scrollTop = list.scrollHeight;
+}
+
 function toggleNotePopover(e) {
   e.stopPropagation();
   const popover = document.getElementById('note-popover');
