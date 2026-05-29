@@ -1418,11 +1418,11 @@
             <span class="add-note" onclick="toggleNotePopover(event)">💬 Add Note</span>
             <div class="note-popover" id="note-popover">
               <textarea id="note-textarea" placeholder="Add a note for this document…"></textarea>
-              <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:#374151;margin-top:8px;cursor:pointer;">
-                <input type="checkbox" id="note-add-to-tasks" style="width:13px;height:13px;accent-color:#2563eb;cursor:pointer;">
-                Add to Tasks
-              </label>
               <div class="note-popover-footer">
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;cursor:pointer;margin-right:auto;">
+                  <input type="checkbox" id="note-add-to-tasks" style="width:13px;height:13px;accent-color:#2563eb;cursor:pointer;">
+                  Add to Tasks
+                </label>
                 <button class="note-cancel" onclick="closeNotePopover()">Cancel</button>
                 <button class="note-save" onclick="saveNote()">Save Note</button>
               </div>
