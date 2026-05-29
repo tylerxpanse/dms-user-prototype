@@ -1429,13 +1429,16 @@
             <button class="btn-actions" onclick="toggleActionsMenu(event)">Actions ▾</button>
             <div class="actions-dropdown" id="actions-dropdown">
               <div class="action-item success" onclick="handleApprove();closeActionsMenu()">✓ Approve</div>
-              <div class="action-item" onclick="closeActionsMenu()">⚑ Flag for Review</div>
-              <div class="action-item" onclick="closeActionsMenu()">↩ Request Revision</div>
+              <div class="action-item" onclick="closeActionsMenu();handleStatusChange('under-review')">⚑ Mark Under Review</div>
+              <div class="action-item" onclick="closeActionsMenu();handleStatusChange('needs-action')">⚠ Needs Action</div>
+              <div class="action-item" onclick="closeActionsMenu();handleStatusChange('classified')">◈ Mark Classified</div>
+              <div class="action-item" onclick="closeActionsMenu();handleStatusChange('extracted')">⬡ Mark Extracted</div>
               <div class="action-divider"></div>
+              <div class="action-item" onclick="closeActionsMenu()">↩ Request Revision</div>
               <div class="action-item" onclick="addCurrentDocToCompare();closeActionsMenu()">⊞ Add to Compare</div>
               <div class="action-item" onclick="closeActionsMenu()">📋 Add to Condition</div>
               <div class="action-divider"></div>
-              <div class="action-item danger" onclick="closeActionsMenu()">✕ Reject</div>
+              <div class="action-item danger" onclick="closeActionsMenu();handleStatusChange('rejected')">✕ Reject</div>
             </div>
           </div>
         </div>
