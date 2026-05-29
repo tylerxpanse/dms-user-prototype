@@ -3271,5 +3271,55 @@ window.addEventListener('resize', () => {
   </div>
 </div>
 
+<!-- STATUS MODALS -->
+
+<!-- Needs Action modal — comment required -->
+<div class="modal-overlay hidden" id="needs-action-modal">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header">
+      <h2 style="display:flex;align-items:center;gap:8px;"><span style="background:#fef9c3;color:#92400e;border-radius:6px;padding:4px 8px;font-size:13px;">⚠ Needs Action</span> Add Required Comment</h2>
+      <button class="modal-close" onclick="closeStatusModal('needs-action-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#6b7280;margin-bottom:4px;">A comment is required when marking a document as <strong style="color:#92400e;">Needs Action</strong>. Describe what action is needed.</p>
+      <textarea id="needs-action-comment" placeholder="e.g. Employer name doesn't match — processor must verify with state records before approval…" style="width:100%;height:90px;border:1px solid #e5e7eb;border-radius:6px;padding:10px;font-size:13px;font-family:inherit;resize:none;outline:none;margin-top:8px;" oninput="document.getElementById('needs-action-confirm').disabled=!this.value.trim();"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeStatusModal('needs-action-modal')">Cancel</button>
+      <button id="needs-action-confirm" class="btn-upload-doc" style="background:#d97706;" disabled onclick="confirmNeedsAction()">Confirm Needs Action</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rejected modal — reason required -->
+<div class="modal-overlay hidden" id="rejected-modal">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header">
+      <h2 style="display:flex;align-items:center;gap:8px;"><span style="background:#fee2e2;color:#991b1b;border-radius:6px;padding:4px 8px;font-size:13px;">✕ Reject Document</span></h2>
+      <button class="modal-close" onclick="closeStatusModal('rejected-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#6b7280;margin-bottom:8px;">Select a rejection reason and optionally add details. This will be logged and visible to the team.</p>
+      <div class="modal-section-label" style="margin-bottom:6px;">Reason <span style="color:#dc2626;">*</span></div>
+      <select id="rejected-reason-select" class="modal-input" onchange="document.getElementById('rejected-confirm').disabled=!this.value;" style="margin-bottom:10px;">
+        <option value="">— Select a reason —</option>
+        <option value="incomplete">Incomplete — missing required information</option>
+        <option value="illegible">Illegible — document not readable</option>
+        <option value="expired-doc">Document is expired</option>
+        <option value="mismatch">Data mismatch — values don't align with application</option>
+        <option value="wrong-doc">Wrong document type submitted</option>
+        <option value="fraud-risk">Flagged for fraud risk</option>
+        <option value="other">Other</option>
+      </select>
+      <div class="modal-section-label" style="margin-bottom:6px;">Additional notes <span style="color:#9ca3af;font-weight:400;">(optional)</span></div>
+      <textarea id="rejected-notes" placeholder="Add any additional context for the team…" style="width:100%;height:72px;border:1px solid #e5e7eb;border-radius:6px;padding:10px;font-size:13px;font-family:inherit;resize:none;outline:none;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeStatusModal('rejected-modal')">Cancel</button>
+      <button id="rejected-confirm" class="btn-upload-doc" style="background:#dc2626;" disabled onclick="confirmRejected()">Confirm Rejection</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
