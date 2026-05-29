@@ -1336,11 +1336,14 @@
                 <span class="doc-bar-name" id="doc-bar-name">W2 - Alice Firstimer - Costco - 2025</span>
                 <span class="doc-bar-size">128 KB</span>
                 <div class="status-select-wrap" id="status-wrap" style="margin:0 8px;">
-                  <select id="status-select" onchange="updateStatus(this.value)">
-                    <option value="approved" selected>Approved</option>
+                  <select id="status-select" onchange="handleStatusChange(this.value)">
+                    <option value="approved">Approved</option>
                     <option value="received">Received</option>
                     <option value="under-review">Under Review</option>
                     <option value="needs-action">Needs Action</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="classified">Classified</option>
+                    <option value="extracted">Extracted</option>
                   </select>
                 </div>
                 <div class="page-nav">
