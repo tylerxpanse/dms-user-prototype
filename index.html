@@ -920,6 +920,50 @@
           </span>
         </div>
       </div>
+      <!-- Advanced Filter Bar -->
+      <div class="adv-filter-bar" id="adv-filter-bar">
+        <span class="adv-filter-label">Status</span>
+        <select class="adv-filter-select" id="filter-status">
+          <option value="">Any</option>
+          <option value="approved">Approved</option>
+          <option value="received">Received</option>
+          <option value="under-review">Under Review</option>
+          <option value="needs-action">Needs Action</option>
+          <option value="rejected">Rejected</option>
+          <option value="classified">Classified</option>
+          <option value="extracted">Extracted</option>
+        </select>
+        <span class="adv-filter-label">Type</span>
+        <select class="adv-filter-select" id="filter-classification">
+          <option value="">Any</option>
+          <option value="W-2 Form">W-2 Form</option>
+          <option value="Pay Stub">Pay Stub</option>
+          <option value="Tax Return">Tax Return</option>
+          <option value="Bank Statement">Bank Statement</option>
+          <option value="Appraisal">Appraisal</option>
+          <option value="Title Document">Title Document</option>
+          <option value="Insurance">Insurance</option>
+          <option value="Employment Verification">Employment Verification</option>
+          <option value="Flood Cert">Flood Cert</option>
+          <option value="Gift Letter">Gift Letter</option>
+        </select>
+        <span class="adv-filter-label">Source</span>
+        <select class="adv-filter-select" id="filter-source">
+          <option value="">Any</option>
+          <option value="Borrower Portal">Borrower Portal</option>
+          <option value="Vendor">Vendor</option>
+          <option value="Third Party">Third Party</option>
+        </select>
+        <span class="adv-filter-label">Uploaded By</span>
+        <select class="adv-filter-select" id="filter-uploader">
+          <option value="">Any</option>
+          <option value="Mike Ross">Mike Ross</option>
+          <option value="Sarah Chen">Sarah Chen</option>
+        </select>
+        <button class="adv-filter-apply" onclick="applyAdvFilters()">Apply</button>
+        <button class="adv-filter-clear" onclick="clearAdvFilters()">Clear</button>
+      </div>
+
       <div id="decision-empty-state" style="display:none; padding: 40px 28px; text-align: center;">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" style="margin-bottom:12px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         <div style="font-size:14px;font-weight:500;color:#374151;margin-bottom:6px;">No decision documents yet</div>
