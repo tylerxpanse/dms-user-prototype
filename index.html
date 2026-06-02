@@ -1860,11 +1860,47 @@ function getSortValue(d, col) {
   return (d[col] || '').toString().toLowerCase();
 }
 
+// ===================== ADVANCED SEARCH =====================
+let advFilters = { status: '', classification: '', source: '', uploader: '' };
+
+function toggleAdvSearch() {
+  const bar = document.getElementById('adv-filter-bar');
+  const btn = document.getElementById('adv-search-btn');
+  const isOpen = bar.classList.toggle('open');
+  btn.classList.toggle('active', isOpen);
+}
+
+function applyAdvFilters() {
+  advFilters.status         = document.getElementById('filter-status').value;
+  advFilters.classification = document.getElementById('filter-classification').value;
+  advFilters.source         = document.getElementById('filter-source').value;
+  advFilters.uploader       = document.getElementById('filter-uploader').value;
+  const activeCount = Object.values(advFilters).filter(v => v).length;
+  const btn = document.getElementById('adv-search-btn');
+  btn.innerHTML = activeCount
+    ? `☰ Advanced Search <span class="adv-filter-active-count">${activeCount}</span>`
+    : '☰ Advanced Search';
+  renderTable();
+}
+
+function clearAdvFilters() {
+  advFilters = { status: '', classification: '', source: '', uploader: '' };
+  ['filter-status','filter-classification','filter-source','filter-uploader'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('adv-search-btn').innerHTML = '☰ Advanced Search';
+  renderTable();
+}
+
 function renderTable() {
   let docs = allDocs.filter(d => {
-    const matchTab = currentTab === 'all' || d.decision;
+    const matchTab    = currentTab === 'all' || d.decision;
     const matchSearch = !searchQuery || d.name.toLowerCase().includes(searchQuery) || d.classification.toLowerCase().includes(searchQuery);
-    return matchTab && matchSearch;
+    const matchStatus = !advFilters.status         || d.status === advFilters.status;
+    const matchClass  = !advFilters.classification || d.classification === advFilters.classification;
+    const matchSource = !advFilters.source         || d.source === advFilters.source;
+    const matchUp     = !advFilters.uploader       || d.uploadedBy === advFilters.uploader;
+    return matchTab && matchSearch && matchStatus && matchClass && matchSource && matchUp;
   });
   if (_sortCol) {
     docs = [...docs].sort((a, b) => {
